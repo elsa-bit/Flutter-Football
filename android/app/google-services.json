@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "8070967761",
+    "project_id": "csbretigny-a154d",
+    "storage_bucket": "csbretigny-a154d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8070967761:android:c9dcacd786e8b1900ef0f0",
+        "android_client_info": {
+          "package_name": "com.bretigny.club.flutter_football"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDGNwYBHDon_UwB4tOZnS9lvNoaUzi4oM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
