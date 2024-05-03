@@ -3,9 +3,12 @@ import 'dart:ui';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_football/firebase_analytics_handler.dart';
-import 'analytics_provider.dart';
-import 'firebase_options.dart';
+import 'package:flutter_football/config/app_router.dart';
+import 'package:flutter_football/networking/firebase/firebase_analytics_handler.dart';
+import 'package:flutter_football/presentation/screens/onboarding/onboarding_screen.dart';
+import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
+import 'networking/firebase/analytics_provider.dart';
+import 'networking/firebase/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +48,9 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        //home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        onGenerateRoute: AppRouter.onGenerateRoute,
+        initialRoute: SplashScreen.routeName,
       ),
     );
   }
