@@ -1,6 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_football/config/app_colors.dart';
 
+//AppTextStyle appTextStyle = AppTextStyle();
+
+class AppTextStyle {
+
+  static TextStyle title = TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.bold,
+    color: currentAppColors.primaryTextColor,
+  );
+
+  static TextStyle subtitle1 = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.bold,
+    //color: currentAppColors.primaryTextColor,
+  );
+
+  static TextStyle subtitle2 = TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.bold,
+    //color: currentAppColors.primaryTextColor,
+  );
+
+  static TextStyle regular = TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    //color: currentAppColors.primaryTextColor,
+  );
+
+}
+
 final lightTheme = ThemeData(
   useMaterial3: true,
 
@@ -27,13 +57,11 @@ final darkTheme = ThemeData(
   useMaterial3: true,
   primaryColor: DarkThemeAppColors().primaryColor,
   brightness: Brightness.dark,
-
   colorScheme: ColorScheme.fromSeed(
     background: DarkThemeAppColors().primaryColor,
     seedColor: DarkThemeAppColors().primaryColor,
     brightness: Brightness.dark,
   ),
-
 );
 
 final darkTheme2 = ThemeData(
