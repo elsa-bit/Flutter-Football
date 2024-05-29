@@ -15,9 +15,10 @@ class TeamRepository {
   Future<List<Team>> getCoachTeams(String coachId) async {
     try {
       final teams = await teamDataSource.getCoachTeams(coachId);
-      final data = jsonDecode(teams) as Map<String, dynamic>;
-      return List<Team>.from(data.values.map((model)=> Team.fromJson(model)));
+      final data = jsonDecode(teams)["teams"] as List<dynamic>;
+      return List<Team>.from(data.map((model)=> Team.fromJson(model)));
     } catch(error) {
+      print(error);
       rethrow;
     }
   }
@@ -25,8 +26,10 @@ class TeamRepository {
   Future<Team> getTeam(int teamId) async {
     try {
       final team = await teamDataSource.getTeam(teamId);
-      return Team.fromJson(jsonDecode(team) as Map<String, dynamic>);
+      final data = jsonDecode(team)["teams"] as List<dynamic>;
+      return List<Team>.from(data.map((model)=> Team.fromJson(model))).first;
     } catch(error) {
+      print(error);
       rethrow;
     }
   }

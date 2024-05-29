@@ -2,7 +2,7 @@
 class Endpoints {
   Endpoints._();
 
-  static const String localHostURL = 'http://localhost:3000/api';
+  static const String localHostURL = '10.0.2.2:3000';
 
   static const String prodURL = '';
 
@@ -13,11 +13,11 @@ class Endpoints {
   static const int connectionTimeout = 3000;
 
   // login paths
-  static const String loginAdmin = '/loginAdmin';
-  static const String loginCoach = '/loginCoach';
-  static const String loginPlayer = '/loginPlayer';
+  static const String loginAdmin = '/api/loginAdmin';
+  static const String loginCoach = '/api/loginCoach';
+  static const String loginPlayer = '/api/loginPlayer';
 
   // team paths
-  static const String teamPath = '/team';
-  static const String coachTeamsPath = '/teamsCoach';
+  static const String teamPath = '/api/team';
+  static const String coachTeamsPath = '/api/teamsCoach';
 }

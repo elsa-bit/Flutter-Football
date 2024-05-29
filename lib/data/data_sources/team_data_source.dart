@@ -8,8 +8,10 @@ class TeamDataSource extends BaseDataSource with TeamService {
 
   @override
   Future<String> getCoachTeams(String coachId) async {
-    const url = Endpoints.baseURL + Endpoints.coachTeamsPath;
-    final response = await httpGet(url);
+    final queryParameters = {
+      'idcoach': coachId
+    };
+    final response = await httpGet(Endpoints.coachTeamsPath, queryParameters);
     if (response.statusCode == 200) {
       return response.body;
     } else {
@@ -19,8 +21,7 @@ class TeamDataSource extends BaseDataSource with TeamService {
 
   @override
   Future<String> getTeam(int teamId) async {
-    const url = Endpoints.baseURL + Endpoints.teamPath;
-    final response = await httpGet(url);
+    final response = await httpGet(Endpoints.teamPath);
     if (response.statusCode == 200) {
       return response.body;
     } else {

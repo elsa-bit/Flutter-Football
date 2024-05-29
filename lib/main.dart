@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // set up the currentAppColors based on the device theme (Dark or Light)
     var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    currentAppColors = brightness == Brightness.dark ? LightThemeAppColors() : DarkThemeAppColors();
+    currentAppColors = brightness == Brightness.dark ? DarkThemeAppColors() : LightThemeAppColors();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
