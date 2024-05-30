@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/config/app_themes.dart';
+import 'package:flutter_football/presentation/widgets/custom_text_field.dart';
 import 'package:flutter_football/utils/extensions/text_extension.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -25,6 +27,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreen extends State<LoginScreen> {
+  late final Function onLoginCallback;
   TextStyle selectedTextStyle =
       AppTextStyle.subtitle1.copyWith(color: currentAppColors.secondaryColor);
   TextStyle unselectedTextStyle =
@@ -94,26 +97,27 @@ class _LoginScreen extends State<LoginScreen> {
                   style: AppTextStyle.title,
                 ),
               ),
+              Spacer(),
               Container(
                 child: Column(
                   children: [
-                    Column(
-                      children: [
-                        Text(
-                          "Email",
-                        ),
-                      ],
+                    CustomTextField(
+                      labelText: "Email",
+                      hint: "email@gmail.com",
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          "Mot de passe",
-                        ),
-                      ],
+                    CustomTextField(
+                      labelText: "Mot de passe",
+                      hint: "*********",
                     ),
                   ],
                 ),
               ),
+              Spacer(),
+              ElevatedButton(
+                  onPressed: () { widget.onLoginCallback(); },
+                  child: const Text("Se connecter")
+              ),
+              Spacer(flex: 2,),
             ],
           ),
         ),

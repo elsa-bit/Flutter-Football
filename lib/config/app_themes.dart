@@ -29,6 +29,12 @@ class AppTextStyle {
     //color: currentAppColors.primaryTextColor,
   );
 
+  static TextStyle small = TextStyle(
+    fontSize: 12.0,
+    fontWeight: FontWeight.normal,
+    //color: currentAppColors.primaryTextColor,
+  );
+
 }
 
 final lightTheme = ThemeData(
