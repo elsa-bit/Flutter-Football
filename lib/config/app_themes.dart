@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_football/config/app_colors.dart';
 
+// TODO : implement theme_tailor
+
 //AppTextStyle appTextStyle = AppTextStyle();
 
 class AppTextStyle {

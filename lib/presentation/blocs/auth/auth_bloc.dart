@@ -9,6 +9,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.repository}) : super(AuthState()) {
 
     on<IsUserAuthenticated>((event, emit) async {
+      emit(state.copyWith(status: AuthStatus.unauthenticated));
       /*try {
         final team = await repository.getTeam(event.teamId);
         emit(state.copyWith(teamDetail: team, status: TeamStatus.success));
@@ -21,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<AuthenticateUser>((event, emit) async {
+      emit(state.copyWith(status: AuthStatus.authenticated));
       /*try {
         final team = await repository.getTeam(event.teamId);
         emit(state.copyWith(teamDetail: team, status: TeamStatus.success));

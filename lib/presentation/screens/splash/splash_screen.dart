@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class SplashScreen extends StatelessWidget {
   static const String routeName = '/splash';
 
+  const SplashScreen({super.key});
+
   static Route route() {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
@@ -14,12 +16,16 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image(image: AssetImage('assets/CSB.png'))
+        child: Image(
+          image: AssetImage('assets/images/CSB.png'),
+          width: 100.0,
+          height: 100.0,
+        ),
       ),
     );
   }
 
-  /*
+/*
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
