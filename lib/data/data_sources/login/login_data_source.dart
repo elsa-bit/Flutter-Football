@@ -14,7 +14,7 @@ class LoginDataSource extends BaseDataSource with LoginService {
       'email': email,
       'password': password,
     };
-    final response = await httpPost(Endpoints.loginAdmin, queryParameters.toString());
+    final response = await httpPost(Endpoints.loginAdmin, queryParameters);
     if (response.statusCode == 200) {
       return response.body;
     } else {
@@ -33,11 +33,13 @@ class LoginDataSource extends BaseDataSource with LoginService {
       'email': email,
       'password': password,
     };
-    final response = await httpPost(Endpoints.loginCoach, queryParameters.toString());
+    final response = await httpPost(Endpoints.loginCoach, queryParameters);
+    print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw ExceptionsFactory().handleStatusCode(response.statusCode);
+      throw response.body;//ExceptionsFactory().handleStatusCode(response.statusCode);
     }
   }
 
@@ -47,11 +49,13 @@ class LoginDataSource extends BaseDataSource with LoginService {
       'email': email,
       'password': password,
     };
-    final response = await httpPost(Endpoints.loginPlayer, queryParameters.toString());
+    final response = await httpPost(Endpoints.loginPlayer, queryParameters);
+    print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw ExceptionsFactory().handleStatusCode(response.statusCode);
+      throw response.body;//ExceptionsFactory().handleStatusCode(response.statusCode);
     }
   }
 

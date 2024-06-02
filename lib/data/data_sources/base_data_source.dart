@@ -19,12 +19,14 @@ class BaseDataSource {
         'title': title,
       })
    */
-  Future<http.Response> httpPost(String path, String body) {
+  Future<http.Response> httpPost(String path, [Map<String, String>? query, String? body]) {
+    final uri = Uri.http(Endpoints.baseURL, path, query);
+    print(uri);
     return http.post(
-      Uri.http(Endpoints.baseURL, path),
-      headers: <String, String>{
+      uri,
+      /*headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-      },
+      },*/
       body: body,
     );
   }

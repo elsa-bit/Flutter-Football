@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter_football/data/data_sources/login/login_data_source.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_football/domain/models/user.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
 
 class LoginRepository {
@@ -27,18 +30,22 @@ class LoginRepository {
     }
   }
 
-  Future<String> loginCoach(String email, String password) async {
+  Future<User> loginCoach(String email, String password) async {
     try {
-      return loginDataSource.loginCoach(email, password);
+      final response = await loginDataSource.loginCoach(email, password);
+      final data = jsonDecode(response)["coachInformation"] as dynamic;
+      return Coach.fromJson(data);
     } catch(error) {
       print(error);
       rethrow;
     }
   }
 
-  Future<String> loginMember(String email, String password) async {
+  Future<User> loginMember(String email, String password) async {
     try {
-      return loginDataSource.loginMember(email, password);
+      final response = await loginDataSource.loginMember(email, password);
+      final data = jsonDecode(response)["playerInformation"] as dynamic;
+      return Member.fromJson(data);
     } catch(error) {
       print(error);
       rethrow;

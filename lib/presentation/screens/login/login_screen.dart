@@ -6,7 +6,6 @@ import 'package:flutter_football/data/data_sources/login/login_data_source.dart'
 import 'package:flutter_football/domain/repositories/login_repository.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
-import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
 import 'package:flutter_football/presentation/blocs/login/login_bloc.dart';
 import 'package:flutter_football/presentation/blocs/login/login_event.dart';
 import 'package:flutter_football/presentation/blocs/login/login_state.dart';
@@ -16,11 +15,7 @@ import 'package:flutter_football/utils/extensions/text_extension.dart';
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
 
-  //final Function onLoginCallback;
-
   LoginScreen({Key? key}) : super(key: key);
-
-  //LoginScreen({super.key, required this.onLoginCallback});
 
   static Route route() {
     return MaterialPageRoute(
@@ -32,6 +27,18 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreen();
 }
+
+
+// Conditional widget creation (for Column, List, etc.)
+/*
+if (_selectedIndex == 0) ...[
+          DayScreen(),
+        ] else ...[
+          StatsScreen(),
+        ],
+ */
+
+
 
 class _LoginScreen extends State<LoginScreen> {
   late final Function onLoginCallback;
@@ -52,6 +59,26 @@ class _LoginScreen extends State<LoginScreen> {
           .copyWith(color: currentAppColors.secondaryTextColor),
     ),
   ];
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  String? emailError = null;
+  String? passwordError = null;
+  String? loginError = null;
+  
+  
+  void handleError(String error) {
+    setState(() {
+      if(error.contains("Email")) {
+        emailError = error;
+      } else if(error.contains("Mot de passe")) {
+        passwordError = error;
+      } else {
+        loginError = error;
+        passwordError = "";
+        emailError = "";
+      }
+    });
+  }
 
   void updateSelectionState(int index) {
     _loginSelections[index] = !_loginSelections[index];
@@ -68,10 +95,6 @@ class _LoginScreen extends State<LoginScreen> {
     }
   }
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  //TODO : Build AuthBloc to notify when user is logged
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
@@ -88,17 +111,15 @@ class _LoginScreen extends State<LoginScreen> {
                 break;
               case LoginStatus.loading:
                 print("[Login] loading");
-                SnackBar(content: Text('Loading...'));
                 break;
               case LoginStatus.success:
                 print("[Login] success");
-                SnackBar(content: Text('Login Success !'));
-                context.read<AuthBloc>().add(AuthenticateUser(token: ""));
+                BlocProvider.of<AuthBloc>(context).add(AuthenticateUser(token: ""));
                 break;
               case LoginStatus.error:
                 print("[Login] error");
                 print(state.error);
-                SnackBar(content: Text('Login failed!'));
+                handleError(state.error.toString());
                 break;
             }
           },
@@ -147,19 +168,50 @@ class _LoginScreen extends State<LoginScreen> {
                                 labelText: "Email",
                                 hint: "email@gmail.com",
                                 controller: emailController,
+                                error: emailError,
+                                onChanged: (_) {
+                                  if(emailError != null) {
+                                    setState(() {
+                                      emailError = null;
+                                    });
+                                  }
+                                },
                               ),
                               CustomTextField(
                                 labelText: "Mot de passe",
                                 hint: "*********",
                                 controller: passwordController,
                                 obscureText: true,
+                                error: passwordError,
+                                onChanged: (_) {
+                                  if(passwordError != null) {
+                                    setState(() {
+                                      passwordError = null;
+                                    });
+                                  }
+                                },
                               ),
                             ],
                           ),
                         ),
+                        if (loginError != null) ...[
+                          Container(
+                            margin: const EdgeInsets.only(top: 15.0),
+                            child: Text(
+                              loginError!,
+                              style: AppTextStyle.regular.copyWith(color: Color.fromRGBO(207, 156, 149, 1.0)),
+                            ),
+                          ),
+                        ] else ...[],
                         Spacer(),
                         ElevatedButton(
                             onPressed: () {
+                              setState(() {
+                                emailError = null;
+                                passwordError = null;
+                                loginError = null;
+                              });
+
                               if (_loginSelections[0] == true) {
                                 // Login coach
                                 print("[Login] Login coach ...");
