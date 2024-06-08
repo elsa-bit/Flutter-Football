@@ -36,10 +36,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     });
 
-    on<LoginTest>((event, emit) async {
+    on<Login>((event, emit) async {
       try {
         emit(state.copyWith(status: LoginStatus.loading));
         final response = await repository.loginTest(event.email, event.password);
+        emit(state.copyWith(authResponse: response, status: LoginStatus.success));
+      } catch (error) {
+        emit(state.copyWith(
+          error: error.toString(),
+          status: LoginStatus.error,
+        ));
+      }
+    });
+
+    on<SignUpTest>((event, emit) async {
+      try {
+        emit(state.copyWith(status: LoginStatus.loading));
+        final response = await repository.signUpTest(event.email, event.password, event.role);
         emit(state.copyWith(token: response.session?.accessToken, status: LoginStatus.success));
       } catch (error) {
         emit(state.copyWith(

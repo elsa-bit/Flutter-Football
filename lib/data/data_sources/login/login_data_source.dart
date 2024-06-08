@@ -3,7 +3,6 @@ import 'package:flutter_football/main.dart';
 import 'package:flutter_football/networking/endpoints.dart';
 import 'package:flutter_football/networking/exceptions_factory.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../base_data_source.dart';
 
 class LoginDataSource extends BaseDataSource with LoginService {
@@ -24,7 +23,7 @@ class LoginDataSource extends BaseDataSource with LoginService {
 
   @override
   Future<AuthResponse> loginTest(String email, String password) async {
-    return supabase.auth.signInWithPassword(password: password);
+    return supabase.auth.signInWithPassword(password: password, email: email);
   }
 
   @override
@@ -57,6 +56,18 @@ class LoginDataSource extends BaseDataSource with LoginService {
     } else {
       throw response.body;//ExceptionsFactory().handleStatusCode(response.statusCode);
     }
+  }
+
+  @override
+  Future<AuthResponse> signUpTest(String email, String password, String role) {
+    final userData = {
+      'firstname': email,
+      'lastname': password,
+      'avatar': '',
+      'tokenPhone': '',
+      'role': role,
+    };
+    return supabase.auth.signUp(password: password, email: email, data: userData);
   }
 
 }

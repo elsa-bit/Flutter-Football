@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository repository;
@@ -9,29 +10,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.repository}) : super(AuthState()) {
 
     on<IsUserAuthenticated>((event, emit) async {
-      emit(state.copyWith(status: AuthStatus.unauthenticated));
-      /*try {
-        final team = await repository.getTeam(event.teamId);
-        emit(state.copyWith(teamDetail: team, status: TeamStatus.success));
+      try {
+        emit(state.copyWith(status: AuthStatus.loading));
+        final isAuthenticated = await repository.isUserAuthenticated();
+        emit(state.copyWith(status: isAuthenticated ? AuthStatus.authenticated : AuthStatus.unauthenticated));
+      } on AuthException catch (error) {
+        emit(state.copyWith(error: error.toString(), status: AuthStatus.unauthenticated,));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: TeamStatus.error,
-        ));
-      }*/
+        emit(state.copyWith(error: error.toString(), status: AuthStatus.error,));
+      }
     });
 
     on<AuthenticateUser>((event, emit) async {
+      emit(state.copyWith(status: AuthStatus.loading));
+      await repository.authenticateUser(event.auth);
       emit(state.copyWith(status: AuthStatus.authenticated));
-      /*try {
-        final team = await repository.getTeam(event.teamId);
-        emit(state.copyWith(teamDetail: team, status: TeamStatus.success));
-      } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: TeamStatus.error,
-        ));
-      }*/
+    });
+
+    on<AuthenticateUserWithToken>((event, emit) async {
+      //repository.authenticateUser(event.auth);
+      //emit(state.copyWith(status: AuthStatus.authenticated));
+    });
+
+    on<Logout>((event, emit) async {
+      repository.logout();
+      emit(state.copyWith(status: AuthStatus.unauthenticated));
     });
 
   }

@@ -1,34 +1,72 @@
-import 'dart:convert';
-
+import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
+import 'package:flutter_football/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepository {
-  //final TeamDataSource teamDataSource;
+  User? user;
+  SharedPreferencesDataSource preferencesDataSource;
 
-  AuthRepository(/*{
-    required this.teamDataSource,
-  }*/);
+  AuthRepository({required this.preferencesDataSource});
 
-  /*Future<List<Team>> getCoachTeams(String coachId) async {
+  Future<bool> isUserAuthenticated() async {
+    final accessToken = preferencesDataSource.getAccessToken();
+    if (accessToken == null) return false;
+
     try {
-      final teams = await teamDataSource.getCoachTeams(coachId);
-      final data = jsonDecode(teams)["teams"] as List<dynamic>;
-      return List<Team>.from(data.map((model)=> Team.fromJson(model)));
-    } catch(error) {
-      print(error);
+      final user = await supabase.auth.getUser(accessToken);
+      if (user.user == null) return false;
+      saveUser(user.user!);
+    } on AuthException catch(e) {
+      return refreshToken();
+    } catch(e) {
       rethrow;
+    }
+    return true;
+  }
+
+  Future<bool> refreshToken() async {
+    print("Refreshing token...");
+    final refreshToken = preferencesDataSource.getRefreshToken();
+    if (refreshToken == null) {
+      print("No refresh token saved");
+      return false;
+    }
+
+    final authResponse = await supabase.auth.refreshSession(refreshToken);
+    authenticateUser(authResponse);
+    return true;
+  }
+
+  Future<void> authenticateUser(AuthResponse auth) async {
+    print("Authenticating user...");
+    if(auth.user != null) saveUser(auth.user!);
+
+    final accessToken = auth.session?.accessToken;
+    final refreshToken = auth.session?.refreshToken;
+
+    if (accessToken != null) {
+      print("Saving access token");
+      preferencesDataSource.saveAccessToken(accessToken);
+    }
+
+    if (refreshToken != null) {
+      print("Saving refresh token");
+      preferencesDataSource.saveRefreshToken(refreshToken);
     }
   }
 
-  Future<Team> getTeam(int teamId) async {
-    try {
-      final team = await teamDataSource.getTeam(teamId);
-      final data = jsonDecode(team)["teams"] as List<dynamic>;
-      return List<Team>.from(data.map((model)=> Team.fromJson(model))).first;
-    } catch(error) {
-      print(error);
-      rethrow;
-    }
-  }*/
+  Future<void> logout() async {
+    supabase.auth.signOut();
+    user = null;
+    await preferencesDataSource.clear();
+  }
 
 
+  // private functions
+
+  void saveUser(User user) {
+    this.user = user;
+
+    // TODO : save user info in preferences
+  }
 }

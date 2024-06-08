@@ -41,6 +41,7 @@ dependencies:
   http: ^0.13.6
   flutter_bloc: ^8.1.5
   supabase_flutter: ^2.5.4
+  shared_preferences: ^2.2.3
 
 
 dev_dependencies:

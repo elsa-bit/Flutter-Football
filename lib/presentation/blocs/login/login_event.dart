@@ -21,12 +21,24 @@ class LoginMember extends LoginEvent {
   });
 }
 
-class LoginTest extends LoginEvent {
+class Login extends LoginEvent {
   final String email;
   final String password;
 
-  LoginTest({
+  Login({
     required this.email,
     required this.password,
+  });
+}
+
+class SignUpTest extends LoginEvent {
+  final String email;
+  final String password;
+  final String role;
+
+  SignUpTest({
+    required this.email,
+    required this.password,
+    required this.role,
   });
 }

@@ -15,8 +15,10 @@ import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
 import 'package:flutter_football/presentation/screens/home.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
+import 'package:flutter_football/utils/shared_preferences_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'config/app_colors.dart';
+import 'data/data_sources/shared_preferences_data_source.dart';
 import 'networking/firebase/analytics_provider.dart';
 import 'networking/firebase/firebase_options.dart';
 
@@ -24,7 +26,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
     url: "https://lbsteoacojxblwiyfbye.supabase.co",
-    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxic3Rlb2Fjb2p4Ymx3aXlmYnllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM2OTQ3NzgsImV4cCI6MjAyOTI3MDc3OH0.t1aFfSzTE1fyg4nG3GIYEKPqD2DetaqfTgXS92slZGo",
+    anonKey:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxic3Rlb2Fjb2p4Ymx3aXlmYnllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM2OTQ3NzgsImV4cCI6MjAyOTI3MDc3OH0.t1aFfSzTE1fyg4nG3GIYEKPqD2DetaqfTgXS92slZGo",
   );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -32,25 +35,43 @@ void main() async {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
+  await SharedPreferencesUtils.init();
+
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
   // set up the currentAppColors based on the device theme (Dark or Light)
-  var brightness = SchedulerBinding.instance.platformDispatcher
-      .platformBrightness;
-  currentAppColors =
-  brightness == Brightness.dark ? DarkThemeAppColors() : LightThemeAppColors();
+  var brightness =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness;
+  currentAppColors = brightness == Brightness.dark
+      ? DarkThemeAppColors()
+      : LightThemeAppColors();
 
   runApp(const MyApp());
 }
 
-
 final supabase = Supabase.instance.client;
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+
+  void listenAuthState(AuthState state) {
+    switch(state.status) {
+      case AuthStatus.error:
+        print(state.error);
+        break;
+      case AuthStatus.authenticated:
+        print("Authenticated !");
+        break;
+      case AuthStatus.unauthenticated:
+        print("Authentication failed.");
+        break;
+      default:
+        return;
+    }
+  }
 
   // TODO : implement Go_router
   // TODO : implement theme_tailor
@@ -58,7 +79,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) => AuthRepository(),
+      create: (context) =>
+          AuthRepository(
+            preferencesDataSource: SharedPreferencesDataSource(),
+          ),
       child: AnalyticsProvider(
         handlers: [
           FirebaseAnalyticsHandler(),
@@ -69,63 +93,33 @@ class MyApp extends StatelessWidget {
             repository: RepositoryProvider.of<AuthRepository>(context),
           )
             ..add(IsUserAuthenticated()),
-          child: MaterialApp(
-            title: 'Flutter Demo',
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: ThemeMode.system,
-            home: BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                switch(state.status) {
-
-                  case AuthStatus.authenticated:
-                    return const Home();
-                    break;
-                  case AuthStatus.unauthenticated:
-                    return LoginScreen();
-                    break;
-                  case AuthStatus.error:
-                    // TODO: Handle this case.
-                    //break;
-                  default:
-                    // For default and AuthStatus.unknown
-                    // TODO : Show Splash screen
-                    return const SplashScreen();
-                    break;
-                }
-                //return RouteManager();
-              },
+          child: BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              this.listenAuthState(state);
+            },
+            child: MaterialApp(
+              title: 'Flutter Demo',
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: ThemeMode.system,
+              home: BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  switch (state.status) {
+                    case AuthStatus.authenticated:
+                      return const Home();
+                    case AuthStatus.unauthenticated:
+                      return LoginScreen();
+                    default:
+                      return const SplashScreen();
+                  }
+                },
+              ),
+              onGenerateRoute: AppRouter.onGenerateRoute,
+              //initialRoute: SplashScreen.routeName,
             ),
-            onGenerateRoute: AppRouter.onGenerateRoute,
-            //initialRoute: SplashScreen.routeName,
           ),
         ),
       ),
     );
   }
 }
-
-class RouteManager extends StatefulWidget {
-  const RouteManager({Key? key}) : super(key: key);
-
-  @override
-  State<RouteManager> createState() => _RouteManagerState();
-}
-
-class _RouteManagerState extends State<RouteManager> {
-  late Widget rootWidget = LoginScreen();
-
-  void onLogin() {
-    setState(() {
-      rootWidget = Home();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: rootWidget
-    );
-  }
-}
-

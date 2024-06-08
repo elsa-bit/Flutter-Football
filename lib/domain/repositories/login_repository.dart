@@ -30,6 +30,15 @@ class LoginRepository {
     }
   }
 
+  Future<AuthResponse> signUpTest(String email, String password, String role) async {
+    try {
+      return loginDataSource.signUpTest(email, password, role);
+    } catch(error) {
+      print(error);
+      rethrow;
+    }
+  }
+
   Future<User> loginCoach(String email, String password) async {
     try {
       final response = await loginDataSource.loginCoach(email, password);
