@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final String labelText;
   final bool obscureText;
+  final Widget? icon;
 
   const CustomTextField({
     Key? key,
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
     this.error,
     this.onChanged,
     this.obscureText = false,
+    this.icon,
     required this.labelText,
   }) : super(key: key);
 
@@ -27,7 +29,14 @@ class CustomTextField extends StatelessWidget {
         labelText: labelText,
         errorText: error,
         hintText: hint,
+        prefixIcon: icon,
         hintStyle: AppTextStyle.small,
+        filled: true,
+        fillColor: currentAppColors.primaryVariantColor2,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          borderSide: BorderSide(color: Colors.yellow, width: 2),
+        ),
       ),
       controller: controller,
       obscureText: obscureText,

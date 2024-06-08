@@ -41,9 +41,9 @@ if (_selectedIndex == 0) ...[
 class _LoginScreen extends State<LoginScreen> {
   late final Function onLoginCallback;
   TextStyle selectedTextStyle =
-      AppTextStyle.subtitle1.copyWith(color: currentAppColors.secondaryColor);
+  AppTextStyle.subtitle1.copyWith(color: currentAppColors.secondaryColor);
   TextStyle unselectedTextStyle =
-      AppTextStyle.regular.copyWith(color: currentAppColors.secondaryTextColor);
+  AppTextStyle.regular.copyWith(color: currentAppColors.secondaryTextColor);
   List<bool> _loginSelections = [true, false];
   List<Text> _loginWidgets = [
     Text(
@@ -97,9 +97,10 @@ class _LoginScreen extends State<LoginScreen> {
     return RepositoryProvider(
       create: (context) => LoginRepository(loginDataSource: LoginDataSource()),
       child: BlocProvider(
-        create: (context) => LoginBloc(
-          repository: RepositoryProvider.of<LoginRepository>(context),
-        ),
+        create: (context) =>
+            LoginBloc(
+              repository: RepositoryProvider.of<LoginRepository>(context),
+            ),
         child: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             switch (state.status) {
@@ -112,10 +113,10 @@ class _LoginScreen extends State<LoginScreen> {
               case LoginStatus.success:
                 print("[Login] success");
 
-                if(state.authResponse != null) {
+                if (state.authResponse != null) {
                   BlocProvider.of<AuthBloc>(context)
                       .add(AuthenticateUser(auth: state.authResponse!));
-                } else if(state.token != null) {
+                } else if (state.token != null) {
                   BlocProvider.of<AuthBloc>(context)
                       .add(AuthenticateUserWithToken(token: state.token!));
                 }
@@ -144,7 +145,7 @@ class _LoginScreen extends State<LoginScreen> {
                         width: 70.0,
                         height: 70.0,
                       ),
-                      Container(
+                      /*Container(
                         margin: const EdgeInsets.only(top: 50.0),
                         child: ToggleButtons(
                           isSelected: _loginSelections,
@@ -159,7 +160,7 @@ class _LoginScreen extends State<LoginScreen> {
                               const BoxConstraints.expand(width: 100.0),
                           children: _loginWidgets,
                         ),
-                      ),
+                      ),*/
                       Container(
                         margin: const EdgeInsets.only(top: 50.0),
                         child: Text(
@@ -174,6 +175,7 @@ class _LoginScreen extends State<LoginScreen> {
                             CustomTextField(
                               labelText: "Email",
                               hint: "email@gmail.com",
+                              icon: Icon(Icons.email),
                               controller: emailController,
                               error: emailError,
                               onChanged: (_) {
@@ -184,9 +186,11 @@ class _LoginScreen extends State<LoginScreen> {
                                 }
                               },
                             ),
+                            const SizedBox(height: 15),
                             CustomTextField(
                               labelText: "Mot de passe",
                               hint: "*********",
+                              icon: Icon(Icons.key),
                               controller: passwordController,
                               obscureText: true,
                               error: passwordError,
@@ -214,26 +218,33 @@ class _LoginScreen extends State<LoginScreen> {
                         ...[],
                       Spacer(),
                       ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              emailError = null;
-                              passwordError = null;
-                              loginError = null;
-                            });
-                            print("Login ...");
-                            final loginBloc =
-                            BlocProvider.of<LoginBloc>(context);
-                            loginBloc.add(
-                              Login(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              ),
-                            );
-                          },
-                          child: const Text("Se connecter")),
-                      const Spacer(
-                        flex: 2,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: currentAppColors.secondaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            emailError = null;
+                            passwordError = null;
+                            loginError = null;
+                          });
+                          print("Login ...");
+                          final loginBloc = BlocProvider.of<LoginBloc>(context);
+                          loginBloc.add(
+                            Login(
+                              email: emailController.text,
+                              password: passwordController.text,
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Se connecter",
+                          style: AppTextStyle.subtitle1.copyWith(color: Colors.white),
+                        ),
                       ),
+                      const Spacer(),
                     ],
                   ),
                 ),
