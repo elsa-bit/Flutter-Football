@@ -19,7 +19,7 @@ class ScheduleScreen extends StatelessWidget {
         title: Text("Schedule"),
       ),
       body: Center(
-        child: Text("Welcome to Schedule page."),
+        child: Text("Aucun évènement programmé pour le moment."),
       ),
     );
   }

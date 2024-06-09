@@ -98,6 +98,7 @@ class MyApp extends StatelessWidget {
               this.listenAuthState(state);
             },
             child: MaterialApp(
+              debugShowCheckedModeBanner: false,
               title: 'Flutter Demo',
               theme: lightTheme,
               darkTheme: darkTheme,

@@ -13,9 +13,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         emit(state.copyWith(status: AuthStatus.loading));
         final isAuthenticated = await repository.isUserAuthenticated();
-        emit(state.copyWith(status: isAuthenticated ? AuthStatus.authenticated : AuthStatus.unauthenticated));
+        emit(state.copyWith(status: isAuthenticated ? AuthStatus.authenticated : AuthStatus.unauthenticated, user: repository.user));
       } on AuthException catch (error) {
-        emit(state.copyWith(error: error.toString(), status: AuthStatus.unauthenticated,));
+        emit(state.copyWith(error: error.toString(), status: AuthStatus.unauthenticated, user: null));
       } catch (error) {
         emit(state.copyWith(error: error.toString(), status: AuthStatus.error,));
       }
@@ -24,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthenticateUser>((event, emit) async {
       emit(state.copyWith(status: AuthStatus.loading));
       await repository.authenticateUser(event.auth);
-      emit(state.copyWith(status: AuthStatus.authenticated));
+      emit(state.copyWith(status: AuthStatus.authenticated, user: repository.user));
     });
 
     on<AuthenticateUserWithToken>((event, emit) async {
@@ -34,7 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<Logout>((event, emit) async {
       repository.logout();
-      emit(state.copyWith(status: AuthStatus.unauthenticated));
+      emit(state.copyWith(status: AuthStatus.unauthenticated, user: null));
     });
 
   }

@@ -19,7 +19,7 @@ class MatchScreen extends StatelessWidget {
         title: Text("Match"),
       ),
       body: Center(
-        child: Text("Welcome to Match page."),
+        child: Text("Aucun match pour le moment."),
       ),
     );
   }
