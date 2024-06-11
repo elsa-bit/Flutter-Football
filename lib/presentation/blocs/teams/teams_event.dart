@@ -1,4 +1,6 @@
 
+import 'package:flutter_football/domain/models/player.dart';
+
 abstract class TeamsEvent {}
 
 class GetTeams extends TeamsEvent {
@@ -14,5 +16,13 @@ class GetTeamDetails extends TeamsEvent {
 
   GetTeamDetails({
     required this.teamId
+  });
+}
+
+class GetTeamPlayers extends TeamsEvent {
+  final List<Player> players;
+
+  GetTeamPlayers({
+    required this.players
   });
 }

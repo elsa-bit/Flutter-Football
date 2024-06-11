@@ -28,4 +28,17 @@ class TeamDataSource extends BaseDataSource with TeamService {
       throw ExceptionsFactory().handleStatusCode(response.statusCode);
     }
   }
+
+  @override
+  Future<String> getTeamPlayers(int teamId) async {
+    final queryParameters = {
+      'idteam': '$teamId'
+    };
+    final response = await httpGet(Endpoints.coachTeamsPath, queryParameters);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw ExceptionsFactory().handleStatusCode(response.statusCode);
+    }
+  }
 }
