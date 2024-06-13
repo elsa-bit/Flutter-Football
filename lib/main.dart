@@ -16,11 +16,13 @@ import 'package:flutter_football/presentation/screens/home.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
 import 'package:flutter_football/utils/shared_preferences_utils.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'config/app_colors.dart';
 import 'data/data_sources/shared_preferences_data_source.dart';
 import 'networking/firebase/analytics_provider.dart';
 import 'networking/firebase/firebase_options.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +50,7 @@ void main() async {
       ? DarkThemeAppColors()
       : LightThemeAppColors();
 
-  runApp(const MyApp());
+  initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
 final supabase = Supabase.instance.client;

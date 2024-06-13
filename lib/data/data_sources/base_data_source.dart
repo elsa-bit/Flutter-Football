@@ -2,8 +2,8 @@ import 'package:http/http.dart' as http;
 import '../../networking/endpoints.dart';
 
 class BaseDataSource {
-
-  Future<http.Response> httpGet(String path, [Map<String, String>? queryParameters]) async {
+  Future<http.Response> httpGet(String path,
+      [Map<String, String>? queryParameters]) async {
     var uri = Uri.http(Endpoints.baseURL, path, queryParameters);
     return await http.get(
       uri,
@@ -19,7 +19,8 @@ class BaseDataSource {
         'title': title,
       })
    */
-  Future<http.Response> httpPost(String path, [Map<String, String>? query, String? body]) {
+  Future<http.Response> httpPost(String path,
+      [Map<String, String>? query, String? body]) {
     final uri = Uri.http(Endpoints.baseURL, path, query);
     print(uri);
     return http.post(
@@ -30,5 +31,4 @@ class BaseDataSource {
       body: body,
     );
   }
-
 }
