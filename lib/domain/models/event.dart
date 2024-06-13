@@ -1,5 +1,5 @@
 class Event {
-  final String title;
+  final String? title;
   final String type;
   final DateTime schedule;
   final String? team;

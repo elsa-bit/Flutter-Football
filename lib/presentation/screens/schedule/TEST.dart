@@ -33,8 +33,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   Map<DateTime, List<Event>> events = {};
-  TextEditingController _placeController = TextEditingController();
-  TextEditingController? _opponentController = TextEditingController();
+  TextEditingController _eventController = TextEditingController();
   late final ValueNotifier<List<Event>> _selectedEvents;
   String? _selectedEventType;
   final List<Map<String, String>> _eventTypes = [
@@ -61,7 +60,49 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         )..add(GetSchedules(idteams: "2,4")),
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
-            onPressed: () => _displayAlertDialogToAddSchedule(context),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      scrollable: true,
+                      title: Text("Ajouter un évenement"),
+                      content: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            TextField(
+                              decoration: InputDecoration(labelText: "Sujet *"),
+                              controller: _eventController,
+                            ),
+                            SizedBox(height: 16),
+                            DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                  labelText: 'Type d\'événement'),
+                              items: _eventTypes.map((type) {
+                                return DropdownMenuItem<String>(
+                                  value: type['id'],
+                                  child: Text(type['name']!),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedEventType = value;
+                                });
+                              },
+                              value: _selectedEventType,
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () => _onAddSchedule(context),
+                            child: Text("Enregistrer"))
+                      ],
+                    );
+                  });
+            },
             child: Icon(Icons.add),
           ),
           body: BlocBuilder<ScheduleBloc, ScheduleState>(
@@ -93,7 +134,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
                     events.update(
                       eventDate,
-                      (existingEvents) => existingEvents
+                          (existingEvents) => existingEvents
                         ..add(Event("Match", 'match', match.date,
                             match.nameTeam, null, null, match.opponentName)),
                       ifAbsent: () => [
@@ -108,7 +149,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
                     events.update(
                       eventDate,
-                      (existingEvents) => existingEvents
+                          (existingEvents) => existingEvents
                         ..add(Event("Entrainement", 'training', training.date,
                             training.nameTeam, training.place, null, null)),
                       ifAbsent: () => [
@@ -123,7 +164,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
                     events.update(
                       eventDate,
-                      (existingEvents) => existingEvents
+                          (existingEvents) => existingEvents
                         ..add(Event("Réunion", 'meeting', meeting.date_debut,
                             null, null, meeting.name, null)),
                       ifAbsent: () => [
@@ -195,7 +236,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             return ListView.builder(
                                 itemCount: value.length,
                                 itemBuilder: (context, index) {
-                                  debugPrint("VALUE : " + value.toString());
                                   return ScheduleItem(event: value[index]);
                                 });
                           },
@@ -229,139 +269,21 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  Future<void> _displayAlertDialogToAddSchedule(BuildContext context) async {
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return BlocProvider.value(
-            value: BlocProvider.of<ScheduleBloc>(context),
-            child: BlocConsumer<ScheduleBloc, ScheduleState>(
-              listener: (context, state) {
-                if (state.status == ScheduleStatus.addSuccess) {
-                  _showSnackBar(
-                      context, 'Evenement ajouté', Colors.greenAccent);
-                  _placeController.text = "";
-                  _opponentController?.text = "";
-
-                  setState(() {
-                    _selectedEvents.value = _getEventsForDay(_selectedDay!);
-                    debugPrint("SELECT DAY: " + _selectedDay.toString());
-                    debugPrint(
-                        "SELECT EVENTS: " + _selectedEvents.value.toString());
-                  });
-
-                  Navigator.pop(context);
-                } else if (state.status == ScheduleStatus.error) {
-                  _showSnackBar(context, state.error, Colors.orangeAccent);
-                  _placeController.text = "";
-                  _opponentController?.text = "";
-                  Navigator.pop(context);
-                }
-              },
-              builder: (context, state) {
-                switch (state.status) {
-                  case ScheduleStatus.loading:
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  default:
-                    return StatefulBuilder(builder: (context, setState) {
-                      return AlertDialog(
-                        title: const Text("Ajouter un évenement"),
-                        content: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                decoration:
-                                    InputDecoration(labelText: "Lieu *"),
-                                controller: _placeController,
-                              ),
-                              SizedBox(height: 16),
-                              DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                    labelText: 'Type d\'événement'),
-                                items: _eventTypes.map((type) {
-                                  return DropdownMenuItem<String>(
-                                    value: type['id'],
-                                    child: Text(type['name']!),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedEventType = value;
-                                  });
-                                },
-                                value: _selectedEventType,
-                              ),
-                              if (_selectedEventType == 'match') ...[
-                                SizedBox(height: 16),
-                                TextField(
-                                  decoration: InputDecoration(
-                                    labelText: "Nom de l'adversaire *",
-                                  ),
-                                  controller: _opponentController,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                        actions: [
-                          ElevatedButton(
-                              onPressed: () => _onAddSchedule(context),
-                              child: Text("Enregistrer"))
-                        ],
-                      );
-                    });
-                }
-              },
-            ),
-          );
-        });
-  }
-
   void _onAddSchedule(BuildContext context) async {
     var bloc = BlocProvider.of<ScheduleBloc>(context);
 
-    if (_placeController.text != '') {
+    if (_eventController.text != '') {
       if (_selectedEventType != null) {
-        if (_selectedEventType == 'match') {
-          if (_opponentController!.text != "") {
-            final event = Event("Match", _selectedEventType!, _selectedDay!,
-                null, _placeController.text, null, _opponentController?.text);
-            bloc.add(AddSchedule(event: event, date: _selectedDay!));
-
-            DateTime eventDate = DateTime(
-                _selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
-            events.update(
-              eventDate,
-              (existingEvents) => existingEvents..add(event),
-              ifAbsent: () => [event],
-            );
-          } else {
-            _showSnackBar(context, 'Veuillez saisir le nom de l\'adversaire.',
-                Colors.orangeAccent);
-          }
-        } else {
-          final event = Event("Entrainement", _selectedEventType!,
-              _selectedDay!, null, _placeController.text, null, null);
-          bloc.add(AddSchedule(event: event, date: _selectedDay!));
-
-          DateTime eventDate = DateTime(
-              _selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
-          events.update(
-            eventDate,
-            (existingEvents) => existingEvents..add(event),
-            ifAbsent: () => [event],
-          );
-        }
+        final event = Event(_eventController.text, _selectedEventType!,
+            DateTime.now(), null, null, null, null);
+        bloc.add(AddSchedule(event: event, date: _selectedDay!));
+        _eventController.text = "";
       } else {
         _showSnackBar(context, 'Veuillez sélectionner un type d\'événement.',
             Colors.orangeAccent);
       }
     } else {
-      _showSnackBar(context, 'Veuillez remplir le lieu de l\'événement.',
+      _showSnackBar(context, 'Veuillez remplir le nom d\'événement.',
           Colors.orangeAccent);
     }
   }

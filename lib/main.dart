@@ -8,10 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_router.dart';
 import 'package:flutter_football/config/app_themes.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
+import 'package:flutter_football/domain/repositories/schedule_repository.dart';
 import 'package:flutter_football/networking/firebase/firebase_analytics_handler.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
+import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/screens/home.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
@@ -19,17 +21,17 @@ import 'package:flutter_football/utils/shared_preferences_utils.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'config/app_colors.dart';
+import 'data/data_sources/schedule_data_source.dart';
 import 'data/data_sources/shared_preferences_data_source.dart';
 import 'networking/firebase/analytics_provider.dart';
 import 'networking/firebase/firebase_options.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
     url: "https://lbsteoacojxblwiyfbye.supabase.co",
     anonKey:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxic3Rlb2Fjb2p4Ymx3aXlmYnllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM2OTQ3NzgsImV4cCI6MjAyOTI3MDc3OH0.t1aFfSzTE1fyg4nG3GIYEKPqD2DetaqfTgXS92slZGo",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxic3Rlb2Fjb2p4Ymx3aXlmYnllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTM2OTQ3NzgsImV4cCI6MjAyOTI3MDc3OH0.t1aFfSzTE1fyg4nG3GIYEKPqD2DetaqfTgXS92slZGo",
   );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -58,9 +60,8 @@ final supabase = Supabase.instance.client;
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
   void listenAuthState(AuthState state) {
-    switch(state.status) {
+    switch (state.status) {
       case AuthStatus.error:
         print(state.error);
         break;
@@ -81,24 +82,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) =>
-          AuthRepository(
-            preferencesDataSource: SharedPreferencesDataSource(),
-          ),
+      create: (context) => AuthRepository(
+        preferencesDataSource: SharedPreferencesDataSource(),
+      ),
       child: AnalyticsProvider(
         handlers: [
           FirebaseAnalyticsHandler(),
         ],
         child: BlocProvider(
-          create: (context) =>
-          AuthBloc(
+          create: (context) => AuthBloc(
             repository: RepositoryProvider.of<AuthRepository>(context),
-          )
-            ..add(IsUserAuthenticated()),
-          child: BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
-              this.listenAuthState(state);
-            },
+          )..add(IsUserAuthenticated()),
+          child: BlocProvider<ScheduleBloc>(
+            create: (context) => ScheduleBloc(
+              repository: ScheduleRepository(
+                scheduleDataSource: ScheduleDataSource(),
+                preferencesDataSource: SharedPreferencesDataSource(),
+              ),
+            ),
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Flutter Demo',

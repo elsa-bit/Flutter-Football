@@ -20,7 +20,7 @@ class BaseDataSource {
       })
    */
   Future<http.Response> httpPost(String path,
-      [Map<String, String>? query, String? body]) {
+      [Map<String, String?>? query, String? body]) {
     final uri = Uri.http(Endpoints.baseURL, path, query);
     print(uri);
     return http.post(

@@ -22,15 +22,20 @@ class ScheduleDataSource extends BaseDataSource with ScheduleService {
   @override
   Future<String> addSchedule(Event event, DateTime date) async {
     late Response response;
-    final queryParameters = {
-      'name': event.title,
-      'date': date.toString(),
-    };
 
     if (event.type == 'match') {
+      final queryParameters = {
+        'place': event.place,
+        'opponentName': event.opponentName,
+        'date': date.toString(),
+      };
       response =
           await httpPost(Endpoints.scheduleCreateMatchPath, queryParameters);
     } else if (event.type == 'training') {
+      final queryParameters = {
+        'place': event.place,
+        'date': date.toString(),
+      };
       response =
           await httpPost(Endpoints.scheduleCreateTrainingPath, queryParameters);
     }
