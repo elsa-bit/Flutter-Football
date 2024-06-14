@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Meeting {
   final int id;
   final DateTime date_debut;
@@ -12,7 +14,8 @@ class Meeting {
   factory Meeting.fromJson(Map<String, dynamic> json) {
     try {
       final int id = json["id"] as int;
-      final DateTime date_debut = DateTime.parse(json["date_debut"] as String);
+      final DateTime date_debut =
+          DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json["date_debut"]);
       final String name = json["name"] as String;
 
       return Meeting(id: id, date_debut: date_debut, name: name);

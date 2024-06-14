@@ -32,14 +32,21 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  TimeOfDay? _selectedTime;
   Map<DateTime, List<Event>> events = {};
   TextEditingController _placeController = TextEditingController();
   TextEditingController? _opponentController = TextEditingController();
-  late final ValueNotifier<List<Event>> _selectedEvents;
+  TextEditingController _timeController = TextEditingController();
+  late ValueNotifier<List<Event>> _selectedEvents;
   String? _selectedEventType;
   final List<Map<String, String>> _eventTypes = [
     {'id': 'match', 'name': 'Match'},
     {'id': 'training', 'name': 'Entrainement'},
+  ];
+  String? _selectedEventTeam;
+  final List<Map<String, String>> _eventTeam = [
+    {'id': '2', 'name': 'SENIOR'},
+    {'id': '4', 'name': 'Les féminines'},
   ];
 
   @override
@@ -47,6 +54,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _selectedTime = TimeOfDay.now();
   }
 
   @override
@@ -195,7 +203,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             return ListView.builder(
                                 itemCount: value.length,
                                 itemBuilder: (context, index) {
-                                  debugPrint("VALUE : " + value.toString());
                                   return ScheduleItem(event: value[index]);
                                 });
                           },
@@ -242,14 +249,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       context, 'Evenement ajouté', Colors.greenAccent);
                   _placeController.text = "";
                   _opponentController?.text = "";
-
-                  setState(() {
-                    _selectedEvents.value = _getEventsForDay(_selectedDay!);
-                    debugPrint("SELECT DAY: " + _selectedDay.toString());
-                    debugPrint(
-                        "SELECT EVENTS: " + _selectedEvents.value.toString());
-                  });
-
                   Navigator.pop(context);
                 } else if (state.status == ScheduleStatus.error) {
                   _showSnackBar(context, state.error, Colors.orangeAccent);
@@ -268,43 +267,87 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     return StatefulBuilder(builder: (context, setState) {
                       return AlertDialog(
                         title: const Text("Ajouter un évenement"),
-                        content: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                decoration:
-                                    InputDecoration(labelText: "Lieu *"),
-                                controller: _placeController,
-                              ),
-                              SizedBox(height: 16),
-                              DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                    labelText: 'Type d\'événement'),
-                                items: _eventTypes.map((type) {
-                                  return DropdownMenuItem<String>(
-                                    value: type['id'],
-                                    child: Text(type['name']!),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedEventType = value;
-                                  });
-                                },
-                                value: _selectedEventType,
-                              ),
-                              if (_selectedEventType == 'match') ...[
-                                SizedBox(height: 16),
+                        content: SingleChildScrollView(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
                                 TextField(
-                                  decoration: InputDecoration(
-                                    labelText: "Nom de l'adversaire *",
-                                  ),
-                                  controller: _opponentController,
+                                  decoration:
+                                      InputDecoration(labelText: "Lieu *"),
+                                  controller: _placeController,
                                 ),
+                                SizedBox(height: 16),
+                                GestureDetector(
+                                  onTap: () async {
+                                    TimeOfDay? pickedTime =
+                                        await showTimePicker(
+                                      context: context,
+                                      initialTime: _selectedTime!,
+                                    );
+                                    if (pickedTime != null) {
+                                      setState(() {
+                                        _selectedTime = pickedTime;
+                                        _timeController.text =
+                                            _selectedTime!.format(context);
+                                      });
+                                    }
+                                  },
+                                  child: AbsorbPointer(
+                                    child: TextField(
+                                      controller: _timeController,
+                                      decoration: InputDecoration(
+                                          labelText: "Horaire *"),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                DropdownButtonFormField<String>(
+                                  decoration: InputDecoration(
+                                      labelText: 'Equipe concernée *'),
+                                  items: _eventTeam.map((type) {
+                                    return DropdownMenuItem<String>(
+                                      value: type['id'],
+                                      child: Text(type['name']!),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedEventTeam = value;
+                                    });
+                                  },
+                                  value: _selectedEventTeam,
+                                ),
+                                SizedBox(height: 16),
+                                DropdownButtonFormField<String>(
+                                  decoration: InputDecoration(
+                                      labelText: 'Type d\'événement *'),
+                                  items: _eventTypes.map((type) {
+                                    return DropdownMenuItem<String>(
+                                      value: type['id'],
+                                      child: Text(type['name']!),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedEventType = value;
+                                    });
+                                  },
+                                  value: _selectedEventType,
+                                ),
+                                if (_selectedEventType == 'match') ...[
+                                  SizedBox(height: 16),
+                                  TextField(
+                                    decoration: InputDecoration(
+                                        labelText: "Nom de l'adversaire *"),
+                                    controller: _opponentController,
+                                  ),
+                                ],
                               ],
-                            ],
+                            ),
                           ),
                         ),
                         actions: [
@@ -325,12 +368,38 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     var bloc = BlocProvider.of<ScheduleBloc>(context);
 
     if (_placeController.text != '') {
-      if (_selectedEventType != null) {
-        if (_selectedEventType == 'match') {
-          if (_opponentController!.text != "") {
-            final event = Event("Match", _selectedEventType!, _selectedDay!,
-                null, _placeController.text, null, _opponentController?.text);
-            bloc.add(AddSchedule(event: event, date: _selectedDay!));
+      if (_selectedEventTeam != null) {
+        if (_selectedEventType != null) {
+          DateTime newDate = DateTime(_selectedDay!.year, _selectedDay!.month,
+              _selectedDay!.day, _selectedTime!.hour, _selectedTime!.minute);
+
+          if (_selectedEventType == 'match') {
+            if (_opponentController!.text != "") {
+              final event = Event(
+                  "Match",
+                  _selectedEventType!,
+                  newDate,
+                  _selectedEventTeam,
+                  _placeController.text,
+                  null,
+                  _opponentController?.text);
+              bloc.add(AddSchedule(event: event, date: newDate));
+
+              DateTime eventDate = DateTime(
+                  _selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
+              events.update(
+                eventDate,
+                (existingEvents) => existingEvents..add(event),
+                ifAbsent: () => [event],
+              );
+            } else {
+              _showSnackBar(context, 'Veuillez saisir le nom de l\'adversaire.',
+                  Colors.orangeAccent);
+            }
+          } else {
+            final event = Event("Entrainement", _selectedEventType!, newDate,
+                _selectedEventTeam, _placeController.text, null, null);
+            bloc.add(AddSchedule(event: event, date: newDate));
 
             DateTime eventDate = DateTime(
                 _selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
@@ -339,26 +408,22 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               (existingEvents) => existingEvents..add(event),
               ifAbsent: () => [event],
             );
-          } else {
-            _showSnackBar(context, 'Veuillez saisir le nom de l\'adversaire.',
-                Colors.orangeAccent);
+
+            setState(() {
+              _selectedEvents.value = _getEventsForDay(_selectedDay!);
+              debugPrint(
+                  "_onAddSchedule // SELECT DAY: " + _selectedDay.toString());
+              debugPrint(" _onAddSchedule // SELECT EVENTS: " +
+                  _selectedEvents.value.toString());
+            });
           }
         } else {
-          final event = Event("Entrainement", _selectedEventType!,
-              _selectedDay!, null, _placeController.text, null, null);
-          bloc.add(AddSchedule(event: event, date: _selectedDay!));
-
-          DateTime eventDate = DateTime(
-              _selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
-          events.update(
-            eventDate,
-            (existingEvents) => existingEvents..add(event),
-            ifAbsent: () => [event],
-          );
+          _showSnackBar(context, 'Veuillez sélectionner un type d\'événement.',
+              Colors.orangeAccent);
         }
       } else {
-        _showSnackBar(context, 'Veuillez sélectionner un type d\'événement.',
-            Colors.orangeAccent);
+        _showSnackBar(
+            context, 'Veuillez sélectionner une équipe', Colors.orangeAccent);
       }
     } else {
       _showSnackBar(context, 'Veuillez remplir le lieu de l\'événement.',

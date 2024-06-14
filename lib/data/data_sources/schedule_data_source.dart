@@ -26,6 +26,7 @@ class ScheduleDataSource extends BaseDataSource with ScheduleService {
     if (event.type == 'match') {
       final queryParameters = {
         'place': event.place,
+        'idteam': event.team,
         'opponentName': event.opponentName,
         'date': date.toString(),
       };
@@ -34,6 +35,7 @@ class ScheduleDataSource extends BaseDataSource with ScheduleService {
     } else if (event.type == 'training') {
       final queryParameters = {
         'place': event.place,
+        'idteam': event.team,
         'date': date.toString(),
       };
       response =

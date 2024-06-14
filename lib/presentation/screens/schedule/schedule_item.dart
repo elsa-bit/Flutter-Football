@@ -60,12 +60,12 @@ class ScheduleItem extends StatelessWidget {
                   ),
                 ),
                 if (event.type == 'match' || event.type == 'training')
-                Text(
-                  event.team!,
-                  style: TextStyle(
-                    color: Colors.grey,
+                  Text(
+                    event.team!,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
               ],
             ),
             SizedBox(width: 16.0),

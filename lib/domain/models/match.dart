@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class Match {
   final int id;
@@ -22,7 +22,8 @@ class Match {
     try {
       final int id = json["id"] as int;
       final int opponentGoal = json["opponentGoal"] as int;
-      final DateTime date = DateTime.parse(json["date"] as String);
+      final DateTime date =
+          DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json["date"]);
       final String opponentName = json["opponentName"] as String;
       final String place = json["place"] as String;
       final bool? win = json["win"] as bool?;
