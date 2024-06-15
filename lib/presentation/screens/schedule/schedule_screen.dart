@@ -68,6 +68,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           repository: RepositoryProvider.of<ScheduleRepository>(context),
         )..add(GetSchedules(idteams: "2,4")),
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           floatingActionButton: FloatingActionButton(
             onPressed: () => _displayAlertDialogToAddSchedule(context),
             child: Icon(Icons.add),
