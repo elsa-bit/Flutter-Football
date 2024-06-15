@@ -17,7 +17,8 @@ class LoginDataSource extends BaseDataSource with LoginService {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw ExceptionsFactory().handleStatusCode(response.statusCode);
+      final errorMessage = response.body;
+      throw ExceptionsFactory().handleStatusCode(response.statusCode, errorMessage: errorMessage);
     }
   }
 

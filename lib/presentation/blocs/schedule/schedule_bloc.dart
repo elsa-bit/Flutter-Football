@@ -37,5 +37,15 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         emit(state.copyWith(error: e.toString(), status: ScheduleStatus.error));
       }
     });
+
+    on<AddPlayerAttendance>((event, emit) async {
+      emit(state.copyWith(status: ScheduleStatus.loading));
+      try {
+        await repository.addPlayerAttendance(event.idEvent, event.idPlayers);
+        emit(state.copyWith(status: ScheduleStatus.addSuccess));
+      } catch (e) {
+        emit(state.copyWith(error: e.toString(), status: ScheduleStatus.error));
+      }
+    });
   }
 }

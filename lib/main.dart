@@ -4,15 +4,20 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_router.dart';
 import 'package:flutter_football/config/app_themes.dart';
+import 'package:flutter_football/data/data_sources/player_data_source.dart';
+import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
+import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/domain/repositories/schedule_repository.dart';
 import 'package:flutter_football/networking/firebase/firebase_analytics_handler.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
+import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/screens/home.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
@@ -81,6 +86,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return RepositoryProvider(
       create: (context) => AuthRepository(
         preferencesDataSource: SharedPreferencesDataSource(),
@@ -100,26 +109,32 @@ class MyApp extends StatelessWidget {
                 preferencesDataSource: SharedPreferencesDataSource(),
               ),
             ),
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Flutter Demo',
-              theme: lightTheme,
-              darkTheme: darkTheme,
-              themeMode: ThemeMode.system,
-              home: BlocBuilder<AuthBloc, AuthState>(
-                builder: (context, state) {
-                  switch (state.status) {
-                    case AuthStatus.authenticated:
-                      return const Home();
-                    case AuthStatus.unauthenticated:
-                      return LoginScreen();
-                    default:
-                      return const SplashScreen();
-                  }
-                },
+            child: BlocProvider<PlayersBloc>(
+              create: (context) => PlayersBloc(
+                  repository: PlayerRepository(
+                playerDataSource: PlayerDataSource(),
+              )),
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Flutter Demo',
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: ThemeMode.system,
+                home: BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    switch (state.status) {
+                      case AuthStatus.authenticated:
+                        return const Home();
+                      case AuthStatus.unauthenticated:
+                        return LoginScreen();
+                      default:
+                        return const SplashScreen();
+                    }
+                  },
+                ),
+                onGenerateRoute: AppRouter.onGenerateRoute,
+                //initialRoute: SplashScreen.routeName,
               ),
-              onGenerateRoute: AppRouter.onGenerateRoute,
-              //initialRoute: SplashScreen.routeName,
             ),
           ),
         ),

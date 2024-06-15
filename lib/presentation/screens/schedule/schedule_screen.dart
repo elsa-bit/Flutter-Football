@@ -9,6 +9,7 @@ import 'package:flutter_football/domain/repositories/schedule_repository.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_state.dart';
+import 'package:flutter_football/presentation/screens/schedule/playerAttendance_screen.dart';
 import 'package:flutter_football/presentation/screens/schedule/schedule_item.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -43,11 +44,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     {'id': 'match', 'name': 'Match'},
     {'id': 'training', 'name': 'Entrainement'},
   ];
-  String? _selectedEventTeam;
+  String? _selectedEventIdTeam;
+  String? _selectEventNameTeam;
   final List<Map<String, String>> _eventTeam = [
     {'id': '2', 'name': 'SENIOR'},
     {'id': '4', 'name': 'Les féminines'},
   ];
+
+  //Obtenir le nom de l'équipe à partir de l'ID
+  String? _getTeamNameById(String? id) {
+    return _eventTeam.firstWhere((team) => team['id'] == id)['name'];
+  }
 
   @override
   void initState() {
@@ -103,11 +110,29 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     events.update(
                       eventDate,
                       (existingEvents) => existingEvents
-                        ..add(Event("Match", 'match', match.date,
-                            match.nameTeam, null, null, match.opponentName)),
+                        ..add(Event(
+                            match.id.toString(),
+                            "Match",
+                            'match',
+                            match.date,
+                            match.nameTeam,
+                            match.idTeam,
+                            null,
+                            null,
+                            match.opponentName,
+                            null)),
                       ifAbsent: () => [
-                        Event("Match", 'match', match.date, match.nameTeam,
-                            null, null, match.opponentName)
+                        Event(
+                            match.id.toString(),
+                            "Match",
+                            'match',
+                            match.date,
+                            match.nameTeam,
+                            match.idTeam,
+                            null,
+                            null,
+                            match.opponentName,
+                            null)
                       ],
                     );
                   }
@@ -118,11 +143,29 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     events.update(
                       eventDate,
                       (existingEvents) => existingEvents
-                        ..add(Event("Entrainement", 'training', training.date,
-                            training.nameTeam, training.place, null, null)),
+                        ..add(Event(
+                            training.id.toString(),
+                            "Entrainement",
+                            'training',
+                            training.date,
+                            training.nameTeam,
+                            training.idTeam,
+                            training.place,
+                            null,
+                            null,
+                            training.presence)),
                       ifAbsent: () => [
-                        Event("Entrainement", 'training', training.date,
-                            training.nameTeam, training.place, null, null)
+                        Event(
+                            training.id.toString(),
+                            "Entrainement",
+                            'training',
+                            training.date,
+                            training.nameTeam,
+                            training.idTeam,
+                            training.place,
+                            null,
+                            null,
+                            training.presence)
                       ],
                     );
                   }
@@ -133,11 +176,29 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     events.update(
                       eventDate,
                       (existingEvents) => existingEvents
-                        ..add(Event("Réunion", 'meeting', meeting.date_debut,
-                            null, null, meeting.name, null)),
+                        ..add(Event(
+                            meeting.id.toString(),
+                            "Réunion",
+                            'meeting',
+                            meeting.date_debut,
+                            null,
+                            null,
+                            null,
+                            meeting.name,
+                            null,
+                            null)),
                       ifAbsent: () => [
-                        Event("Réunion", 'meeting', meeting.date_debut, null,
-                            null, meeting.name, null)
+                        Event(
+                            meeting.id.toString(),
+                            "Réunion",
+                            'meeting',
+                            meeting.date_debut,
+                            null,
+                            null,
+                            null,
+                            meeting.name,
+                            null,
+                            null)
                       ],
                     );
                   }
@@ -204,7 +265,19 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             return ListView.builder(
                                 itemCount: value.length,
                                 itemBuilder: (context, index) {
-                                  return ScheduleItem(event: value[index]);
+                                  var item = value[index];
+                                  if (item.type == 'training' &&
+                                      item.presence == null && item.schedule.isAfter(DateTime.now()))
+                                    return ScheduleItem(
+                                      event: value[index],
+                                      onTap: () =>
+                                          _navigateToPlayerAttendanceScreen(
+                                              context,
+                                              value[index].idTeam!,
+                                              value[index].id!),
+                                    );
+                                  else
+                                    return ScheduleItem(event: value[index]);
                                 });
                           },
                         ),
@@ -235,6 +308,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         backgroundColor: background,
       ),
     );
+  }
+
+  void _navigateToPlayerAttendanceScreen(
+      BuildContext context, String idTeam, String idEvent) {
+    PlayerAttendanceScreen.navigateTo(context, idTeam, idEvent);
   }
 
   Future<void> _displayAlertDialogToAddSchedule(BuildContext context) async {
@@ -317,10 +395,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                   }).toList(),
                                   onChanged: (value) {
                                     setState(() {
-                                      _selectedEventTeam = value;
+                                      _selectedEventIdTeam = value;
+                                      _selectEventNameTeam =
+                                          _getTeamNameById(value);
                                     });
                                   },
-                                  value: _selectedEventTeam,
+                                  value: _selectedEventIdTeam,
                                 ),
                                 SizedBox(height: 16),
                                 DropdownButtonFormField<String>(
@@ -369,7 +449,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     var bloc = BlocProvider.of<ScheduleBloc>(context);
 
     if (_placeController.text != '') {
-      if (_selectedEventTeam != null) {
+      if (_selectedEventIdTeam != null) {
         if (_selectedEventType != null) {
           DateTime newDate = DateTime(_selectedDay!.year, _selectedDay!.month,
               _selectedDay!.day, _selectedTime!.hour, _selectedTime!.minute);
@@ -377,13 +457,16 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           if (_selectedEventType == 'match') {
             if (_opponentController!.text != "") {
               final event = Event(
+                  null,
                   "Match",
                   _selectedEventType!,
                   newDate,
-                  _selectedEventTeam,
+                  _selectEventNameTeam,
+                  _selectedEventIdTeam,
                   _placeController.text,
                   null,
-                  _opponentController?.text);
+                  _opponentController?.text,
+                  null);
               bloc.add(AddSchedule(event: event, date: newDate));
 
               DateTime eventDate = DateTime(
@@ -398,8 +481,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   Colors.orangeAccent);
             }
           } else {
-            final event = Event("Entrainement", _selectedEventType!, newDate,
-                _selectedEventTeam, _placeController.text, null, null);
+            final event = Event(
+                null,
+                "Entrainement",
+                _selectedEventType!,
+                newDate,
+                _selectEventNameTeam,
+                _selectedEventIdTeam,
+                _placeController.text,
+                null,
+                null,
+                null);
             bloc.add(AddSchedule(event: event, date: newDate));
 
             DateTime eventDate = DateTime(

@@ -20,3 +20,13 @@ class AddSchedule extends ScheduleEvent {
     required this.date,
   });
 }
+
+class AddPlayerAttendance extends ScheduleEvent {
+  final String idEvent;
+  final String idPlayers;
+
+  AddPlayerAttendance({
+    required this.idEvent,
+    required this.idPlayers,
+  });
+}

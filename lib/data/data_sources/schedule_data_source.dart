@@ -15,7 +15,9 @@ class ScheduleDataSource extends BaseDataSource with ScheduleService {
     if (response.statusCode == 200) {
       return ScheduleResult.fromJson(jsonDecode(response.body));
     } else {
-      throw ExceptionsFactory().handleStatusCode(response.statusCode);
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
     }
   }
 
@@ -26,7 +28,7 @@ class ScheduleDataSource extends BaseDataSource with ScheduleService {
     if (event.type == 'match') {
       final queryParameters = {
         'place': event.place,
-        'idteam': event.team,
+        'idteam': event.idTeam,
         'opponentName': event.opponentName,
         'date': date.toString(),
       };
@@ -35,7 +37,7 @@ class ScheduleDataSource extends BaseDataSource with ScheduleService {
     } else if (event.type == 'training') {
       final queryParameters = {
         'place': event.place,
-        'idteam': event.team,
+        'idteam': event.idTeam,
         'date': date.toString(),
       };
       response =
@@ -44,7 +46,27 @@ class ScheduleDataSource extends BaseDataSource with ScheduleService {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw ExceptionsFactory().handleStatusCode(response.statusCode);
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
+  }
+
+  @override
+  Future<String> addPlayerAttendance(String idEvent, String idPlayers) async {
+    final queryParameters = {
+      'idevent': idEvent,
+      'idplayers': idPlayers,
+    };
+    final response =
+        await httpPost(Endpoints.addAttendanceSchedule, queryParameters);
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
     }
   }
 }

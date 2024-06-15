@@ -32,4 +32,8 @@ class ScheduleRepository {
   Future<String> addSchedule(Event event, DateTime date) {
     return scheduleDataSource.addSchedule(event, date);
   }
+
+  Future<String> addPlayerAttendance(String idEvent, String idPlayers) {
+    return scheduleDataSource.addPlayerAttendance(idEvent, idPlayers);
+  }
 }

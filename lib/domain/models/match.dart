@@ -6,6 +6,7 @@ class Match {
   final DateTime date;
   final String opponentName;
   final String place;
+  final String idTeam;
   final bool? win;
   final String nameTeam;
 
@@ -15,6 +16,7 @@ class Match {
       required this.date,
       required this.opponentName,
       required this.place,
+      required this.idTeam,
       this.win,
       required this.nameTeam});
 
@@ -26,6 +28,7 @@ class Match {
           DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json["date"]);
       final String opponentName = json["opponentName"] as String;
       final String place = json["place"] as String;
+      final String idTeam = json["idTeam"].toString();
       final bool? win = json["win"] as bool?;
       final String nameTeam = json["nameTeam"] as String;
 
@@ -35,6 +38,7 @@ class Match {
           date: date,
           opponentName: opponentName,
           place: place,
+          idTeam: idTeam,
           win: win,
           nameTeam: nameTeam);
     } catch (e) {
