@@ -16,9 +16,9 @@ class GetTeamDetails extends TeamsEvent {
 }
 
 class GetTeamPlayers extends TeamsEvent {
-  final List<Player> players;
+  final int teamId;
 
   GetTeamPlayers({
-    required this.players
+    required this.teamId
   });
 }

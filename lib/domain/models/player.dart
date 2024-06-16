@@ -32,7 +32,7 @@ class Player {
       final String? position = json["position"] as String?;
       final String? birthday = json["birthday"] as String?;
       final String? num_licence = json["num_licence"] as String?;
-      final List<String>? teams = json["idTeams"] as List<String>?;
+      final List<String>? teams = (json["idTeams"] as List<dynamic>?)?.map((e) => e as String).toList();
 
       return Player(
           id: id,
