@@ -4,11 +4,7 @@ import 'package:flutter_football/domain/models/event.dart';
 abstract class ScheduleEvent {}
 
 class GetSchedules extends ScheduleEvent {
-  final String idteams;
-
-  GetSchedules({
-    required this.idteams
-  });
+  GetSchedules();
 }
 
 class AddSchedule extends ScheduleEvent {

@@ -45,13 +45,13 @@ class SettingsScreen extends StatelessWidget {
                           children: [
                             Spacer(flex: 2),
                             Text(
-                              "Jean Pascal",//"${state.user?.getFirstname() ?? " "} ${state.user?.getLastname() ?? ""}",
+                              "${state.user?.getFirstname() ?? " "} ${state.user?.getLastname() ?? ""}",
                               style: AppTextStyle.subtitle2.copyWith(
                                   color: currentAppColors.secondaryColor),
                             ),
                             Spacer(),
                             Text(
-                              "Entraineur U14",//state.user?.getRole() ?? "",
+                              state.user?.getRole() ?? "",
                               style: AppTextStyle.regular.copyWith(
                                   color: currentAppColors.secondaryColor),
                             ),

@@ -17,11 +17,12 @@ class ScheduleRepository {
     required this.preferencesDataSource,
   });
 
-  Future<ScheduleResult> getSchedule(String idteams) async {
+  Future<ScheduleResult> getSchedule() async {
     final idCoach = preferencesDataSource.getIdCoach();
+    final teamsId = preferencesDataSource.getTeamsIds()?.toString().replaceAll("[", "").replaceAll("]", "") ?? "";
 
     try {
-      final schedules = await scheduleDataSource.getSchedule(idCoach!, idteams);
+      final schedules = await scheduleDataSource.getSchedule(idCoach!, teamsId);
       return schedules;
     } catch (error) {
       print(error);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
+import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/data/data_sources/team_data_source.dart';
 import 'package:flutter_football/domain/models/team.dart';
 import 'package:flutter_football/domain/repositories/team_repository.dart';
@@ -25,12 +26,15 @@ class TeamsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) => TeamRepository(teamDataSource: TeamDataSource()),
+      create: (context) => TeamRepository(
+          teamDataSource: TeamDataSource(),
+          preferences: SharedPreferencesDataSource(),
+      ),
       child: BlocProvider(
         create: (context) => TeamsBloc(
           repository: RepositoryProvider.of<TeamRepository>(context),
         )
-        ..add(GetTeams(coachId: "1")),
+        ..add(GetTeams()),
         child: Scaffold(
           appBar: AppBar(
             title: Center(child: Text("Mes équipes")),

@@ -7,9 +7,9 @@ import '../../networking/exceptions_factory.dart';
 class TeamDataSource extends BaseDataSource with TeamService {
 
   @override
-  Future<String> getCoachTeams(String coachId) async {
+  Future<String> getCoachTeams(int coachId) async {
     final queryParameters = {
-      'idcoach': coachId
+      'idcoach': coachId.toString()
     };
     final response = await httpGet(Endpoints.coachTeamsPath, queryParameters);
     if (response.statusCode == 200) {

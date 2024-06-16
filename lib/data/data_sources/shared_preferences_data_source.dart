@@ -26,6 +26,14 @@ class SharedPreferencesDataSource {
     return SharedPreferencesUtils.getInt(SharedPreferencesKeys.idCoach.name);
   }
 
+  Future<bool> saveTeamsIds(List<int> teamsId) async {
+    return await SharedPreferencesUtils.setIntList(SharedPreferencesKeys.teamsId.name, teamsId);
+  }
+
+  List<int>? getTeamsIds() {
+    return SharedPreferencesUtils.getIntList(SharedPreferencesKeys.teamsId.name);
+  }
+
   Future<bool> saveIdPlayer(int id) async {
     return await SharedPreferencesUtils.setInt(SharedPreferencesKeys.idPlayer.name, id);
   }
@@ -45,4 +53,5 @@ enum SharedPreferencesKeys {
   refreshToken,
   idCoach,
   idPlayer,
+  teamsId,
 }

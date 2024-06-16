@@ -73,7 +73,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       child: BlocProvider(
         create: (context) => ScheduleBloc(
           repository: RepositoryProvider.of<ScheduleRepository>(context),
-        )..add(GetSchedules(idteams: "2,4")),
+        )..add(GetSchedules()),
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           floatingActionButton: FloatingActionButton(

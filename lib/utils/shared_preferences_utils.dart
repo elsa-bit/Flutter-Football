@@ -26,6 +26,15 @@ class SharedPreferencesUtils {
     return await _prefsInstance.setInt(key, value);
   }
 
+  static List<int>? getIntList(String key) {
+    final res = _prefsInstance.getStringList(key);
+    return res?.map((e) => int.parse(e)).toList();
+  }
+
+  static Future<bool> setIntList(String key, List<int> value) async {
+    return await _prefsInstance.setStringList(key, value.map((e) => e.toString()).toList());
+  }
+
   static Future<void> clear() async {
     await _prefsInstance.clear();
   }

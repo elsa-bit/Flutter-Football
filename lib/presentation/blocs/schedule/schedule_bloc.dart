@@ -14,7 +14,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       try {
         emit(state.copyWith(status: ScheduleStatus.loading));
         final schedule =
-            await repository.getSchedule(event.idteams);
+            await repository.getSchedule();
         emit(state.copyWith(
             matchs: schedule.matchs,
             trainings: schedule.trainings,
