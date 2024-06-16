@@ -1,7 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
-
 extension UserData on User {
 
   String? getFirstname() {

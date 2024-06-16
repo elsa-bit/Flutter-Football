@@ -18,6 +18,14 @@ class SharedPreferencesUtils {
     return await _prefsInstance.setString(key, value);
   }
 
+  static int? getInt(String key) {
+    return _prefsInstance.getInt(key);
+  }
+
+  static Future<bool> setInt(String key, int value) async {
+    return await _prefsInstance.setInt(key, value);
+  }
+
   static Future<void> clear() async {
     await _prefsInstance.clear();
   }

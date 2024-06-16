@@ -2,7 +2,8 @@
 class Endpoints {
   Endpoints._();
 
-  static const String localHostURL = '10.0.2.2:3000';
+  static const String localHostURL = '192.168.1.107:3000';
+  //'10.0.2.2:3000';
 
   static const String prodURL = '';
 
@@ -20,4 +21,12 @@ class Endpoints {
   // team paths
   static const String teamPath = '/api/team';
   static const String coachTeamsPath = '/api/teamsCoach';
+
+  //schedule paths
+  static const String schedulePath = '/api/eventsCoach';
+  static const String scheduleCreateMatchPath = '/api/createMatch';
+  static const String scheduleCreateTrainingPath = '/api/createTraining';
+  static const String playersTeamPath = '/api/playersTeam';
+  static const String addAttendanceSchedule = '/api/updateAttendanceTraining';
+
 }
