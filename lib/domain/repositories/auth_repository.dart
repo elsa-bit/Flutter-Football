@@ -16,9 +16,9 @@ class AuthRepository {
       final user = await supabase.auth.getUser(accessToken);
       if (user.user == null) return false;
       saveUser(user.user!);
-    } on AuthException catch(e) {
+    } on AuthException catch (e) {
       return refreshToken();
-    } catch(e) {
+    } catch (e) {
       rethrow;
     }
     return true;
@@ -39,8 +39,15 @@ class AuthRepository {
 
   Future<void> authenticateUser(AuthResponse auth) async {
     print("Authenticating user...");
-    if(auth.user != null) saveUser(auth.user!);
+    var idCoach = null;
+    var idPlayer = null;
+    if (auth.user != null) saveUser(auth.user!);
 
+    if (user!.userMetadata?["role"] == "coach") {
+      idCoach = user!.userMetadata?["idCoach"];
+    } else if (user!.userMetadata?["role"] == "player") {
+      idPlayer = user!.userMetadata?["idPlayer"];
+    }
     final accessToken = auth.session?.accessToken;
     final refreshToken = auth.session?.refreshToken;
 
@@ -53,6 +60,16 @@ class AuthRepository {
       print("Saving refresh token");
       preferencesDataSource.saveRefreshToken(refreshToken);
     }
+
+    if (idCoach != null) {
+      print("Saving id coach");
+      preferencesDataSource.saveIdCoach(idCoach);
+    }
+
+    if (idPlayer != null) {
+      print("Saving id player");
+      preferencesDataSource.saveIdPlayer(idPlayer);
+    }
   }
 
   Future<void> logout() async {
@@ -60,7 +77,6 @@ class AuthRepository {
     user = null;
     await preferencesDataSource.clear();
   }
-
 
   // private functions
 

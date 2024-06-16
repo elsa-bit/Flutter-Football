@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/match/match_screen.dart';
 import 'package:flutter_football/presentation/screens/onboarding/onboarding_screen.dart';
+import 'package:flutter_football/presentation/screens/schedule/playerAttendance_screen.dart';
 import 'package:flutter_football/presentation/screens/schedule/schedule_screen.dart';
 import 'package:flutter_football/presentation/screens/settings/settings_screen.dart';
 import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
@@ -30,6 +30,8 @@ class AppRouter {
         return SettingsScreen.route();
       case SplashScreen.routeName:
         return SplashScreen.route();
+      case PlayerAttendanceScreen.routeName:
+        return PlayerAttendanceScreen.route(settings);
       default:
         return _errorRoute();
     }

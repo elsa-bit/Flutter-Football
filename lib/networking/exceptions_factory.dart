@@ -6,28 +6,28 @@ class ExceptionsFactory {
   }
   ExceptionsFactory._internal();
 
-  Exception handleStatusCode(int statusCode) {
+  Exception handleStatusCode(int statusCode,  {String? errorMessage}) {
     switch (statusCode) {
       case 400:
-        return Exception('Bad request.');
+        return Exception(errorMessage ?? 'Bad request.');
       case 401:
-        return Exception('Authentication failed.');
+        return Exception(errorMessage ?? 'Authentication failed.');
       case 403:
-        return Exception('The authenticated user is not allowed to access the specified API endpoint.');
+        return Exception(errorMessage ?? 'The authenticated user is not allowed to access the specified API endpoint.');
       case 404:
-        return Exception('The requested resource does not exist.');
+        return Exception(errorMessage ?? 'The requested resource does not exist.');
       case 405:
-        return Exception('Method not allowed. Please check the Allow header for the allowed HTTP methods.');
+        return Exception(errorMessage ?? 'Method not allowed. Please check the Allow header for the allowed HTTP methods.');
       case 415:
-        return Exception('Unsupported media type. The requested content type or version number is invalid.');
+        return Exception(errorMessage ?? 'Unsupported media type. The requested content type or version number is invalid.');
       case 422:
-        return Exception('Data validation failed.');
+        return Exception(errorMessage ?? 'Data validation failed.');
       case 429:
-        return Exception('Too many requests.');
+        return Exception(errorMessage ?? 'Too many requests.');
       case 500:
-        return Exception('Internal server error.');
+        return Exception(errorMessage ?? 'Internal server error.');
       default:
-        return Exception('Oops something went wrong!');
+        return Exception(errorMessage ?? 'Oops something went wrong!');
     }
   }
 }
