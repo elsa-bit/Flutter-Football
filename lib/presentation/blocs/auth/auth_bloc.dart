@@ -13,7 +13,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         emit(state.copyWith(status: AuthStatus.loading));
         final isAuthenticated = await repository.isUserAuthenticated();
-        emit(state.copyWith(status: isAuthenticated ? AuthStatus.authenticated : AuthStatus.unauthenticated, user: repository.user));
+        final user = repository.user;
+
+        if(!isAuthenticated || user == null) {
+          emit(state.copyWith(status: AuthStatus.unauthenticated, user: repository.user));
+          return;
+        }
+
+        if (user.userMetadata?["role"] == "coach") {
+          emit(state.copyWith(status: AuthStatus.authenticatedAsCoach, user: repository.user));
+        } else if (user.userMetadata?["role"] == "player") {
+          emit(state.copyWith(status: AuthStatus.authenticatedAsPlayer, user: repository.user));
+        } else {
+          emit(state.copyWith(status: AuthStatus.unauthenticated, user: repository.user));
+        }
       } on AuthException catch (error) {
         emit(state.copyWith(error: error.toString(), status: AuthStatus.unauthenticated, user: null));
       } catch (error) {
@@ -24,7 +37,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthenticateUser>((event, emit) async {
       emit(state.copyWith(status: AuthStatus.loading));
       await repository.authenticateUser(event.auth);
-      emit(state.copyWith(status: AuthStatus.authenticated, user: repository.user));
+      final user = event.auth.user;
+
+      if(user == null) {
+        emit(state.copyWith(status: AuthStatus.unauthenticated, user: repository.user));
+        return;
+      }
+
+      if (user.userMetadata?["role"] == "coach") {
+        emit(state.copyWith(status: AuthStatus.authenticatedAsCoach, user: repository.user));
+      } else if (user.userMetadata?["role"] == "player") {
+        emit(state.copyWith(status: AuthStatus.authenticatedAsPlayer, user: repository.user));
+      } else {
+        emit(state.copyWith(status: AuthStatus.unauthenticated, user: repository.user));
+      }
     });
 
     on<AuthenticateUserWithToken>((event, emit) async {

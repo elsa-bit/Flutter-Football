@@ -62,11 +62,12 @@ class LoginDataSource extends BaseDataSource with LoginService {
   @override
   Future<AuthResponse> signUpTest(String email, String password, String role) {
     final userData = {
-      'firstname': email,
-      'lastname': password,
+      'firstname': 'Elsa',
+      'lastname': 'Huy',
       'avatar': '',
       'tokenPhone': '',
-      'role': role,
+      'role': 'player',
+      'idPlayer': 1,
     };
     return supabase.auth.signUp(password: password, email: email, data: userData);
   }

@@ -38,4 +38,8 @@ class SharedPreferencesUtils {
   static Future<void> clear() async {
     await _prefsInstance.clear();
   }
+
+  static Future<void> removeKey(String key) async {
+    await _prefsInstance.remove(key);
+  }
 }

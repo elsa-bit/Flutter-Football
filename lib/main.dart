@@ -21,6 +21,7 @@ import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/screens/home.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
+import 'package:flutter_football/presentation/screens/player/home_player.dart';
 import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
 import 'package:flutter_football/utils/shared_preferences_utils.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -70,7 +71,8 @@ class MyApp extends StatelessWidget {
       case AuthStatus.error:
         print(state.error);
         break;
-      case AuthStatus.authenticated:
+      case AuthStatus.authenticatedAsCoach:
+      case AuthStatus.authenticatedAsPlayer:
         print("Authenticated !");
         break;
       case AuthStatus.unauthenticated:
@@ -123,8 +125,10 @@ class MyApp extends StatelessWidget {
                 home: BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     switch (state.status) {
-                      case AuthStatus.authenticated:
+                      case AuthStatus.authenticatedAsCoach:
                         return const Home();
+                      case AuthStatus.authenticatedAsPlayer:
+                        return const HomePlayer();
                       case AuthStatus.unauthenticated:
                         return LoginScreen();
                       default:

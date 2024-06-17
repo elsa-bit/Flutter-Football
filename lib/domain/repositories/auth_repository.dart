@@ -39,15 +39,8 @@ class AuthRepository {
 
   Future<void> authenticateUser(AuthResponse auth) async {
     print("Authenticating user...");
-    var idCoach = null;
-    var idPlayer = null;
     if (auth.user != null) saveUser(auth.user!);
 
-    if (user!.userMetadata?["role"] == "coach") {
-      idCoach = user!.userMetadata?["idCoach"];
-    } else if (user!.userMetadata?["role"] == "player") {
-      idPlayer = user!.userMetadata?["idPlayer"];
-    }
     final accessToken = auth.session?.accessToken;
     final refreshToken = auth.session?.refreshToken;
 
@@ -59,16 +52,6 @@ class AuthRepository {
     if (refreshToken != null) {
       print("Saving refresh token");
       preferencesDataSource.saveRefreshToken(refreshToken);
-    }
-
-    if (idCoach != null) {
-      print("Saving id coach");
-      preferencesDataSource.saveIdCoach(idCoach);
-    }
-
-    if (idPlayer != null) {
-      print("Saving id player");
-      preferencesDataSource.saveIdPlayer(idPlayer);
     }
   }
 
@@ -82,7 +65,15 @@ class AuthRepository {
 
   void saveUser(User user) {
     this.user = user;
+    int? idCoach = null;
+    int? idPlayer = null;
 
-    // TODO : save user info in preferences
+    if (user.userMetadata?["role"] == "coach") {
+      idCoach = user.userMetadata?["idCoach"];
+    } else if (user.userMetadata?["role"] == "player") {
+      idPlayer = user.userMetadata?["idPlayer"];
+    }
+    preferencesDataSource.saveIdCoach(idCoach);
+    preferencesDataSource.saveIdPlayer(idPlayer);
   }
 }

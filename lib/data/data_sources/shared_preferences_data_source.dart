@@ -18,7 +18,11 @@ class SharedPreferencesDataSource {
     return SharedPreferencesUtils.getString(SharedPreferencesKeys.refreshToken.name);
   }
 
-  Future<bool> saveIdCoach(int id) async {
+  Future<bool> saveIdCoach(int? id) async {
+    if(id == null) {
+      await SharedPreferencesUtils.removeKey(SharedPreferencesKeys.idCoach.name);
+      return false;
+    }
     return await SharedPreferencesUtils.setInt(SharedPreferencesKeys.idCoach.name, id);
   }
 
@@ -34,7 +38,11 @@ class SharedPreferencesDataSource {
     return SharedPreferencesUtils.getIntList(SharedPreferencesKeys.teamsId.name);
   }
 
-  Future<bool> saveIdPlayer(int id) async {
+  Future<bool> saveIdPlayer(int? id) async {
+    if(id == null) {
+      await SharedPreferencesUtils.removeKey(SharedPreferencesKeys.idPlayer.name);
+      return false;
+    }
     return await SharedPreferencesUtils.setInt(SharedPreferencesKeys.idPlayer.name, id);
   }
 
