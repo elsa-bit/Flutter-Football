@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_football/config/app_colors.dart';
-
-import '../../../domain/models/team.dart';
+import 'package:flutter_football/domain/models/team.dart';
 
 class TeamItem extends StatelessWidget {
   final Team team;

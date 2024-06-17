@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_football/presentation/screens/coach/match/match_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/schedule/playerAttendance_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/schedule/schedule_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/settings/settings_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/teams/teams_screen.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/onboarding/onboarding_screen.dart';
-import 'package:flutter_football/presentation/screens/schedule/playerAttendance_screen.dart';
-import 'package:flutter_football/presentation/screens/schedule/schedule_screen.dart';
-import 'package:flutter_football/presentation/screens/settings/settings_screen.dart';
 import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
-import 'package:flutter_football/presentation/screens/teams/teams_screen.dart';
 
 class AppRouter {
   static Route onGenerateRoute(RouteSettings settings) {

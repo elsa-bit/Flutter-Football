@@ -8,8 +8,8 @@ import 'package:flutter_football/domain/repositories/team_repository.dart';
 import 'package:flutter_football/presentation/blocs/teams/teams_bloc.dart';
 import 'package:flutter_football/presentation/blocs/teams/teams_event.dart';
 import 'package:flutter_football/presentation/blocs/teams/teams_state.dart';
-import 'package:flutter_football/presentation/screens/teams/team_item.dart';
-import 'package:flutter_football/presentation/screens/teams/team_players_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/teams/team_item.dart';
+import 'package:flutter_football/presentation/screens/coach/teams/team_players_screen.dart';
 
 class TeamsScreen extends StatelessWidget {
   static const String routeName = '/teams';

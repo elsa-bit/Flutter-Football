@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_football/presentation/screens/coach/match/match_screen.dart';
-import 'package:flutter_football/presentation/screens/schedule/schedule_screen.dart';
-import 'package:flutter_football/presentation/screens/settings/settings_screen.dart';
-import 'package:flutter_football/presentation/screens/teams/teams_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/schedule/schedule_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/settings/settings_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/teams/teams_screen.dart';
 
-import '../widgets/bottom_nav_bar.dart';
+import '../../widgets/bottom_nav_bar.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);

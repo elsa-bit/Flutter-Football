@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
 import 'package:flutter_football/domain/models/team.dart';
+import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
-
-import '../../../domain/repositories/player_repository.dart';
-import '../../blocs/players/players_event.dart';
-import '../../blocs/players/players_state.dart';
+import 'package:flutter_football/presentation/blocs/players/players_event.dart';
+import 'package:flutter_football/presentation/blocs/players/players_state.dart';
 
 class TeamPlayersScreen extends StatelessWidget {
   static const String routeName = '/teamPlayers';

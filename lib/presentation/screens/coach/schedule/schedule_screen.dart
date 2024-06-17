@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
@@ -9,8 +8,8 @@ import 'package:flutter_football/domain/repositories/schedule_repository.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_state.dart';
-import 'package:flutter_football/presentation/screens/schedule/playerAttendance_screen.dart';
-import 'package:flutter_football/presentation/screens/schedule/schedule_item.dart';
+import 'package:flutter_football/presentation/screens/coach/schedule/playerAttendance_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/schedule/schedule_item.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ScheduleScreen extends StatefulWidget {

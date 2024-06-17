@@ -19,7 +19,7 @@ import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
-import 'package:flutter_football/presentation/screens/home.dart';
+import 'package:flutter_football/presentation/screens/coach/home.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/player/home_player.dart';
 import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
