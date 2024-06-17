@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
+import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/models/team.dart';
 import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_state.dart';
+import 'package:flutter_football/presentation/screens/coach/teams/player_item.dart';
+import 'package:flutter_football/presentation/screens/coach/teams/player_profile_screen.dart';
 
 class TeamPlayersScreen extends StatelessWidget {
   static const String routeName = '/teamPlayers';
@@ -17,7 +20,9 @@ class TeamPlayersScreen extends StatelessWidget {
   static Route route(Team team) {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => TeamPlayersScreen(team: team,),
+      builder: (context) => TeamPlayersScreen(
+        team: team,
+      ),
     );
   }
 
@@ -27,11 +32,9 @@ class TeamPlayersScreen extends StatelessWidget {
       create: (context) =>
           PlayerRepository(playerDataSource: PlayerDataSource()),
       child: BlocProvider(
-        create: (context) =>
-        PlayersBloc(
+        create: (context) => PlayersBloc(
           repository: RepositoryProvider.of<PlayerRepository>(context),
-        )
-          ..add(GetPlayersTeam(teamId: "${team.id}")),
+        )..add(GetPlayersTeam(teamId: "${team.id}")),
         child: Scaffold(
           appBar: AppBar(
             title: Text(team.name),
@@ -60,10 +63,9 @@ class TeamPlayersScreen extends StatelessWidget {
                     itemCount: state.players.length,
                     itemBuilder: (context, index) {
                       final player = state.players[index];
-                      return ListTile(
-                        title: Text(
-                            "${player.firstname} ${player.lastname}",
-                        ),
+                      return PlayerItem(
+                        player: player,
+                        onTap: () => _onPlayerTap(context, player),
                       );
                     },
                   );
@@ -79,4 +81,7 @@ class TeamPlayersScreen extends StatelessWidget {
     );
   }
 
+  void _onPlayerTap(BuildContext context, Player player) async {
+    Navigator.push(context, PlayerProfileScreen.route(player));
+  }
 }

@@ -1,16 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_football/config/app_colors.dart';
-import 'package:flutter_football/domain/models/team.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_football/config/app_themes.dart';
+import 'package:flutter_football/domain/models/player.dart';
+import 'package:flutter_football/utils/extensions/string_extension.dart';
+import 'package:flutter_svg/svg.dart';
 
-class TeamItem extends StatelessWidget {
-  final Team team;
+class PlayerItem extends StatelessWidget {
+  final Player player;
   final VoidCallback? onTap;
 
-  const TeamItem({
+  const PlayerItem({
     Key? key,
-    required this.team,
+    required this.player,
     this.onTap,
   }) : super(key: key);
 
@@ -30,11 +31,24 @@ class TeamItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Text(
-              team.name,
-              style: TextStyle(
-                color: currentAppColors.primaryTextColor,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${player.firstname} ${player.lastname}",
+                  style: TextStyle(
+                    color: currentAppColors.primaryTextColor,
+                  ),
+                ),
+                if (player.position != null) ...[
+                  Text(
+                    "${player.position}".capitalize(),
+                    style: AppTextStyle.small
+                        .copyWith(color: currentAppColors.secondaryTextColor),
+                  ),
+                ] else
+                  ...[],
+              ],
             ),
             Spacer(),
             SvgPicture.asset(
@@ -46,5 +60,4 @@ class TeamItem extends StatelessWidget {
       ),
     );
   }
-
 }
