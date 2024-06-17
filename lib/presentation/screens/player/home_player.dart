@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_football/presentation/screens/player/home/home_player_screen.dart';
-import 'package:flutter_football/presentation/screens/player/settings/settings_screen.dart';
+import 'package:flutter_football/presentation/screens/player/calendar/calendar_screen.dart';
+import 'package:flutter_football/presentation/screens/player/profil/profil_screen.dart';
+import 'package:flutter_football/presentation/screens/player/statistic/statistic_screen.dart';
+import 'package:flutter_football/presentation/screens/player/tchat/tchat_player_screen.dart';
 import 'package:flutter_football/presentation/widgets/player_bottom_nav_bar.dart';
 
 class HomePlayer extends StatefulWidget {
@@ -13,8 +15,10 @@ class HomePlayer extends StatefulWidget {
 class _HomePlayerState extends State<HomePlayer> {
   int _currentIndex = 0;
   final screens = [
-    HomePlayerScreen(),
-    SettingsScreen(),
+    CalendarScreen(),
+    TchatPlayerScreen(),
+    StatisticScreen(),
+    ProfilScreen(),
   ];
 
   @override

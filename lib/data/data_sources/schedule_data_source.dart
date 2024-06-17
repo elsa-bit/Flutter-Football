@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/data/data_sources/base_data_source.dart';
 import 'package:flutter_football/data/services/schedule_service.dart';
 import 'package:flutter_football/domain/models/event.dart';
@@ -14,6 +15,19 @@ class ScheduleDataSource extends BaseDataSource with ScheduleService {
     final response = await httpGet(Endpoints.schedulePath, queryParameters);
     if (response.statusCode == 200) {
       return ScheduleResult.fromJson(jsonDecode(response.body));
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
+  }
+
+  @override
+  Future<ScheduleResultPlayer> getSchedulePlayer(int idplayer) async {
+    final queryParameters = {'idplayer': idplayer.toString()};
+    final response = await httpGet(Endpoints.schedulePlayerPath, queryParameters);
+    if (response.statusCode == 200) {
+      return ScheduleResultPlayer.fromJson(jsonDecode(response.body));
     } else {
       final errorMessage = response.body;
       throw ExceptionsFactory()

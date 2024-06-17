@@ -7,6 +7,10 @@ class GetSchedules extends ScheduleEvent {
   GetSchedules();
 }
 
+class GetSchedulesPlayer extends ScheduleEvent {
+  GetSchedulesPlayer();
+}
+
 class AddSchedule extends ScheduleEvent {
   final Event event;
   final DateTime date;

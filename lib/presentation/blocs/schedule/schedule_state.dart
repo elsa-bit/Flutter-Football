@@ -9,6 +9,7 @@ class ScheduleState {
   final List<Match>? matchs;
   final List<Training>? trainings;
   final List<Meeting>? meetings;
+  final String? idTeams;
   final String error;
 
   ScheduleState({
@@ -16,6 +17,7 @@ class ScheduleState {
     this.matchs = const [],
     this.trainings = const [],
     this.meetings = const [],
+    this.idTeams = '',
     this.error = '',
   });
 
@@ -24,6 +26,7 @@ class ScheduleState {
     final List<Match>? matchs,
     final List<Training>? trainings,
     final List<Meeting>? meetings,
+    final String? idTeams,
     String? error,
   }) {
     return ScheduleState(
@@ -31,6 +34,7 @@ class ScheduleState {
         matchs: matchs ?? this.matchs,
         trainings: trainings ?? this.trainings,
         meetings: meetings ?? this.meetings,
+        idTeams: idTeams ?? this.idTeams,
         error: error ?? this.error);
   }
 }

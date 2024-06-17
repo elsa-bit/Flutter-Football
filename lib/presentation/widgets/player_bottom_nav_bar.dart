@@ -18,25 +18,14 @@ class _PlayerBottomNavBarState extends State<PlayerBottomNavBar> {
 
   List<BottomNavigationBarItem> navItems = const [
     BottomNavigationBarItem(
-        icon: Icon(
-            Icons.home
-        ),
-        label: 'Home'),
+        icon: Icon(Icons.calendar_month), label: 'Calendrier'),
+    BottomNavigationBarItem(icon: Icon(Icons.speaker_notes_rounded), label: 'Tchat'),
+    BottomNavigationBarItem(icon: Icon(Icons.query_stats), label: 'Mes stats'),
     BottomNavigationBarItem(
         icon: Icon(
-          Icons.settings,
+          Icons.account_circle
         ),
-        label: 'Paramètres'),
-    /*BottomNavigationBarItem(
-        icon: Icon(
-          Icons.sports_football,
-        ),
-        label: 'Match'),
-    BottomNavigationBarItem(
-        icon: Icon(
-          Icons.settings,
-        ),
-        label: 'Paramètres'),*/
+        label: 'Profil'),
   ];
 
   void _onItemTapped(int index) {
