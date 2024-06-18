@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -41,6 +42,13 @@ class FriendScreen extends StatefulWidget {
 
 class _FriendScreenState extends State<FriendScreen> {
   String _scanQRcode = 'Unknown';
+  final _controller = ConfettiController(duration: Duration(seconds: 5));
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +76,8 @@ class _FriendScreenState extends State<FriendScreen> {
                       if (state.status == PlayersStatus.success) {
                         _showSnackBar(
                             context, 'Ami ajouté', Colors.greenAccent);
+                        _controller.play();
                         _scanQRcode = "";
-                        Navigator.pop(context);
                       } else if (state.status == PlayersStatus.error) {
                         _showSnackBar(
                             context, state.error, Colors.orangeAccent);
@@ -129,6 +137,12 @@ class _FriendScreenState extends State<FriendScreen> {
                   ],
                 ),
               ),
+              ConfettiWidget(
+                confettiController: _controller,
+                blastDirectionality: BlastDirectionality.explosive,
+                colors: const [Colors.indigo, Colors.blue, Colors.redAccent],
+                //gravity: 0.5,
+              )
             ],
           ),
         ),
