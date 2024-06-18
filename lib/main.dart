@@ -115,6 +115,7 @@ class MyApp extends StatelessWidget {
               create: (context) => PlayersBloc(
                   repository: PlayerRepository(
                 playerDataSource: PlayerDataSource(),
+                preferencesDataSource: SharedPreferencesDataSource(),
               )),
               child: MaterialApp(
                 debugShowCheckedModeBanner: false,

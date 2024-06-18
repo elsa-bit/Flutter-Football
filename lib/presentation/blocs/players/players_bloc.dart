@@ -19,5 +19,18 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         ));
       }
     });
+
+    on<GetPlayerDetails>((event, emit) async {
+      try {
+        emit(state.copyWith(status: PlayersStatus.loading));
+        final detailsPlayer = await repository.getPlayerDetails();
+        emit(state.copyWith(detailsPlayer: detailsPlayer, status: PlayersStatus.success));
+      } catch (error) {
+        emit(state.copyWith(
+          error: error.toString(),
+          status: PlayersStatus.error,
+        ));
+      }
+    });
   }
 }

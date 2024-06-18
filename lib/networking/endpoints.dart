@@ -30,4 +30,7 @@ class Endpoints {
   static const String addAttendanceSchedule = '/api/updateAttendanceTraining';
   static const String schedulePlayerPath = '/api/eventsPlayer';
 
+  //statistic paths
+  static const String detailsPlayerPath = '/api/detailsPlayer';
+
 }

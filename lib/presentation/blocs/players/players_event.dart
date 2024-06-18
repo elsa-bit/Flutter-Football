@@ -5,3 +5,7 @@ class GetPlayersTeam extends PlayersEvent {
 
   GetPlayersTeam({required this.teamId});
 }
+
+class GetPlayerDetails extends PlayersEvent {
+  GetPlayerDetails();
+}
