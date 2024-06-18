@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_router.dart';
 import 'package:flutter_football/config/app_themes.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
-import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
 import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/domain/repositories/schedule_repository.dart';

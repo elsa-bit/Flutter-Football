@@ -1,13 +1,7 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/data/data_sources/schedule_data_source.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
-import 'package:flutter_football/data/data_sources/team_data_source.dart';
 import 'package:flutter_football/data/services/schedule_service.dart';
 import 'package:flutter_football/domain/models/event.dart';
-
-import '../models/team.dart';
 
 class ScheduleRepository {
   final ScheduleDataSource scheduleDataSource;
