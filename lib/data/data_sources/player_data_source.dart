@@ -29,4 +29,16 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
       throw ExceptionsFactory().handleStatusCode(response.statusCode, errorMessage: errorMessage);
     }
   }
+
+  @override
+  Future<String> addFriend(String idplayer, String idfriend) async {
+    final queryParameters = {'idplayer': idplayer, 'idfriend': idfriend};
+    final response = await httpPost(Endpoints.addFriendPath, queryParameters);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory().handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
+  }
 }

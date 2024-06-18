@@ -4,6 +4,8 @@ abstract class PlayerService {
   Future<String> getPlayersTeam(String idteam);
 
   Future<PlayerDetailResult> getPlayerDetails(int idplayer);
+
+  Future<String> addFriend(String idplayer, String idfriend);
 }
 
 class PlayerDetailResult {

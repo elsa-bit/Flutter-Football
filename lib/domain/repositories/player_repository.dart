@@ -39,4 +39,8 @@ class PlayerRepository {
       rethrow;
     }
   }
+
+  Future<String> addFriend(String idPlayer, String idFriend) {
+    return playerDataSource.addFriend(idPlayer, idFriend);
+  }
 }

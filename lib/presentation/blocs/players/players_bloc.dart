@@ -32,5 +32,15 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         ));
       }
     });
+
+    on<AddFriend>((event, emit) async {
+      emit(state.copyWith(status: PlayersStatus.loading));
+      try {
+        await repository.addFriend(event.idPlayer, event.idFriend);
+        emit(state.copyWith(status: PlayersStatus.success));
+      } catch (e) {
+        emit(state.copyWith(error: e.toString(), status: PlayersStatus.error));
+      }
+    });
   }
 }

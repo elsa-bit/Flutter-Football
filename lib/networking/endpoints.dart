@@ -32,5 +32,6 @@ class Endpoints {
 
   //statistic paths
   static const String detailsPlayerPath = '/api/detailsPlayer';
+  static const String addFriendPath = '/api/updateFriend';
 
 }
