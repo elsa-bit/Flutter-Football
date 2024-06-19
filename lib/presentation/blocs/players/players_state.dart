@@ -6,7 +6,7 @@ enum PlayersStatus { initial, loading, success, error }
 class PlayersState {
   final PlayersStatus status;
   final List<Player>? players;
-  final PlayerDetailResult? detailsPlayer;
+  final Player? detailsPlayer;
   final String error;
 
   PlayersState({
@@ -19,7 +19,7 @@ class PlayersState {
   PlayersState copyWith({
     PlayersStatus? status,
     List<Player>? players,
-    PlayerDetailResult? detailsPlayer,
+    Player? detailsPlayer,
     String? error,
   }) {
     return PlayersState(

@@ -10,6 +10,12 @@ class GetPlayerDetails extends PlayersEvent {
   GetPlayerDetails();
 }
 
+class GetFriendsPlayer extends PlayersEvent {
+  final String idPlayer;
+
+  GetFriendsPlayer({required this.idPlayer});
+}
+
 class AddFriend extends PlayersEvent {
   final String idPlayer;
   final String idFriend;

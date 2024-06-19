@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_state.dart';
 import 'package:flutter_football/presentation/screens/player/statistic/friend_screen.dart';
+import 'package:flutter_football/presentation/screens/player/statistic/ranking_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class StatisticScreen extends StatelessWidget {
@@ -189,10 +192,11 @@ class StatisticScreen extends StatelessWidget {
 
   void _navigateToRankingScreen(BuildContext context) {
     var sharedPref = SharedPreferencesDataSource();
+    var idPlayer = sharedPref.getIdPlayer();
     var idTeams = sharedPref.getTeamsIds();
 
-    debugPrint(idTeams.toString());
-    //RankingScreen.navigateTo(context, idTeams);
+    RankingScreen.navigateTo(
+        context, idPlayer.toString(), utf8.decode(idTeams!));
   }
 
   void _navigateToFriendScreen(BuildContext context) {

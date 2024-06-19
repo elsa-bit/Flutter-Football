@@ -27,7 +27,7 @@ class PlayerRepository {
     }
   }
 
-  Future<PlayerDetailResult> getPlayerDetails() async {
+  Future<Player> getPlayerDetails() async {
     final idPlayer = preferencesDataSource.getIdPlayer();
 
     try {
@@ -41,5 +41,16 @@ class PlayerRepository {
 
   Future<String> addFriend(String idPlayer, String idFriend) {
     return playerDataSource.addFriend(idPlayer, idFriend);
+  }
+
+  Future<List<Player>> getFriendsPlayer(String idPlayer) async {
+    try {
+      final players = await playerDataSource.getFriendsPlayer(idPlayer);
+      final data = jsonDecode(players)["player"] as List<dynamic>;
+      return List<Player>.from(data.map((model) => Player.fromJson(model)));
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
   }
 }

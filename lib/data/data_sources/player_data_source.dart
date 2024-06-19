@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/data/data_sources/base_data_source.dart';
 import 'package:flutter_football/data/services/player_service.dart';
+import 'package:flutter_football/domain/models/player.dart';
 import '../../networking/endpoints.dart';
 import '../../networking/exceptions_factory.dart';
 
@@ -19,11 +21,12 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
   }
 
   @override
-  Future<PlayerDetailResult> getPlayerDetails(int idplayer) async {
+  Future<Player> getPlayerDetails(int idplayer) async {
     final queryParameters = {'idplayer': idplayer.toString()};
     final response = await httpGet(Endpoints.detailsPlayerPath, queryParameters);
     if (response.statusCode == 200) {
-      return PlayerDetailResult.fromJson(jsonDecode(response.body));
+      final data = jsonDecode(response.body)["info"] as Map<String, dynamic>;
+      return Player.fromJson(data);
     } else {
       final errorMessage = response.body;
       throw ExceptionsFactory().handleStatusCode(response.statusCode, errorMessage: errorMessage);
@@ -34,6 +37,18 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
   Future<String> addFriend(String idplayer, String idfriend) async {
     final queryParameters = {'idplayer': idplayer, 'idfriend': idfriend};
     final response = await httpPost(Endpoints.addFriendPath, queryParameters);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory().handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
+  }
+
+  @override
+  Future<String> getFriendsPlayer(String idplayer) async {
+    final queryParameters = {'idplayer': idplayer};
+    final response = await httpGet(Endpoints.friendPlayerPath, queryParameters);
     if (response.statusCode == 200) {
       return response.body;
     } else {
