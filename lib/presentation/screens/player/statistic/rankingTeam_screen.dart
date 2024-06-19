@@ -138,6 +138,12 @@ class _RankingTeamScreenState extends State<RankingTeamScreen> {
                         ),
                         BlocBuilder<PlayersBloc, PlayersState>(
                           builder: (context, playerState) {
+                            if (_selectedTeam == null) {
+                              return Center(
+                                child: Text("Sélectionnez une équipe pour afficher les joueurs"),
+                              );
+                            }
+
                             switch (playerState.status) {
                               case PlayersStatus.loading:
                                 return const Center(

@@ -40,99 +40,95 @@ class _RankingFriendScreenState extends State<RankingFriendScreen> {
   String _selectedCriteria = 'buts';
 
   @override
+  void initState() {
+    super.initState();
+    final playerBloc = context.read<PlayersBloc>();
+    playerBloc.add(GetFriendsPlayer(idPlayer: widget.idPlayer));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => PlayerRepository(
-        playerDataSource: PlayerDataSource(),
-        preferencesDataSource: SharedPreferencesDataSource(),
-      ),
-      child: BlocProvider(
-        create: (context) => PlayersBloc(
-          repository: RepositoryProvider.of<PlayerRepository>(context),
-        )..add(GetFriendsPlayer(idPlayer: widget.idPlayer)),
-        child: Scaffold(
-          body: BlocBuilder<PlayersBloc, PlayersState>(
-            builder: (context, state) {
-              switch (state.status) {
-                case PlayersStatus.loading:
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                case PlayersStatus.error:
-                  return Center(
-                    child: Text(
-                      state.error,
-                    ),
-                  );
-                case PlayersStatus.success:
-                default:
-                  var listPlayer = state.players;
-                  if (listPlayer == null || listPlayer.isEmpty) {
-                    return const Center(
-                      child: Text("Aucun joueur reconnu !"),
-                    );
-                  }
+    return Scaffold(
+      body: BlocBuilder<PlayersBloc, PlayersState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case PlayersStatus.loading:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            case PlayersStatus.error:
+              return Center(
+                child: Text(
+                  state.error,
+                ),
+              );
+            case PlayersStatus.success:
+            default:
+              var listPlayer = state.players;
+              if (listPlayer == null || listPlayer.isEmpty) {
+                return const Center(
+                  child: Text("Aucun joueur reconnu !"),
+                );
+              }
 
-                  if (_selectedCriteria == 'buts') {
-                    listPlayer.sort((a, b) => b.goal.compareTo(a.goal));
-                  } else if (_selectedCriteria == 'carton rouge') {
-                    listPlayer.sort((a, b) => b.redCard.compareTo(a.redCard));
-                  } else if (_selectedCriteria == 'carton jaune') {
-                    listPlayer
-                        .sort((a, b) => b.yellowCard.compareTo(a.yellowCard));
-                  }
+              if (_selectedCriteria == 'buts') {
+                listPlayer.sort((a, b) => b.goal.compareTo(a.goal));
+              } else if (_selectedCriteria == 'carton rouge') {
+                listPlayer.sort((a, b) => b.redCard.compareTo(a.redCard));
+              } else if (_selectedCriteria == 'carton jaune') {
+                listPlayer
+                    .sort((a, b) => b.yellowCard.compareTo(a.yellowCard));
+              }
 
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, top: 20),
-                        child: Row(
-                          children: [
-                            Text(
-                              "Trier par ",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(width: 5),
-                            DropdownButton<String>(
-                              value: _selectedCriteria,
-                              items: <String>[
-                                'buts',
-                                'carton rouge',
-                                'carton jaune'
-                              ].map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (newValue) {
-                                setState(() {
-                                  _selectedCriteria = newValue!;
-                                });
-                              },
-                            ),
-                          ],
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 20),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Trier par ",
+                          style: TextStyle(fontSize: 16),
                         ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: listPlayer.length,
-                          itemBuilder: (context, index) {
-                            final player = listPlayer[index];
-                            return RankingItem(
-                              player: player,
-                              idPlayer: widget.idPlayer,
-                              index: index,
+                        SizedBox(width: 5),
+                        DropdownButton<String>(
+                          value: _selectedCriteria,
+                          items: <String>[
+                            'buts',
+                            'carton rouge',
+                            'carton jaune'
+                          ].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
                             );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedCriteria = newValue!;
+                            });
                           },
                         ),
-                      ),
-                    ],
-                  );
-              }
-            },
-          ),
-        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: listPlayer.length,
+                      itemBuilder: (context, index) {
+                        final player = listPlayer[index];
+                        return RankingItem(
+                          player: player,
+                          idPlayer: widget.idPlayer,
+                          index: index,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+          }
+        },
       ),
     );
   }
