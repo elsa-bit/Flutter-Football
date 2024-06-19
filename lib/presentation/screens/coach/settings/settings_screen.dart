@@ -79,6 +79,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ],
                     Align(
+                      alignment: Alignment.topRight,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
+                        child: ElevatedButton(
+                          onPressed: () {  },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                          ),
+                          child: Icon(Icons.edit, color: Colors.white,),
+                        ),
+                      ),
+                    ),
+                    Align(
                       alignment: Alignment.bottomCenter,
                       child: Card(
                         color: Colors.white,
