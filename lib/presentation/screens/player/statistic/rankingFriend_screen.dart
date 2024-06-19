@@ -87,7 +87,10 @@ class _RankingFriendScreenState extends State<RankingFriendScreen> {
                         padding: const EdgeInsets.only(left: 20, top: 20),
                         child: Row(
                           children: [
-                            Text("Trier par ", style: TextStyle(fontSize: 16),),
+                            Text(
+                              "Trier par ",
+                              style: TextStyle(fontSize: 16),
+                            ),
                             SizedBox(width: 5),
                             DropdownButton<String>(
                               value: _selectedCriteria,
@@ -117,7 +120,14 @@ class _RankingFriendScreenState extends State<RankingFriendScreen> {
                             final players = listPlayer[index];
                             return ListTile(
                               leading: Container(
-                                padding: const EdgeInsets.all(2.0),
+                                padding: const EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  color:
+                                      players.id.toString() == widget.idPlayer
+                                          ? Color(0xa872acde)
+                                          : Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
                                 child: Text(
                                   (index + 1).toString() + ".",
                                   style: const TextStyle(

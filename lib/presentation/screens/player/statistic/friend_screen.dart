@@ -122,6 +122,7 @@ class _FriendScreenState extends State<FriendScreen> {
                       data: widget.idPlayer.toString(),
                       version: QrVersions.auto,
                       size: 200,
+                      backgroundColor: Colors.white,
                       gapless: false,
                       errorStateBuilder: (cxt, err) {
                         return Container(
