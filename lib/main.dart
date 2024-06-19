@@ -8,15 +8,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_router.dart';
 import 'package:flutter_football/config/app_themes.dart';
+import 'package:flutter_football/data/data_sources/media_data_source.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
 import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
+import 'package:flutter_football/domain/repositories/media_repository.dart';
 import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/domain/repositories/schedule_repository.dart';
 import 'package:flutter_football/networking/firebase/firebase_analytics_handler.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
+import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/screens/coach/home.dart';
@@ -92,54 +95,79 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return RepositoryProvider(
-      create: (context) => AuthRepository(
-        preferencesDataSource: SharedPreferencesDataSource(),
-      ),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => AuthRepository(
+            preferencesDataSource: SharedPreferencesDataSource(),
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => MediaRepository(
+            mediaDataSource: MediaDataSource(),
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => ScheduleRepository(
+            scheduleDataSource: ScheduleDataSource(),
+            preferencesDataSource: SharedPreferencesDataSource(),
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => PlayerRepository(
+            playerDataSource: PlayerDataSource(),
+          ),
+        ),
+      ],
       child: AnalyticsProvider(
         handlers: [
           FirebaseAnalyticsHandler(),
         ],
-        child: BlocProvider(
-          create: (context) => AuthBloc(
-            repository: RepositoryProvider.of<AuthRepository>(context),
-          )..add(IsUserAuthenticated()),
-          child: BlocProvider<ScheduleBloc>(
-            create: (context) => ScheduleBloc(
-              repository: ScheduleRepository(
-                scheduleDataSource: ScheduleDataSource(),
-                preferencesDataSource: SharedPreferencesDataSource(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => AuthBloc(
+                repository: RepositoryProvider.of<AuthRepository>(context),
+              )..add(IsUserAuthenticated()),
+            ),
+            BlocProvider(
+              create: (context) => ScheduleBloc(
+                repository: RepositoryProvider.of<ScheduleRepository>(context),
               ),
             ),
-            child: BlocProvider<PlayersBloc>(
+            BlocProvider(
               create: (context) => PlayersBloc(
-                  repository: PlayerRepository(
-                playerDataSource: PlayerDataSource(),
-              )),
-              child: MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'Flutter Demo',
-                theme: lightTheme,
-                darkTheme: darkTheme,
-                themeMode: ThemeMode.system,
-                home: BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, state) {
-                    switch (state.status) {
-                      case AuthStatus.authenticatedAsCoach:
-                        return const Home();
-                      case AuthStatus.authenticatedAsPlayer:
-                        return const HomePlayer();
-                      case AuthStatus.unauthenticated:
-                        return LoginScreen();
-                      default:
-                        return const SplashScreen();
-                    }
-                  },
-                ),
-                onGenerateRoute: AppRouter.onGenerateRoute,
-                //initialRoute: SplashScreen.routeName,
+                repository: RepositoryProvider.of<PlayerRepository>(context),
               ),
             ),
+            BlocProvider(
+              create: (context) => MediaBloc(
+                repository: RepositoryProvider.of<MediaRepository>(context),
+              ),
+            ),
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: ThemeMode.system,
+            home: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                switch (state.status) {
+                  case AuthStatus.authenticatedAsCoach:
+                    return const Home();
+                  case AuthStatus.authenticatedAsPlayer:
+                    return const HomePlayer();
+                  case AuthStatus.unauthenticated:
+                    return LoginScreen();
+                  default:
+                    return const SplashScreen();
+                }
+              },
+            ),
+            onGenerateRoute: AppRouter.onGenerateRoute,
+            //initialRoute: SplashScreen.routeName,
           ),
         ),
       ),
