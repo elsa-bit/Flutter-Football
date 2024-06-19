@@ -6,6 +6,10 @@ import 'package:flutter_football/presentation/screens/coach/settings/settings_sc
 import 'package:flutter_football/presentation/screens/coach/teams/teams_screen.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/onboarding/onboarding_screen.dart';
+import 'package:flutter_football/presentation/screens/player/calendar/calendar_screen.dart';
+import 'package:flutter_football/presentation/screens/player/statistic/friend_screen.dart';
+import 'package:flutter_football/presentation/screens/player/statistic/rankingFriend_screen.dart';
+import 'package:flutter_football/presentation/screens/player/statistic/ranking_screen.dart';
 import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
 
 class AppRouter {
@@ -32,6 +36,14 @@ class AppRouter {
         return SplashScreen.route();
       case PlayerAttendanceScreen.routeName:
         return PlayerAttendanceScreen.route(settings);
+      case CalendarScreen.routeName:
+        return CalendarScreen.route();
+      case FriendScreen.routeName:
+        return FriendScreen.route(settings);
+      case RankingScreen.routeName:
+        return RankingScreen.route(settings);
+      case RankingFriendScreen.routeName:
+        return RankingFriendScreen.route(settings);
       default:
         return _errorRoute();
     }

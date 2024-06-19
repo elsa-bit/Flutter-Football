@@ -23,6 +23,19 @@ class ScheduleDataSource extends BaseDataSource with ScheduleService {
   }
 
   @override
+  Future<ScheduleResultPlayer> getSchedulePlayer(int idplayer) async {
+    final queryParameters = {'idplayer': idplayer.toString()};
+    final response = await httpGet(Endpoints.schedulePlayerPath, queryParameters);
+    if (response.statusCode == 200) {
+      return ScheduleResultPlayer.fromJson(jsonDecode(response.body));
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
+  }
+
+  @override
   Future<String> addSchedule(Event event, DateTime date) async {
     late Response response;
 

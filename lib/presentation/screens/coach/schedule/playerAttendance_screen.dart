@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
+import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_event.dart';
@@ -48,8 +49,9 @@ class _PlayerAttendanceScreenState extends State<PlayerAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) =>
-          PlayerRepository(playerDataSource: PlayerDataSource()),
+      create: (context) => PlayerRepository(
+          playerDataSource: PlayerDataSource(),
+          preferencesDataSource: SharedPreferencesDataSource()),
       child: BlocProvider(
         create: (context) => PlayersBloc(
           repository: RepositoryProvider.of<PlayerRepository>(context),
@@ -73,7 +75,7 @@ class _PlayerAttendanceScreenState extends State<PlayerAttendanceScreen> {
                     ),
                   );
                 case PlayersStatus.success:
-                  if (state.players.isEmpty) {
+                  if (state.players!.isEmpty) {
                     return const Center(
                       child: Text("Il n'y a pas de joueurs dans cette équipe."),
                     );
@@ -82,22 +84,22 @@ class _PlayerAttendanceScreenState extends State<PlayerAttendanceScreen> {
                     children: [
                       Expanded(
                         child: ListView.builder(
-                          itemCount: state.players.length,
+                          itemCount: state.players!.length,
                           itemBuilder: (context, index) {
                             return CheckboxListTile(
                               activeColor: currentAppColors.secondaryColor,
                               title: Text(
-                                  "${state.players[index].firstname} ${state.players[index].lastname}"),
+                                  "${state.players![index].firstname} ${state.players![index].lastname}"),
                               value: _selectedPlayers
-                                  .contains(state.players[index].id),
+                                  .contains(state.players![index].id),
                               onChanged: (bool? isChecked) {
                                 setState(() {
                                   if (isChecked!) {
                                     _selectedPlayers
-                                        .add(state.players[index].id);
+                                        .add(state.players![index].id);
                                   } else {
                                     _selectedPlayers
-                                        .remove(state.players[index].id);
+                                        .remove(state.players![index].id);
                                   }
                                 });
                               },

@@ -5,15 +5,15 @@ import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
 
-class SettingsScreen extends StatelessWidget {
-  static const String routeName = '/player/home';
+class ProfilScreen extends StatelessWidget {
+  static const String routeName = '/player/profil';
 
-  const SettingsScreen({super.key});
+  const ProfilScreen({super.key});
 
   static Route route() {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
-      builder: (context) => const SettingsScreen(),
+      builder: (context) => const ProfilScreen(),
     );
   }
 
@@ -23,7 +23,7 @@ class SettingsScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text("Paramètres"),
+            title: Text("Profil"),
           ),
           body: Column(
             children: [
