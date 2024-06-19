@@ -54,15 +54,15 @@ class TeamsScreen extends StatelessWidget {
                     ),
                   );
                 case TeamStatus.success:
-                  if (state.teams.isEmpty) {
+                  if (state.teams!.isEmpty) {
                     return const Center(
                       child: Text("Aucune équipe ne vous a été attribuée."),
                     );
                   }
                   return ListView.builder(
-                    itemCount: state.teams.length,
+                    itemCount: state.teams!.length,
                     itemBuilder: (context, index) {
-                      final team = state.teams[index];
+                      final team = state.teams![index];
                       return TeamItem(
                           team: team,
                         onTap: () => _onTeamTap(context, team),

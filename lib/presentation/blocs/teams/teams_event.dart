@@ -22,3 +22,11 @@ class GetTeamPlayers extends TeamsEvent {
     required this.teamId
   });
 }
+
+class GetSpecificTeamPlayer extends TeamsEvent {
+  final String idPlayer;
+
+  GetSpecificTeamPlayer({
+    required this.idPlayer
+  });
+}

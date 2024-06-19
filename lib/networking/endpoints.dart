@@ -21,6 +21,7 @@ class Endpoints {
   static const String teamPath = '/api/team';
   static const String coachTeamsPath = '/api/teamsCoach';
   static const String teamPlayersPath = '/api/playersTeam';
+  static const String specificTeamPlayerPath = '/api/teamsPlayer';
 
   //schedule paths
   static const String schedulePath = '/api/eventsCoach';

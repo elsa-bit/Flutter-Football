@@ -48,5 +48,18 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamState> {
         ));
       }
     });
+
+    on<GetSpecificTeamPlayer>((event, emit) async {
+      try {
+        emit(state.copyWith(status: TeamStatus.loading));
+        final teams = await repository.getSpecificTeamPlayer(event.idPlayer);
+        emit(state.copyWith(teams: teams, status: TeamStatus.success));
+      } catch (error) {
+        emit(state.copyWith(
+          error: error.toString(),
+          status: TeamStatus.error,
+        ));
+      }
+    });
   }
 }
