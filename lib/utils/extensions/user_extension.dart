@@ -25,4 +25,12 @@ extension UserData on User {
       return null;
     }
   }
+
+  String? getAvatar() {
+    try {
+      return this.userMetadata?["avatar"] as String;
+    } catch(e) {
+      return null;
+    }
+  }
 }

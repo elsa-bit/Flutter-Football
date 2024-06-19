@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/domain/models/team.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TeamItem extends StatelessWidget {
   final Team team;
@@ -27,11 +28,20 @@ class TeamItem extends StatelessWidget {
           border: Border.all(color: currentAppColors.primaryVariantColor2),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(
-          team.name,
-          style: TextStyle(
-            color: currentAppColors.primaryTextColor,
-          ),
+        child: Row(
+          children: [
+            Text(
+              team.name,
+              style: TextStyle(
+                color: currentAppColors.primaryTextColor,
+              ),
+            ),
+            Spacer(),
+            SvgPicture.asset(
+              "assets/arrow.svg",
+              colorFilter: ColorFilter.mode(currentAppColors.secondaryTextColor, BlendMode.srcIn),
+            ),
+          ],
         ),
       ),
     );

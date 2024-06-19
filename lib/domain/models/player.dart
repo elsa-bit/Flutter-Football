@@ -42,9 +42,9 @@ class Player {
       final String? num_licence = json["num_licence"] as String?;
       final List<String>? teams =
           (json["idTeams"] as List<dynamic>?)?.map((e) => e as String).toList();
-      final int goal = json["goal"] as int;
-      final int redCard = json["redCard"] as int;
-      final int yellowCard = json["yellowCard"] as int;
+      final int goal = json["goal"] as int? ?? 0;
+      final int redCard = json["redCard"] as int? ?? 0;
+      final int yellowCard = json["yellowCard"] as int? ?? 0;
 
       return Player(
         id: id,
