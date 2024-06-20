@@ -49,6 +49,8 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   qr_flutter: ^4.1.0
   confetti: ^0.7.0
+  syncfusion_flutter_pdfviewer: ^20.4.54
+  flutter_inappwebview: ^6.0.0
 
 dev_dependencies:
   flutter_test:

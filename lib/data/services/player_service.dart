@@ -11,4 +11,6 @@ abstract class PlayerService {
   Future<String> getFriendsPlayer(String idplayer);
 
   Future<String> modifyPlayer(PlayerMin player, int idPlayer);
+
+  Future<String> getCoachPlayer(String idteam);
 }

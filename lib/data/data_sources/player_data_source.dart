@@ -83,4 +83,17 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
           .handleStatusCode(response.statusCode, errorMessage: errorMessage);
     }
   }
+
+  @override
+  Future<String> getCoachPlayer(String idteams) async {
+    final queryParameters = {'idteams': idteams};
+    final response = await httpGet(Endpoints.coachPlayerPath, queryParameters);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
+  }
 }

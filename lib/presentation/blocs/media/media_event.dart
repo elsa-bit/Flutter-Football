@@ -1,4 +1,3 @@
-
 abstract class MediaEvent {}
 
 class GetAvatar extends MediaEvent {
@@ -9,4 +8,8 @@ class GetAvatar extends MediaEvent {
     required this.identifier,
     required this.imageName,
   });
+}
+
+class GetClubRule extends MediaEvent {
+  GetClubRule();
 }

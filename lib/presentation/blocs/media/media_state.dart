@@ -1,10 +1,6 @@
+import 'dart:typed_data';
 
-enum MediaStatus {
-  initial,
-  loading,
-  success,
-  error
-}
+enum MediaStatus { initial, loading, success, error }
 
 class MediaState {
   final MediaStatus status;
@@ -32,7 +28,7 @@ class MediaState {
 
 class MediaResponse {
   final String url;
-  final String identifier;
+  final String? identifier;
 
-  MediaResponse({required this.url, required this.identifier});
+  MediaResponse({required this.url, this.identifier});
 }

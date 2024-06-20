@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_football/data/data_sources/media_data_source.dart';
 
 class MediaRepository {
@@ -20,6 +22,15 @@ class MediaRepository {
   Future<String> getDefaultAvatar() async {
     try {
       return await mediaDataSource.getDefaultAvatar();
+    } catch(error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Future<String> getClubRule() async {
+    try {
+      return await mediaDataSource.getClubRule();
     } catch(error) {
       print(error);
       rethrow;

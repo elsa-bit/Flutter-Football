@@ -35,3 +35,7 @@ class ModifyPlayer extends PlayersEvent {
     required this.player,
   });
 }
+
+class GetCoachPlayer extends PlayersEvent {
+  GetCoachPlayer();
+}

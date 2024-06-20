@@ -13,6 +13,8 @@ import 'package:flutter_football/presentation/blocs/media/media_state.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_state.dart';
+import 'package:flutter_football/presentation/screens/player/profil/infoClub_screen.dart';
+import 'package:flutter_football/presentation/screens/player/profil/news_screen.dart';
 import 'package:flutter_football/utils/extensions/user_extension.dart';
 import 'package:intl/intl.dart';
 
@@ -145,7 +147,29 @@ class _ProfilScreenState extends State<ProfilScreen> {
               ),
               Container(
                 child: Column(
-                  children: [],
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            WidgetStateProperty.all<Color>(AppColors.lightBlue),
+                      ),
+                      onPressed: () => _navigateToNewsScreen(context),
+                      child: Text(
+                        "Actualités du club",
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                        WidgetStateProperty.all<Color>(AppColors.lightBlue),
+                      ),
+                      onPressed: () => _navigateToInfoClubScreen(context),
+                      child: Text(
+                        "Contact et réglement du club",
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Spacer(),
@@ -244,7 +268,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
                                   onTap: () async {
                                     DateTime? pickedDate = await showDatePicker(
                                       context: context,
-                                      initialDate:  DateTime.parse(state.detailsPlayer!.birthday!),
+                                      initialDate: DateTime.parse(
+                                          state.detailsPlayer!.birthday!),
                                       firstDate: DateTime(1900),
                                       lastDate: DateTime(2100),
                                     );
@@ -313,5 +338,13 @@ class _ProfilScreenState extends State<ProfilScreen> {
         backgroundColor: background,
       ),
     );
+  }
+
+  void _navigateToNewsScreen(BuildContext context) {
+    NewsScreen.navigateTo(context);
+  }
+
+  void _navigateToInfoClubScreen(BuildContext context) {
+    InfoClubScreen.navigateTo(context);
   }
 }
