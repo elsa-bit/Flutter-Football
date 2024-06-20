@@ -2,11 +2,10 @@
 class Endpoints {
   Endpoints._();
 
-  static const String localHostURL = 'api-csbretigny.vercel.app';
+  static const String localHostURL = '192.168.1.107:3000';
+  static const String prodURL = 'api-csbretigny.vercel.app';
 
-  static const String prodURL = '';
-
-  static const String baseURL = localHostURL;
+  static const String baseURL = prodURL;
 
   static const int receiveTimeout = 5000;
 
@@ -35,5 +34,8 @@ class Endpoints {
   static const String detailsPlayerPath = '/api/detailsPlayer';
   static const String addFriendPath = '/api/updateFriend';
   static const String friendPlayerPath = '/api/friendsPlayer';
+
+  //player paths
+  static const String modifyPlayerPath = '/api/modifyPlayer';
 
 }

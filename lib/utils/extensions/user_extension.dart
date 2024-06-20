@@ -33,4 +33,12 @@ extension UserData on User {
       return null;
     }
   }
+
+  String? getEmail() {
+    try {
+      return this.userMetadata?["email"] as String;
+    } catch(e) {
+      return null;
+    }
+  }
 }

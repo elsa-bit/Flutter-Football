@@ -1,3 +1,5 @@
+import 'package:flutter_football/domain/models/player_min.dart';
+
 abstract class PlayersEvent {}
 
 class GetPlayersTeam extends PlayersEvent {
@@ -23,5 +25,13 @@ class AddFriend extends PlayersEvent {
   AddFriend({
     required this.idPlayer,
     required this.idFriend,
+  });
+}
+
+class ModifyPlayer extends PlayersEvent {
+  final PlayerMin player;
+
+  ModifyPlayer({
+    required this.player,
   });
 }

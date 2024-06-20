@@ -4,6 +4,7 @@ import 'package:flutter_football/data/data_sources/player_data_source.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/data/services/player_service.dart';
 import 'package:flutter_football/domain/models/player.dart';
+import 'package:flutter_football/domain/models/player_min.dart';
 
 import '../models/team.dart';
 
@@ -52,5 +53,11 @@ class PlayerRepository {
       print(error);
       rethrow;
     }
+  }
+
+  Future<String> modifyPlayer(PlayerMin player) {
+    final idPlayer = preferencesDataSource.getIdPlayer();
+
+    return playerDataSource.modifyPlayer(player, idPlayer!);
   }
 }
