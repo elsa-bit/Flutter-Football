@@ -15,6 +15,7 @@ import 'package:flutter_football/presentation/blocs/players/players_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_state.dart';
 import 'package:flutter_football/presentation/screens/player/profil/infoClub_screen.dart';
 import 'package:flutter_football/presentation/screens/player/profil/news_screen.dart';
+import 'package:flutter_football/presentation/screens/player/profil/resource_screen.dart';
 import 'package:flutter_football/utils/extensions/user_extension.dart';
 import 'package:intl/intl.dart';
 
@@ -145,9 +146,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
                   ],
                 ),
               ),
+              Spacer(),
               Container(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
                       style: ButtonStyle(
@@ -159,14 +160,27 @@ class _ProfilScreenState extends State<ProfilScreen> {
                         "Actualités du club",
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                          WidgetStateProperty.all<Color>(AppColors.lightBlue),
+                        ),
+                        onPressed: () => _navigateToInfoClubScreen(context),
+                        child: Text(
+                          "Contact et réglement du club",
+                        ),
+                      ),
+                    ),
                     ElevatedButton(
                       style: ButtonStyle(
                         foregroundColor:
                         WidgetStateProperty.all<Color>(AppColors.lightBlue),
                       ),
-                      onPressed: () => _navigateToInfoClubScreen(context),
+                      onPressed: () => _navigateToResourceScreen(context),
                       child: Text(
-                        "Contact et réglement du club",
+                        "Ressources entrainement",
                       ),
                     ),
                   ],
@@ -346,5 +360,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
   void _navigateToInfoClubScreen(BuildContext context) {
     InfoClubScreen.navigateTo(context);
+  }
+
+  void _navigateToResourceScreen(BuildContext context) {
+    ResourceScreen.navigateTo(context);
   }
 }

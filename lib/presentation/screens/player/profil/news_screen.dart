@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class NewsScreen extends StatefulWidget {

@@ -9,6 +9,7 @@ import 'package:flutter_football/presentation/screens/onboarding/onboarding_scre
 import 'package:flutter_football/presentation/screens/player/calendar/calendar_screen.dart';
 import 'package:flutter_football/presentation/screens/player/profil/infoClub_screen.dart';
 import 'package:flutter_football/presentation/screens/player/profil/news_screen.dart';
+import 'package:flutter_football/presentation/screens/player/profil/resource_screen.dart';
 import 'package:flutter_football/presentation/screens/player/statistic/friend_screen.dart';
 import 'package:flutter_football/presentation/screens/player/statistic/rankingFriend_screen.dart';
 import 'package:flutter_football/presentation/screens/player/statistic/ranking_screen.dart';
@@ -50,6 +51,8 @@ class AppRouter {
         return NewsScreen.route();
       case InfoClubScreen.routeName:
         return InfoClubScreen.route();
+      case ResourceScreen.routeName:
+        return ResourceScreen.route();
       default:
         return _errorRoute();
     }

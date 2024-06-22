@@ -13,3 +13,9 @@ class GetAvatar extends MediaEvent {
 class GetClubRule extends MediaEvent {
   GetClubRule();
 }
+
+class GetVideosBucket extends MediaEvent {
+  final String bucketName;
+
+  GetVideosBucket({required this.bucketName});
+}

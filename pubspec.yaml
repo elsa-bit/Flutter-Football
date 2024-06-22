@@ -51,6 +51,7 @@ dependencies:
   confetti: ^0.7.0
   syncfusion_flutter_pdfviewer: ^20.4.54
   flutter_inappwebview: ^6.0.0
+  video_player: ^2.8.7
 
 dev_dependencies:
   flutter_test:

@@ -19,6 +19,7 @@ abstract class AppColors {
   static const Color mediumBlue = Color(0xff318DDB);
   static const Color darkBlue = Color(0xff16558d);
   static const Color red = Color(0xffea2424);
+  static const Color backGrey = Color(0x74857777);
 }
 
 class LightThemeAppColors extends AppColors {
