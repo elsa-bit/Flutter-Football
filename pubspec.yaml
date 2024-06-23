@@ -49,16 +49,19 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   qr_flutter: ^4.1.0
   confetti: ^0.7.0
+  syncfusion_flutter_pdfviewer: ^20.4.54
+  flutter_inappwebview: ^6.0.0
+  video_player: ^2.8.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
 
-flutter_icons:
+flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/CSB.png"
+  image_path: "assets/images/CSB_simple.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

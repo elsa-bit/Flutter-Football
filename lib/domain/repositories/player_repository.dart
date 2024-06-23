@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/data/services/player_service.dart';
 import 'package:flutter_football/domain/models/player.dart';
+import 'package:flutter_football/domain/models/player_min.dart';
+import 'package:flutter_football/domain/models/user.dart';
 
 import '../models/team.dart';
 
@@ -48,6 +51,31 @@ class PlayerRepository {
       final players = await playerDataSource.getFriendsPlayer(idPlayer);
       final data = jsonDecode(players)["player"] as List<dynamic>;
       return List<Player>.from(data.map((model) => Player.fromJson(model)));
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Future<String> modifyPlayer(PlayerMin player) {
+    final idPlayer = preferencesDataSource.getIdPlayer();
+
+    return playerDataSource.modifyPlayer(player, idPlayer!);
+  }
+
+  Future<List<Coach>> getCoachPlayer() async {
+    final teamsId = preferencesDataSource
+            .getTeamsIds()
+            ?.toString()
+            .replaceAll("[", "")
+            .replaceAll("]", "") ??
+        "";
+
+    try {
+      final coachs = await playerDataSource.getCoachPlayer(teamsId);
+      final data = jsonDecode(coachs)["coachs"] as List<dynamic>;
+      debugPrint("JSON : "+ data.toString());
+      return List<Coach>.from(data.map((model) => Coach.fromJson(model)));
     } catch (error) {
       print(error);
       rethrow;

@@ -2,11 +2,10 @@
 class Endpoints {
   Endpoints._();
 
-  static const String localHostURL = 'api-csbretigny.vercel.app';
+  static const String localHostURL = '192.168.1.107:3000';
+  static const String prodURL = 'api-csbretigny.vercel.app';
 
-  static const String prodURL = '';
-
-  static const String baseURL = localHostURL;
+  static const String baseURL = prodURL;
 
   static const int receiveTimeout = 5000;
 
@@ -21,6 +20,7 @@ class Endpoints {
   static const String teamPath = '/api/team';
   static const String coachTeamsPath = '/api/teamsCoach';
   static const String teamPlayersPath = '/api/playersTeam';
+  static const String specificTeamPlayerPath = '/api/teamsPlayer';
 
   //schedule paths
   static const String schedulePath = '/api/eventsCoach';
@@ -35,4 +35,8 @@ class Endpoints {
   static const String addFriendPath = '/api/updateFriend';
   static const String friendPlayerPath = '/api/friendsPlayer';
 
+  //player paths
+  static const String modifyPlayerPath = '/api/modifyPlayer';
+  static const String coachPlayerPath = '/api/coachTeams';
+  static const String specificVideosPlayerPath = '/api/videosPlayer';
 }

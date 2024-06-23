@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import '../../networking/endpoints.dart';
 
@@ -29,6 +31,18 @@ class BaseDataSource {
         'Content-Type': 'application/json; charset=UTF-8',
       },*/
       body: body,
+    );
+  }
+
+  Future<http.Response> httpPostBody(String path, Map<String, dynamic> body) {
+    final uri = Uri.https(Endpoints.baseURL, path);
+    print(uri);
+    return http.post(
+      uri,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(body),
     );
   }
 }

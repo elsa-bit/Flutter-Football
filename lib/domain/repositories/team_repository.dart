@@ -56,5 +56,15 @@ class TeamRepository {
     }
   }
 
-
+  Future<List<Team>> getSpecificTeamPlayer(String idPlayer) async {
+    try {
+      final teams = await teamDataSource.getSpecificTeamPlayer(idPlayer);
+      final data = jsonDecode(teams)["teams"] as List<dynamic>;
+      final result = List<Team>.from(data.map((model)=> Team.fromJson(model)));
+      return result;
+    } catch(error) {
+      print(error);
+      rethrow;
+    }
+  }
 }

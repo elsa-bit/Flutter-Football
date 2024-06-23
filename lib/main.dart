@@ -10,11 +10,13 @@ import 'package:flutter_football/config/app_router.dart';
 import 'package:flutter_football/config/app_themes.dart';
 import 'package:flutter_football/data/data_sources/media_data_source.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
+import 'package:flutter_football/data/data_sources/team_data_source.dart';
 import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
 import 'package:flutter_football/domain/repositories/media_repository.dart';
 import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/domain/repositories/schedule_repository.dart';
+import 'package:flutter_football/domain/repositories/team_repository.dart';
 import 'package:flutter_football/networking/firebase/firebase_analytics_handler.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
@@ -22,6 +24,7 @@ import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
+import 'package:flutter_football/presentation/blocs/teams/teams_bloc.dart';
 import 'package:flutter_football/presentation/screens/coach/home.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/player/home_player.dart';
@@ -105,6 +108,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => MediaRepository(
             mediaDataSource: MediaDataSource(),
+            preferencesDataSource: SharedPreferencesDataSource(),
           ),
         ),
         RepositoryProvider(
@@ -117,6 +121,12 @@ class MyApp extends StatelessWidget {
           create: (context) => PlayerRepository(
             playerDataSource: PlayerDataSource(),
             preferencesDataSource: SharedPreferencesDataSource(),
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => TeamRepository(
+            teamDataSource: TeamDataSource(),
+            preferences: SharedPreferencesDataSource(),
           ),
         ),
       ],
@@ -144,6 +154,11 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => MediaBloc(
                 repository: RepositoryProvider.of<MediaRepository>(context),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => TeamsBloc(
+                repository: RepositoryProvider.of<TeamRepository>(context),
               ),
             ),
           ],
