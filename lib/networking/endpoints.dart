@@ -35,4 +35,7 @@ class Endpoints {
   static const String addFriendPath = '/api/updateFriend';
   static const String friendPlayerPath = '/api/friendsPlayer';
 
+  //match paths
+  static const String teamMatchPath = '/api/matchsTeam';
+
 }

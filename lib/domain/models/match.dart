@@ -9,16 +9,19 @@ class Match {
   final String idTeam;
   final bool? win;
   final String nameTeam;
+  final int? idFMI;
 
-  Match(
-      {required this.id,
-      required this.opponentGoal,
-      required this.date,
-      required this.opponentName,
-      required this.place,
-      required this.idTeam,
-      this.win,
-      required this.nameTeam});
+  Match({
+    required this.id,
+    required this.opponentGoal,
+    required this.date,
+    required this.opponentName,
+    required this.place,
+    required this.idTeam,
+    this.win,
+    required this.nameTeam,
+    this.idFMI,
+  });
 
   factory Match.fromJson(Map<String, dynamic> json) {
     try {
@@ -30,7 +33,8 @@ class Match {
       final String place = json["place"] as String;
       final String idTeam = json["idTeam"].toString();
       final bool? win = json["win"] as bool?;
-      final String nameTeam = json["nameTeam"] as String;
+      final String nameTeam = json["nameTeam"] as String? ?? "";
+      final int? idFMI = json["idFMI"] as int?;
 
       return Match(
           id: id,
@@ -40,7 +44,9 @@ class Match {
           place: place,
           idTeam: idTeam,
           win: win,
-          nameTeam: nameTeam);
+          nameTeam: nameTeam,
+          idFMI: idFMI,
+      );
     } catch (e) {
       print(e);
       throw const FormatException('Failed to convert Match data.');
