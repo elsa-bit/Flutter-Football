@@ -30,8 +30,9 @@ class _ResourceScreenState extends State<ResourceScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<MediaBloc>(context)
-        .add(GetVideosBucket(bucketName: "trainingGeneral"));
-    //get video speicifque poste - general - prepa physique
+        ..add(GetSpecificVideos())
+        ..add(GetVideosBucket(bucketName: "trainingGeneral"))
+        ..add(GetVideosBucket(bucketName: "trainingPhysical"));
   }
 
   @override
@@ -58,26 +59,26 @@ class _ResourceScreenState extends State<ResourceScreen> {
               return ListView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text('Techniques (en fonction de son poste)',
+                    padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 18.0, bottom: 2.0),
+                    child: Text('Technique',
                         style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold)),
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
-                  VideoCarousel(videos: state.videos!),
+                  VideoCarousel(videos: state.videosSpecific!),
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 18.0, bottom: 2.0),
                     child: Text('Entrainement général',
                         style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold)),
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
-                  VideoCarousel(videos: state.videos!),
+                  VideoCarousel(videos: state.videosGeneral!),
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 18.0, bottom: 2.0),
                     child: Text('Préparation physique',
                         style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold)),
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
-                  VideoCarousel(videos: state.videos!),
+                  VideoCarousel(videos: state.videosPhysical!),
                 ],
               );
             default:

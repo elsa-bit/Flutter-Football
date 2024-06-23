@@ -71,8 +71,6 @@ class PlayerRepository {
             .replaceAll("]", "") ??
         "";
 
-    debugPrint("Teams : " + teamsId);
-
     try {
       final coachs = await playerDataSource.getCoachPlayer(teamsId);
       final data = jsonDecode(coachs)["coachs"] as List<dynamic>;

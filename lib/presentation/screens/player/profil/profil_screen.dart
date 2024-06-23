@@ -150,38 +150,47 @@ class _ProfilScreenState extends State<ProfilScreen> {
               Container(
                 child: Column(
                   children: [
-                    ElevatedButton(
+                    OutlinedButton.icon(
                       style: ButtonStyle(
                         foregroundColor:
                             WidgetStateProperty.all<Color>(AppColors.lightBlue),
+                        side: WidgetStateProperty.all<BorderSide>(
+                            BorderSide(width: 0.2, color: Colors.grey)),
                       ),
                       onPressed: () => _navigateToNewsScreen(context),
-                      child: Text(
+                      label: Text(
                         "Actualités du club",
                       ),
+                      icon: Icon(Icons.feed, size: 18),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: ElevatedButton(
+                      child: OutlinedButton.icon(
                         style: ButtonStyle(
-                          foregroundColor:
-                          WidgetStateProperty.all<Color>(AppColors.lightBlue),
+                          foregroundColor: WidgetStateProperty.all<Color>(
+                              AppColors.lightBlue),
+                          side: WidgetStateProperty.all<BorderSide>(
+                              BorderSide(width: 0.2, color: Colors.grey)),
                         ),
                         onPressed: () => _navigateToInfoClubScreen(context),
-                        child: Text(
+                        label: Text(
                           "Contact et réglement du club",
                         ),
+                        icon: Icon(Icons.contact_mail, size: 18),
                       ),
                     ),
-                    ElevatedButton(
+                    OutlinedButton.icon(
                       style: ButtonStyle(
                         foregroundColor:
-                        WidgetStateProperty.all<Color>(AppColors.lightBlue),
+                            WidgetStateProperty.all<Color>(AppColors.lightBlue),
+                        side: WidgetStateProperty.all<BorderSide>(
+                            BorderSide(width: 0.2, color: Colors.grey)),
                       ),
                       onPressed: () => _navigateToResourceScreen(context),
-                      child: Text(
+                      label: Text(
                         "Ressources entrainement",
                       ),
+                      icon: Icon(Icons.directions_run, size: 18),
                     ),
                   ],
                 ),

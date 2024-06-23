@@ -38,4 +38,5 @@ class Endpoints {
   //player paths
   static const String modifyPlayerPath = '/api/modifyPlayer';
   static const String coachPlayerPath = '/api/coachTeams';
+  static const String specificVideosPlayerPath = '/api/videosPlayer';
 }

@@ -19,3 +19,7 @@ class GetVideosBucket extends MediaEvent {
 
   GetVideosBucket({required this.bucketName});
 }
+
+class GetSpecificVideos extends MediaEvent {
+  GetSpecificVideos();
+}

@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/data/data_sources/base_data_source.dart';
 import 'package:flutter_football/data/services/media_service.dart';
 import 'package:flutter_football/main.dart';
+import 'package:flutter_football/networking/endpoints.dart';
+import 'package:flutter_football/networking/exceptions_factory.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
 
 class MediaDataSource extends BaseDataSource with MediaService {
@@ -37,5 +39,17 @@ class MediaDataSource extends BaseDataSource with MediaService {
       videos.add(Video(url: url, name: file.name));
     }
     return videos;
+  }
+
+  Future<String> getSpecificVideos(int? idplayer) async {
+    final queryParameters = {'idplayer': idplayer.toString()};
+    final response = await httpGet(Endpoints.specificVideosPlayerPath, queryParameters);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
   }
 }

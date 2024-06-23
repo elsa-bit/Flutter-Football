@@ -49,12 +49,30 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
       try {
         emit(state.copyWith(status: MediaStatus.loading));
         final videos = await repository.getVideosBucket(event.bucketName);
-        emit(state.copyWith(videos: videos, status: MediaStatus.success));
+
+        if(event.bucketName == 'trainingGeneral'){
+          emit(state.copyWith(videosGeneral: videos, status: MediaStatus.success));
+        }else if(event.bucketName == 'trainingPhysical'){
+          emit(state.copyWith(videosPhysical: videos, status: MediaStatus.success));
+        }
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
           status: MediaStatus.error,
         ));
+      }
+    });
+
+    on<GetSpecificVideos>((event, emit) async {
+      try {
+        emit(state.copyWith(status: MediaStatus.loading));
+        final videos = await repository.getSpecificVideos();
+        emit(state.copyWith(videosSpecific: videos, status: MediaStatus.success));
+      } catch (error) {
+        emit(state.copyWith(
+            error: error.toString(),
+            status: MediaStatus.error,
+            response: null));
       }
     });
   }

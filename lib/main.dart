@@ -108,6 +108,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => MediaRepository(
             mediaDataSource: MediaDataSource(),
+            preferencesDataSource: SharedPreferencesDataSource(),
           ),
         ),
         RepositoryProvider(
