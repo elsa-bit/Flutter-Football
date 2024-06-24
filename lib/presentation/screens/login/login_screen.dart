@@ -132,120 +132,124 @@ class _LoginScreen extends State<LoginScreen> {
             }
           },
           child: Builder(builder: (context) {
-            return Scaffold(
-              body: Container(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 40.0, horizontal: 60.0),
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/images/CSB.png",
-                        width: 70.0,
-                        height: 70.0,
-                      ),
-                      /*Container(
-                        margin: const EdgeInsets.only(top: 50.0),
-                        child: ToggleButtons(
-                          isSelected: _loginSelections,
-                          //textStyle: AppTextStyle.regular,
-                          selectedColor: currentAppColors.secondaryColor,
-                          onPressed: (int index) {
-                            setState(() {
-                              updateSelectionState(index);
-                            });
-                          },
-                          constraints:
-                              const BoxConstraints.expand(width: 100.0),
-                          children: _loginWidgets,
+            return GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 40.0, horizontal: 60.0),
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/CSB.png",
+                          width: 70.0,
+                          height: 70.0,
                         ),
-                      ),*/
-                      Container(
-                        margin: const EdgeInsets.only(top: 50.0),
-                        child: Text(
-                          "Connexion",
-                          style: AppTextStyle.title,
-                        ),
-                      ),
-                      Spacer(),
-                      Container(
-                        child: Column(
-                          children: [
-                            CustomTextField(
-                              labelText: "Email",
-                              hint: "email@gmail.com",
-                              icon: Icon(Icons.email),
-                              controller: emailController,
-                              error: emailError,
-                              onChanged: (_) {
-                                if (emailError != null) {
-                                  setState(() {
-                                    emailError = null;
-                                  });
-                                }
-                              },
-                            ),
-                            const SizedBox(height: 15),
-                            CustomTextField(
-                              labelText: "Mot de passe",
-                              hint: "*********",
-                              icon: Icon(Icons.key),
-                              controller: passwordController,
-                              obscureText: true,
-                              error: passwordError,
-                              onChanged: (_) {
-                                if (passwordError != null) {
-                                  setState(() {
-                                    passwordError = null;
-                                  });
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (loginError != null) ...[
+                        /*Container(
+                          margin: const EdgeInsets.only(top: 50.0),
+                          child: ToggleButtons(
+                            isSelected: _loginSelections,
+                            //textStyle: AppTextStyle.regular,
+                            selectedColor: currentAppColors.secondaryColor,
+                            onPressed: (int index) {
+                              setState(() {
+                                updateSelectionState(index);
+                              });
+                            },
+                            constraints:
+                                const BoxConstraints.expand(width: 100.0),
+                            children: _loginWidgets,
+                          ),
+                        ),*/
                         Container(
-                          margin: const EdgeInsets.only(top: 15.0),
+                          margin: const EdgeInsets.only(top: 50.0),
                           child: Text(
-                            loginError!,
-                            style: AppTextStyle.regular.copyWith(
-                                color: Color.fromRGBO(207, 156, 149, 1.0)),
+                            "Connexion",
+                            style: AppTextStyle.title,
                           ),
                         ),
-                      ] else
-                        ...[],
-                      Spacer(),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: currentAppColors.secondaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                        Spacer(),
+                        Container(
+                          child: Column(
+                            children: [
+                              CustomTextField(
+                                labelText: "Email",
+                                hint: "email@gmail.com",
+                                icon: Icon(Icons.email),
+                                controller: emailController,
+                                error: emailError,
+                                onChanged: (_) {
+                                  if (emailError != null) {
+                                    setState(() {
+                                      emailError = null;
+                                    });
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 15),
+                              CustomTextField(
+                                labelText: "Mot de passe",
+                                hint: "*********",
+                                icon: Icon(Icons.key),
+                                controller: passwordController,
+                                obscureText: true,
+                                error: passwordError,
+                                onChanged: (_) {
+                                  if (passwordError != null) {
+                                    setState(() {
+                                      passwordError = null;
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            emailError = null;
-                            passwordError = null;
-                            loginError = null;
-                          });
-                          print("Login ...");
-                          final loginBloc = BlocProvider.of<LoginBloc>(context);
-                          loginBloc.add(
-                            Login(
-                              email: emailController.text,
-                              password: passwordController.text,
+                        if (loginError != null) ...[
+                          Container(
+                            margin: const EdgeInsets.only(top: 15.0),
+                            child: Text(
+                              loginError!,
+                              style: AppTextStyle.regular.copyWith(
+                                  color: Color.fromRGBO(207, 156, 149, 1.0)),
                             ),
-                          );
-                        },
-                        child: Text(
-                          "Se connecter",
-                          style: AppTextStyle.subtitle1.copyWith(color: Colors.white),
+                          ),
+                        ] else
+                          ...[],
+                        Spacer(),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: currentAppColors.secondaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              emailError = null;
+                              passwordError = null;
+                              loginError = null;
+                            });
+                            print("Login ...");
+                            final loginBloc = BlocProvider.of<LoginBloc>(context);
+                            loginBloc.add(
+                              Login(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Se connecter",
+                            style: AppTextStyle.subtitle1.copyWith(color: Colors.white),
+                          ),
                         ),
-                      ),
-                      const Spacer(),
-                    ],
+                        const Spacer(),
+                      ],
+                    ),
                   ),
                 ),
               ),
