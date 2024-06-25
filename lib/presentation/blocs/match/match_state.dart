@@ -1,11 +1,11 @@
-import 'package:flutter_football/domain/models/match.dart';
+import 'package:flutter_football/domain/models/match_details.dart';
 
 enum MatchStatus { initial, loading, success, error }
 
 class MatchState {
   final MatchStatus status;
-  final List<Match>? previousMatch;
-  final List<Match>? nextMatch;
+  final List<MatchDetails>? previousMatch;
+  final List<MatchDetails>? nextMatch;
   final String? idTeams;
   final String error;
 
@@ -19,8 +19,8 @@ class MatchState {
 
   MatchState copyWith({
     MatchStatus? status,
-    final List<Match>? previousMatch,
-    final List<Match>? nextMatch,
+    final List<MatchDetails>? previousMatch,
+    final List<MatchDetails>? nextMatch,
     final String? idTeams,
     String? error,
   }) {

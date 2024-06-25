@@ -11,7 +11,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     on<GetMatches>((event, emit) async {
       try {
         emit(state.copyWith(status: MatchStatus.loading));
-        final matches = await repository.getMatches();
+        final matches = await repository.getMatchesDetails();
         matches.sort((a, b) => a.date.compareTo(b.date));
         final i = matches.indexWhere((m) => m.date.isEqualOrAfter(DateTime.now()));
         emit(state.copyWith(

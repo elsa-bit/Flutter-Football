@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/data/data_sources/match_data_source.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
+import 'package:flutter_football/domain/models/match_details.dart';
 import 'package:flutter_football/domain/repositories/match_repository.dart';
 import 'package:flutter_football/presentation/blocs/match/match_bloc.dart';
 import 'package:flutter_football/domain/models/match.dart';
@@ -39,38 +40,40 @@ class MatchScreen extends StatelessWidget {
           repository: RepositoryProvider.of<MatchRepository>(context),
         )..add(GetMatches()),
         child: Scaffold(
-          body: Column(
-            children: [
-              // TODO : add filters with teams name
-              BlocBuilder<MatchBloc, MatchState>(
-                builder: (context, state) {
-                  switch (state.status) {
-                    case MatchStatus.loading:
-                      return Loader();
-                    case MatchStatus.error:
-                      return Text(state.error);
-                    case MatchStatus.success:
-                      return Expanded(
-                        child: Column(
-                          children: [
-                            if (state.previousMatch != null &&
-                                state.previousMatch!.isNotEmpty)
-                              Expanded(child: MatchSection(title: "Matchs passés", matches: state.previousMatch!)),
-                            if (state.nextMatch != null &&
-                                state.nextMatch!.isNotEmpty)
-                              Expanded(child: MatchSection(title: "Matchs à venir", matches: state.nextMatch!)),
-                          ],
-                        ),
-                      );
-
-                    default:
-                      return Center(
-                        child: Text("Aucun match pour le moment"),
-                      );
-                  }
-                },
-              ),
-            ],
+          body: SafeArea(
+            child: Column(
+              children: [
+                // TODO : add filters with teams name
+                BlocBuilder<MatchBloc, MatchState>(
+                  builder: (context, state) {
+                    switch (state.status) {
+                      case MatchStatus.loading:
+                        return Loader();
+                      case MatchStatus.error:
+                        return Text(state.error);
+                      case MatchStatus.success:
+                        return Expanded(
+                          child: Column(
+                            children: [
+                              if (state.previousMatch != null &&
+                                  state.previousMatch!.isNotEmpty)
+                                Expanded(child: MatchSection(title: "Matchs passés", matches: state.previousMatch!)),
+                              if (state.nextMatch != null &&
+                                  state.nextMatch!.isNotEmpty)
+                                Expanded(child: MatchSection(title: "Matchs à venir", matches: state.nextMatch!)),
+                            ],
+                          ),
+                        );
+            
+                      default:
+                        return Center(
+                          child: Text("Aucun match pour le moment"),
+                        );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -80,7 +83,7 @@ class MatchScreen extends StatelessWidget {
 
 class MatchSection extends StatelessWidget {
   final String title;
-  final List<Match> matches;
+  final List<MatchDetails> matches;
 
   const MatchSection({
     Key? key,
@@ -115,9 +118,9 @@ class MatchSection extends StatelessWidget {
     );
   }
 
-  void onMatchTap(BuildContext context, Match match) {
+  void onMatchTap(BuildContext context, MatchDetails match) {
     if(match.win != null || match.date.isEqualOrBefore(DateTime.now())) {
-      if(match.idFMI == null) {
+      if(!match.FMICompleted) {
         // Create / Edit FMI
         Navigator.push(
             context,

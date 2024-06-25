@@ -2,9 +2,9 @@
 class Endpoints {
   Endpoints._();
 
-  static const String localHostURL = 'api-csbretigny.vercel.app';
+  static const String localHostURL = '10.0.2.2:3000';
 
-  static const String prodURL = '';
+  static const String prodURL = 'api-csbretigny.vercel.app';
 
   static const String baseURL = localHostURL;
 
@@ -36,6 +36,10 @@ class Endpoints {
   static const String friendPlayerPath = '/api/friendsPlayer';
 
   //match paths
+  static const String matchDetailsPath = '/api/getCoachMatchesDetails';
   static const String teamMatchPath = '/api/matchsTeam';
+  static const String addReplacementPath = '/api/addReplacement';
+  static const String addCardPath = '/api/addCard';
+  static const String addGoalPath = '/api/addGoal';
 
 }

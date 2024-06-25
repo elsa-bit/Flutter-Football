@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_football/config/app_colors.dart';
-import 'package:flutter_football/domain/models/match.dart';
+import 'package:flutter_football/domain/models/match_details.dart';
 import 'package:flutter_football/utils/extensions/date_time_extension.dart';
 
 class MatchItem extends StatelessWidget {
-  final Match match;
+  final MatchDetails match;
   final VoidCallback? onTap;
 
   const MatchItem({Key? key, required this.match, this.onTap}): super(key: key);
@@ -23,12 +23,13 @@ class MatchItem extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(12.0),
+              width: 80.0,
               decoration: BoxDecoration(
                 color: (match.win != null) ? ((match.win!) ? AppColors.green.withOpacity(0.4) : AppColors.red.withOpacity(0.4)) : AppColors.black.withOpacity(0.1),
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     this.formattedDate(match.date),
@@ -37,17 +38,18 @@ class MatchItem extends StatelessWidget {
                       fontSize: 16.0,
                     ),
                   ),
-                  /*if (event.type == 'match' || event.type == 'training')
-                    Text(
-                      event.team!,
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),*/
+                  Text(
+                    match.nameTeam,
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12.0,
+                    ),
+                    textAlign: TextAlign.center,
+                  )
                 ],
               ),
             ),
-            SizedBox(width: 16.0),
+            SizedBox(width: 10.0),
             Expanded(
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
@@ -70,11 +72,11 @@ class MatchItem extends StatelessWidget {
                             alignment: Alignment.bottomRight,
                             padding: const EdgeInsets.all(5.0),
                             decoration: BoxDecoration(
-                              color: (match.idFMI != null) ? AppColors.green.withOpacity(0.4) : AppColors.red.withOpacity(0.4),
+                              color: (match.FMICompleted) ? AppColors.green.withOpacity(0.4) : AppColors.red.withOpacity(0.4),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              (match.idFMI != null) ? "FMI remplie" : "FMI non remplie",
+                              (match.FMICompleted) ? "FMI remplie" : "FMI non remplie",
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -91,7 +93,7 @@ class MatchItem extends StatelessWidget {
             if(match.win != null || match.date.isEqualOrBefore(DateTime.now())) //if match is finished or should start today
               Container(
                 padding: const EdgeInsets.all(10.0),
-                  child: Icon((match.idFMI == null) ? Icons.edit : Icons.read_more),
+                  child: Icon((!match.FMICompleted) ? Icons.edit : Icons.read_more),
               )
           ],
         ),

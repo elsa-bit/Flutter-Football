@@ -23,5 +23,57 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
         ));
       }
     });
+
+    on<AddCard>((event, emit) async {
+      try {
+        emit(state.copyWith(status: FmiStatus.loading));
+        final response = await repository.addCard(event.idMatch, event.idPlayer, event.color);
+        if (response.statusCode == 200) {
+          emit(state.copyWith(/*TODO : retrieve object in response and add it to success data*/));
+        } else {
+          emit(state.copyWith(/*error: FMIErrorType.Card */));
+        }
+      } catch (error) {
+        emit(state.copyWith(
+          error: error.toString(),
+          status: FmiStatus.error,
+        ));
+      }
+    });
+
+    on<AddGoal>((event, emit) async {
+      try {
+        emit(state.copyWith(status: FmiStatus.loading));
+        final response = await repository.addGoal(event.idMatch, event.idPlayer);
+        if (response.statusCode == 200) {
+          emit(state.copyWith(/*TODO : retrieve object in response and add it to success data*/));
+        } else {
+          emit(state.copyWith(/*error: FMIErrorType.Goal */));
+        }
+      } catch (error) {
+        emit(state.copyWith(
+          error: error.toString(),
+          status: FmiStatus.error,
+        ));
+      }
+    });
+
+    on<AddReplacement>((event, emit) async {
+      try {
+        emit(state.copyWith(status: FmiStatus.loading));
+        final response = await repository.addReplacement(event.idMatch, event.idPlayerOut, event.idPlayerIn, event.reason);
+        if (response.statusCode == 200) {
+          emit(state.copyWith(/*TODO : retrieve object in response and add it to success data*/));
+        } else {
+          emit(state.copyWith(/*error: FMIErrorType.Replacement */));
+        }
+      } catch (error) {
+        emit(state.copyWith(
+          error: error.toString(),
+          status: FmiStatus.error,
+        ));
+      }
+    });
+
   }
 }
