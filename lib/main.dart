@@ -8,12 +8,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_router.dart';
 import 'package:flutter_football/config/app_themes.dart';
+import 'package:flutter_football/data/data_sources/conversation_data_source.dart';
 import 'package:flutter_football/data/data_sources/media_data_source.dart';
+import 'package:flutter_football/data/data_sources/message_data_source.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
 import 'package:flutter_football/data/data_sources/team_data_source.dart';
 import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
+import 'package:flutter_football/domain/repositories/conversation_repository.dart';
 import 'package:flutter_football/domain/repositories/media_repository.dart';
+import 'package:flutter_football/domain/repositories/message_repository.dart';
 import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/domain/repositories/schedule_repository.dart';
 import 'package:flutter_football/domain/repositories/team_repository.dart';
@@ -21,7 +25,9 @@ import 'package:flutter_football/networking/firebase/firebase_analytics_handler.
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
+import 'package:flutter_football/presentation/blocs/conversation/conversation_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
+import 'package:flutter_football/presentation/blocs/message/message_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/blocs/teams/teams_bloc.dart';
@@ -129,6 +135,17 @@ class MyApp extends StatelessWidget {
             preferences: SharedPreferencesDataSource(),
           ),
         ),
+        RepositoryProvider(
+          create: (context) => ConversationRepository(
+            conversationDataSource: ConversationDataSource(),
+            preferences: SharedPreferencesDataSource(),
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => MessageRepository(
+            messageDataSource: MessageDataSource(),
+          ),
+        ),
       ],
       child: AnalyticsProvider(
         handlers: [
@@ -161,6 +178,17 @@ class MyApp extends StatelessWidget {
                 repository: RepositoryProvider.of<TeamRepository>(context),
               ),
             ),
+            BlocProvider(
+              create: (context) => ConversationBloc(
+                repository:
+                    RepositoryProvider.of<ConversationRepository>(context),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => MessageBloc(
+                repository: RepositoryProvider.of<MessageRepository>(context),
+              ),
+            )
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

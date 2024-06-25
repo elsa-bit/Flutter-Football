@@ -13,6 +13,7 @@ import 'package:flutter_football/presentation/screens/player/profil/resource_scr
 import 'package:flutter_football/presentation/screens/player/statistic/friend_screen.dart';
 import 'package:flutter_football/presentation/screens/player/statistic/rankingFriend_screen.dart';
 import 'package:flutter_football/presentation/screens/player/statistic/ranking_screen.dart';
+import 'package:flutter_football/presentation/screens/player/tchat/message_screen.dart';
 import 'package:flutter_football/presentation/screens/splash/splash_screen.dart';
 
 class AppRouter {
@@ -53,6 +54,8 @@ class AppRouter {
         return InfoClubScreen.route();
       case ResourceScreen.routeName:
         return ResourceScreen.route();
+      case MessageScreen.routeName:
+        return MessageScreen.route(settings);
       default:
         return _errorRoute();
     }
