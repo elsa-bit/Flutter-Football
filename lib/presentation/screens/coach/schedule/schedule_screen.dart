@@ -4,10 +4,14 @@ import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/data/data_sources/schedule_data_source.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/domain/models/event.dart';
+import 'package:flutter_football/domain/models/team.dart';
 import 'package:flutter_football/domain/repositories/schedule_repository.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_state.dart';
+import 'package:flutter_football/presentation/blocs/teams/teams_bloc.dart';
+import 'package:flutter_football/presentation/blocs/teams/teams_event.dart';
+import 'package:flutter_football/presentation/blocs/teams/teams_state.dart';
 import 'package:flutter_football/presentation/screens/coach/schedule/playerAttendance_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/schedule/schedule_item.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -45,10 +49,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   ];
   String? _selectedEventIdTeam;
   String? _selectEventNameTeam;
-  final List<Map<String, String>> _eventTeam = [
-    {'id': '2', 'name': 'SENIOR'},
-    {'id': '4', 'name': 'Les féminines'},
-  ];
+  final List<Map<String, String>> _eventTeam = [];
 
   //Obtenir le nom de l'équipe à partir de l'ID
   String? _getTeamNameById(String? id) {
@@ -61,235 +62,255 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     _selectedTime = TimeOfDay.now();
+
+    BlocProvider.of<ScheduleBloc>(context).add(GetSchedules());
+    BlocProvider.of<TeamsBloc>(context).add(GetTeams());
   }
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => ScheduleRepository(
-          scheduleDataSource: ScheduleDataSource(),
-          preferencesDataSource: SharedPreferencesDataSource()),
-      child: BlocProvider(
-        create: (context) => ScheduleBloc(
-          repository: RepositoryProvider.of<ScheduleRepository>(context),
-        )..add(GetSchedules()),
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => _displayAlertDialogToAddSchedule(context),
-            child: Icon(Icons.add),
-          ),
-          body: BlocBuilder<ScheduleBloc, ScheduleState>(
-            builder: (context, state) {
-              switch (state.status) {
-                case ScheduleStatus.loading:
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                case ScheduleStatus.error:
-                  return Center(
-                    child: Text(
-                      state.error,
-                    ),
-                  );
-                case ScheduleStatus.success:
-                  if (state.matchs!.isEmpty &&
-                      state.trainings!.isEmpty &&
-                      state.meetings!.isEmpty) {
-                    return Center(
-                      child: Text("Calendrier vide !"),
-                    );
-                  }
-
-                  events.clear();
-                  for (var match in state.matchs!) {
-                    DateTime eventDate = DateTime(
-                        match.date.year, match.date.month, match.date.day);
-
-                    events.update(
-                      eventDate,
-                      (existingEvents) => existingEvents
-                        ..add(Event(
-                            match.id.toString(),
-                            "Match",
-                            'match',
-                            match.date,
-                            match.nameTeam,
-                            match.idTeam,
-                            null,
-                            null,
-                            match.opponentName,
-                            null)),
-                      ifAbsent: () => [
-                        Event(
-                            match.id.toString(),
-                            "Match",
-                            'match',
-                            match.date,
-                            match.nameTeam,
-                            match.idTeam,
-                            null,
-                            null,
-                            match.opponentName,
-                            null)
-                      ],
-                    );
-                  }
-                  for (var training in state.trainings!) {
-                    DateTime eventDate = DateTime(training.date.year,
-                        training.date.month, training.date.day);
-
-                    events.update(
-                      eventDate,
-                      (existingEvents) => existingEvents
-                        ..add(Event(
-                            training.id.toString(),
-                            "Entrainement",
-                            'training',
-                            training.date,
-                            training.nameTeam,
-                            training.idTeam,
-                            training.place,
-                            null,
-                            null,
-                            training.presence)),
-                      ifAbsent: () => [
-                        Event(
-                            training.id.toString(),
-                            "Entrainement",
-                            'training',
-                            training.date,
-                            training.nameTeam,
-                            training.idTeam,
-                            training.place,
-                            null,
-                            null,
-                            training.presence)
-                      ],
-                    );
-                  }
-                  for (var meeting in state.meetings!) {
-                    DateTime eventDate = DateTime(meeting.date_debut.year,
-                        meeting.date_debut.month, meeting.date_debut.day);
-
-                    events.update(
-                      eventDate,
-                      (existingEvents) => existingEvents
-                        ..add(Event(
-                            meeting.id.toString(),
-                            "Réunion",
-                            'meeting',
-                            meeting.date_debut,
-                            null,
-                            null,
-                            null,
-                            meeting.name,
-                            null,
-                            null)),
-                      ifAbsent: () => [
-                        Event(
-                            meeting.id.toString(),
-                            "Réunion",
-                            'meeting',
-                            meeting.date_debut,
-                            null,
-                            null,
-                            null,
-                            meeting.name,
-                            null,
-                            null)
-                      ],
-                    );
-                  }
-                  _selectedEvents.value = _getEventsForDay(_selectedDay!);
-
-                  return Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 30.0),
-                        child: TableCalendar(
-                          locale: 'fr_FR',
-                          firstDay: DateTime.utc(2010, 10, 16),
-                          lastDay: DateTime.utc(2100, 12, 31),
-                          focusedDay: _focusedDay,
-                          headerStyle: HeaderStyle(
-                              formatButtonVisible: false, titleCentered: true),
-                          calendarFormat: _calendarFormat,
-                          calendarStyle: CalendarStyle(
-                            defaultTextStyle: TextStyle(
-                                color: currentAppColors.secondaryColor),
-                            weekendTextStyle: TextStyle(
-                                color: currentAppColors.secondaryColor),
-                            selectedDecoration: BoxDecoration(
-                              color: currentAppColors.secondaryColor,
-                              shape: BoxShape.circle,
-                            ),
-                            todayDecoration: BoxDecoration(
-                              color: AppColors.darkBlue,
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
-                          selectedDayPredicate: (day) {
-                            return isSameDay(_selectedDay, day);
-                          },
-                          onDaySelected: (selectedDay, focusedDay) {
-                            if (!isSameDay(_selectedDay, selectedDay)) {
-                              setState(() {
-                                _selectedDay = selectedDay;
-                                _focusedDay = focusedDay;
-                                _selectedEvents.value =
-                                    _getEventsForDay(selectedDay);
-                              });
-                            }
-                          },
-                          onFormatChanged: (format) {
-                            if (_calendarFormat != format) {
-                              setState(() {
-                                _calendarFormat = format;
-                              });
-                            }
-                          },
-                          onPageChanged: (focusedDay) {
-                            _focusedDay = focusedDay;
-                          },
-                          eventLoader: (day) => _getEventsForDay(day),
-                        ),
-                      ),
-                      SizedBox(height: 8.0),
-                      Expanded(
-                        child: ValueListenableBuilder<List<Event>>(
-                          valueListenable: _selectedEvents,
-                          builder: (context, value, _) {
-                            return ListView.builder(
-                                itemCount: value.length,
-                                itemBuilder: (context, index) {
-                                  var item = value[index];
-                                  if (item.type == 'training' &&
-                                      item.presence == null && item.schedule.isAfter(DateTime.now()))
-                                    return ScheduleItem(
-                                      event: value[index],
-                                      onTap: () =>
-                                          _navigateToPlayerAttendanceScreen(
-                                              context,
-                                              value[index].idTeam!,
-                                              value[index].id!),
-                                    );
-                                  else
-                                    return ScheduleItem(event: value[index]);
-                                });
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                default:
-                  return Center(
-                    child: Text("Calendrier vide !"),
-                  );
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _displayAlertDialogToAddSchedule(context),
+        child: Icon(Icons.add),
+      ),
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<ScheduleBloc, ScheduleState>(
+            listener: (context, state) {
+              if (state.status == ScheduleStatus.addSuccess) {
+                _showSnackBar(context, 'Événement ajouté', Colors.greenAccent);
+                _placeController.text = "";
+                _opponentController?.text = "";
+              } else if (state.status == ScheduleStatus.error) {
+                _showSnackBar(context, state.error, Colors.orangeAccent);
+                _placeController.text = "";
+                _opponentController?.text = "";
               }
             },
           ),
+          BlocListener<TeamsBloc, TeamState>(
+            listener: (context, state) {
+              if (state.status == TeamStatus.success) {
+                _updateEventTeam(state.teams!);
+              } else if (state.status == TeamStatus.error) {
+                _showSnackBar(context, state.error, Colors.orangeAccent);
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<ScheduleBloc, ScheduleState>(
+          builder: (context, state) {
+            switch (state.status) {
+              case ScheduleStatus.loading:
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              case ScheduleStatus.error:
+                return Center(
+                  child: Text(
+                    state.error,
+                  ),
+                );
+              case ScheduleStatus.success:
+                if (state.matchs!.isEmpty &&
+                    state.trainings!.isEmpty &&
+                    state.meetings!.isEmpty) {
+                  return Center(
+                    child: Text("Calendrier vide !"),
+                  );
+                }
+
+                events.clear();
+                for (var match in state.matchs!) {
+                  DateTime eventDate = DateTime(
+                      match.date.year, match.date.month, match.date.day);
+
+                  events.update(
+                    eventDate,
+                    (existingEvents) => existingEvents
+                      ..add(Event(
+                          match.id.toString(),
+                          "Match",
+                          'match',
+                          match.date,
+                          match.nameTeam,
+                          match.idTeam,
+                          null,
+                          null,
+                          match.opponentName,
+                          null)),
+                    ifAbsent: () => [
+                      Event(
+                          match.id.toString(),
+                          "Match",
+                          'match',
+                          match.date,
+                          match.nameTeam,
+                          match.idTeam,
+                          null,
+                          null,
+                          match.opponentName,
+                          null)
+                    ],
+                  );
+                }
+                for (var training in state.trainings!) {
+                  DateTime eventDate = DateTime(training.date.year,
+                      training.date.month, training.date.day);
+
+                  events.update(
+                    eventDate,
+                    (existingEvents) => existingEvents
+                      ..add(Event(
+                          training.id.toString(),
+                          "Entrainement",
+                          'training',
+                          training.date,
+                          training.nameTeam,
+                          training.idTeam,
+                          training.place,
+                          null,
+                          null,
+                          training.presence)),
+                    ifAbsent: () => [
+                      Event(
+                          training.id.toString(),
+                          "Entrainement",
+                          'training',
+                          training.date,
+                          training.nameTeam,
+                          training.idTeam,
+                          training.place,
+                          null,
+                          null,
+                          training.presence)
+                    ],
+                  );
+                }
+                for (var meeting in state.meetings!) {
+                  DateTime eventDate = DateTime(meeting.date_debut.year,
+                      meeting.date_debut.month, meeting.date_debut.day);
+
+                  events.update(
+                    eventDate,
+                    (existingEvents) => existingEvents
+                      ..add(Event(
+                          meeting.id.toString(),
+                          "Réunion",
+                          'meeting',
+                          meeting.date_debut,
+                          null,
+                          null,
+                          null,
+                          meeting.name,
+                          null,
+                          null)),
+                    ifAbsent: () => [
+                      Event(
+                          meeting.id.toString(),
+                          "Réunion",
+                          'meeting',
+                          meeting.date_debut,
+                          null,
+                          null,
+                          null,
+                          meeting.name,
+                          null,
+                          null)
+                    ],
+                  );
+                }
+                _selectedEvents.value = _getEventsForDay(_selectedDay!);
+
+                return Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 30.0),
+                      child: TableCalendar(
+                        locale: 'fr_FR',
+                        firstDay: DateTime.utc(2010, 10, 16),
+                        lastDay: DateTime.utc(2100, 12, 31),
+                        focusedDay: _focusedDay,
+                        headerStyle: HeaderStyle(
+                            formatButtonVisible: false, titleCentered: true),
+                        calendarFormat: _calendarFormat,
+                        calendarStyle: CalendarStyle(
+                          defaultTextStyle:
+                              TextStyle(color: currentAppColors.secondaryColor),
+                          weekendTextStyle:
+                              TextStyle(color: currentAppColors.secondaryColor),
+                          selectedDecoration: BoxDecoration(
+                            color: currentAppColors.secondaryColor,
+                            shape: BoxShape.circle,
+                          ),
+                          todayDecoration: BoxDecoration(
+                            color: AppColors.darkBlue,
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        selectedDayPredicate: (day) {
+                          return isSameDay(_selectedDay, day);
+                        },
+                        onDaySelected: (selectedDay, focusedDay) {
+                          if (!isSameDay(_selectedDay, selectedDay)) {
+                            setState(() {
+                              _selectedDay = selectedDay;
+                              _focusedDay = focusedDay;
+                              _selectedEvents.value =
+                                  _getEventsForDay(selectedDay);
+                            });
+                          }
+                        },
+                        onFormatChanged: (format) {
+                          if (_calendarFormat != format) {
+                            setState(() {
+                              _calendarFormat = format;
+                            });
+                          }
+                        },
+                        onPageChanged: (focusedDay) {
+                          _focusedDay = focusedDay;
+                        },
+                        eventLoader: (day) => _getEventsForDay(day),
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    Expanded(
+                      child: ValueListenableBuilder<List<Event>>(
+                        valueListenable: _selectedEvents,
+                        builder: (context, value, _) {
+                          return ListView.builder(
+                              itemCount: value.length,
+                              itemBuilder: (context, index) {
+                                var item = value[index];
+                                if (item.type == 'training' &&
+                                    item.presence == null &&
+                                    item.schedule.isAfter(DateTime.now()))
+                                  return ScheduleItem(
+                                    event: value[index],
+                                    onTap: () =>
+                                        _navigateToPlayerAttendanceScreen(
+                                            context,
+                                            value[index].idTeam!,
+                                            value[index].id!),
+                                  );
+                                else
+                                  return ScheduleItem(event: value[index]);
+                              });
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              default:
+                return Center(
+                  child: Text("Calendrier vide !"),
+                );
+            }
+          },
         ),
       ),
     );
@@ -520,6 +541,16 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     } else {
       _showSnackBar(context, 'Veuillez remplir le lieu de l\'événement.',
           Colors.orangeAccent);
+    }
+  }
+
+  void _updateEventTeam(List<Team> teams) {
+    _eventTeam.clear();
+    for (var team in teams) {
+      _eventTeam.add({
+        'id': team.id.toString(),
+        'name': team.name,
+      });
     }
   }
 }

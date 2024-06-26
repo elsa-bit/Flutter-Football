@@ -13,7 +13,6 @@ import 'package:flutter_football/data/data_sources/media_data_source.dart';
 import 'package:flutter_football/data/data_sources/message_data_source.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
 import 'package:flutter_football/data/data_sources/team_data_source.dart';
-import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
 import 'package:flutter_football/domain/repositories/conversation_repository.dart';
 import 'package:flutter_football/domain/repositories/media_repository.dart';
@@ -74,7 +73,6 @@ void main() async {
 }
 
 final supabase = Supabase.instance.client;
-final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -197,7 +195,6 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: ThemeMode.system,
-            navigatorObservers: [routeObserver],
             home: BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 switch (state.status) {

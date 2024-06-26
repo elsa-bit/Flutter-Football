@@ -52,6 +52,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.4.54
   flutter_inappwebview: ^6.0.0
   video_player: ^2.8.7
+  firebase_messaging: ^14.9.4
 
 dev_dependencies:
   flutter_test:
