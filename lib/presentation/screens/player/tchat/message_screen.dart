@@ -103,8 +103,8 @@ class _MessageScreenState extends State<MessageScreen> {
                 if (state.status == MessageStatus.addSuccess) {
                   _showSnackBar(context, 'Message ajouté', Colors.green);
                   _messageController.text = "";
-                  BlocProvider.of<MessageBloc>(context)
-                      .add(GetMessagePlayer(idConversation: widget.idConversation));
+                  BlocProvider.of<MessageBloc>(context).add(
+                      GetMessagePlayer(idConversation: widget.idConversation));
                 } else if (state.status == MessageStatus.error) {
                   _showSnackBar(
                       context, state.error ?? '', Colors.yellowAccent);
@@ -113,7 +113,6 @@ class _MessageScreenState extends State<MessageScreen> {
               builder: (context, state) {
                 switch (state.status) {
                   case MessageStatus.loading:
-                    return const CircularProgressIndicator();
                   default:
                     return Padding(
                       padding: const EdgeInsets.all(8.0),

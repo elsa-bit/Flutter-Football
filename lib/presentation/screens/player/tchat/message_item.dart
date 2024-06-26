@@ -5,8 +5,9 @@ import 'package:intl/intl.dart';
 class MessageItem extends StatelessWidget {
   final Message message;
   final bool isCurrentUser;
+  final DateFormat formatter = DateFormat('dd-MM-yyyy HH:mm');
 
-  const MessageItem({
+  MessageItem({
     Key? key,
     required this.message,
     required this.isCurrentUser,
@@ -36,12 +37,19 @@ class MessageItem extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 4),
-              Text(
-                "${message.sender} - ${DateFormat('yyyy-MM-dd HH:mm:ss').format(message.date!)}",
-                style: const TextStyle(
-                  color: Colors.white70,
-                ),
-              ),
+              isCurrentUser
+                  ? Text(
+                      "${formatter.format(message.date!)}",
+                      style: const TextStyle(
+                        color: Colors.white70,
+                      ),
+                    )
+                  : Text(
+                      "${message.sender} - ${formatter.format(message.date!)}",
+                      style: const TextStyle(
+                        color: Colors.white70,
+                      ),
+                    ),
             ],
           ),
         ),

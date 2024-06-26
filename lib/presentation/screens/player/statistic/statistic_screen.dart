@@ -90,7 +90,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                                 size: 70.0,
                               ),
                               Text(
-                                "2",
+                                state.detailsPlayer!.replacement.toString(),
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(fontSize: 28),
                               ),

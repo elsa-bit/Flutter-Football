@@ -74,6 +74,7 @@ void main() async {
 }
 
 final supabase = Supabase.instance.client;
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -196,6 +197,7 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: ThemeMode.system,
+            navigatorObservers: [routeObserver],
             home: BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 switch (state.status) {
