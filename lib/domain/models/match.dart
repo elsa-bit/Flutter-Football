@@ -2,7 +2,6 @@ import 'package:intl/intl.dart';
 
 class Match {
   final int id;
-  final int opponentGoal;
   final DateTime date;
   final String opponentName;
   final String place;
@@ -13,7 +12,6 @@ class Match {
 
   Match({
     required this.id,
-    required this.opponentGoal,
     required this.date,
     required this.opponentName,
     required this.place,
@@ -26,7 +24,6 @@ class Match {
   factory Match.fromJson(Map<String, dynamic> json) {
     try {
       final int id = json["id"] as int;
-      final int opponentGoal = json["opponentGoal"] as int;
       final DateTime date =
           DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json["date"]);
       final String opponentName = json["opponentName"] as String;
@@ -38,7 +35,6 @@ class Match {
 
       return Match(
           id: id,
-          opponentGoal: opponentGoal,
           date: date,
           opponentName: opponentName,
           place: place,

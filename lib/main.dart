@@ -8,10 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_router.dart';
 import 'package:flutter_football/config/app_themes.dart';
+import 'package:flutter_football/data/data_sources/match_data_source.dart';
 import 'package:flutter_football/data/data_sources/media_data_source.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
 import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
+import 'package:flutter_football/domain/repositories/match_repository.dart';
 import 'package:flutter_football/domain/repositories/media_repository.dart';
 import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/domain/repositories/schedule_repository.dart';
@@ -116,6 +118,12 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => PlayerRepository(
             playerDataSource: PlayerDataSource(),
+            preferencesDataSource: SharedPreferencesDataSource(),
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => MatchRepository(
+            matchDataSource: MatchDataSource(),
             preferencesDataSource: SharedPreferencesDataSource(),
           ),
         ),

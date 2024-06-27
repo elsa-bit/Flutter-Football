@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_football/data/data_sources/match_data_source.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
+import 'package:flutter_football/domain/models/fmi/card.dart';
 import 'package:flutter_football/domain/models/match.dart';
 import 'package:flutter_football/domain/models/match_details.dart';
 import 'package:http/http.dart';
@@ -41,8 +42,17 @@ class MatchRepository {
     }
   }
 
-  Future<Response> addCard(int idMatch, int idPlayer, String color) async {
-    return await matchDataSource.addCard(idMatch, idPlayer, color);
+  Future<Card> addCard(int idMatch, int idPlayer, String color) async {
+    try {
+      final response = await matchDataSource.addCard(idMatch, idPlayer, color);
+      if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMICardCreationException
+
+      final data = jsonDecode(response.body)["card"] as Map<String, dynamic>;
+      return Card.fromJson(data);
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
   }
 
   Future<Response> addGoal(int idMatch, int? idPlayer) async {

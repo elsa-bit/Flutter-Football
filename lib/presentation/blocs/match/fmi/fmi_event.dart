@@ -1,7 +1,9 @@
+import 'package:flutter_football/domain/models/match_details.dart';
+
 abstract class FmiEvent {}
 
 class InitFMI extends FmiEvent {
-  final Match match;
+  final MatchDetails match;
   InitFMI({required this.match});
 }
 

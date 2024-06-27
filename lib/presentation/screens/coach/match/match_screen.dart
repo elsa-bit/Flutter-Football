@@ -30,52 +30,43 @@ class MatchScreen extends StatelessWidget {
   //  - retrieve names of teams
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => MatchRepository(
-        matchDataSource: MatchDataSource(),
-        preferencesDataSource: SharedPreferencesDataSource(),
-      ),
-      child: BlocProvider(
-        create: (context) => MatchBloc(
-          repository: RepositoryProvider.of<MatchRepository>(context),
-        )..add(GetMatches()),
-        child: Scaffold(
-          body: SafeArea(
-            child: Column(
-              children: [
-                // TODO : add filters with teams name
-                BlocBuilder<MatchBloc, MatchState>(
-                  builder: (context, state) {
-                    switch (state.status) {
-                      case MatchStatus.loading:
-                        return Loader();
-                      case MatchStatus.error:
-                        return Text(state.error);
-                      case MatchStatus.success:
-                        return Expanded(
-                          child: Column(
-                            children: [
-                              if (state.previousMatch != null &&
-                                  state.previousMatch!.isNotEmpty)
-                                Expanded(child: MatchSection(title: "Matchs passés", matches: state.previousMatch!)),
-                              if (state.nextMatch != null &&
-                                  state.nextMatch!.isNotEmpty)
-                                Expanded(child: MatchSection(title: "Matchs à venir", matches: state.nextMatch!)),
-                            ],
-                          ),
-                        );
-            
-                      default:
-                        return Center(
-                          child: Text("Aucun match pour le moment"),
-                        );
-                    }
-                  },
-                ),
-              ],
+    return BlocProvider(
+      create: (context) => MatchBloc(
+        repository: RepositoryProvider.of<MatchRepository>(context),
+      )..add(GetMatches()),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            body: SafeArea(
+              child: BlocBuilder<MatchBloc, MatchState>(
+                builder: (context, state) {
+                  switch (state.status) {
+                    case MatchStatus.loading:
+                      return Loader();
+                    case MatchStatus.error:
+                      return Text(state.error);
+                    case MatchStatus.success:
+                      return Column(
+                        children: [
+                          if (state.previousMatch != null &&
+                              state.previousMatch!.isNotEmpty)
+                            Expanded(child: MatchSection(title: "Matchs passés", matches: state.previousMatch!)),
+                          if (state.nextMatch != null &&
+                              state.nextMatch!.isNotEmpty)
+                            Expanded(child: MatchSection(title: "Matchs à venir", matches: state.nextMatch!)),
+                        ],
+                      );
+
+                    default:
+                      return Center(
+                        child: Text("Aucun match pour le moment"),
+                      );
+                  }
+                },
+              ),
             ),
-          ),
-        ),
+          );
+        }
       ),
     );
   }
