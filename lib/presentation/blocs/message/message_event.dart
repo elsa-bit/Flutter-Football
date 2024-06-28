@@ -8,6 +8,13 @@ class GetMessagePlayer extends MessageEvent {
   GetMessagePlayer({required this.idConversation});
 }
 
+class SubscribeToMessages extends MessageEvent {
+  String idConversation;
+
+  SubscribeToMessages({required this.idConversation});
+}
+
+
 class AddMessage extends MessageEvent {
   Message message;
 

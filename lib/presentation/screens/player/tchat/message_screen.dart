@@ -46,7 +46,8 @@ class _MessageScreenState extends State<MessageScreen> {
     idPlayer = sharedPreferencesDataSource.getIdPlayer()!;
 
     BlocProvider.of<MessageBloc>(context)
-        .add(GetMessagePlayer(idConversation: widget.idConversation));
+      ..add(GetMessagePlayer(idConversation: widget.idConversation))
+      ..add(SubscribeToMessages(idConversation: widget.idConversation));
   }
 
   @override
@@ -103,8 +104,6 @@ class _MessageScreenState extends State<MessageScreen> {
                 if (state.status == MessageStatus.addSuccess) {
                   _showSnackBar(context, 'Message ajouté', Colors.green);
                   _messageController.text = "";
-                  BlocProvider.of<MessageBloc>(context).add(
-                      GetMessagePlayer(idConversation: widget.idConversation));
                 } else if (state.status == MessageStatus.error) {
                   _showSnackBar(
                       context, state.error ?? '', Colors.yellowAccent);

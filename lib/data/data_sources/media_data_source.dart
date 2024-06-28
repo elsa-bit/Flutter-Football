@@ -1,6 +1,3 @@
-import 'dart:typed_data';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/data/data_sources/base_data_source.dart';
 import 'package:flutter_football/data/services/media_service.dart';
 import 'package:flutter_football/main.dart';

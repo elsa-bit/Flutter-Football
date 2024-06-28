@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_football/domain/models/message.dart';
 import 'package:flutter_football/domain/repositories/message_repository.dart';
 import 'package:flutter_football/presentation/blocs/message/message_event.dart';
 import 'package:flutter_football/presentation/blocs/message/message_state.dart';
 
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final MessageRepository repository;
+  StreamSubscription<Message>? _subscription;
 
   MessageBloc({required this.repository}) : super(MessageState()) {
     on<GetMessagePlayer>((event, emit) async {
@@ -24,8 +29,22 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       }
     });
 
+    on<SubscribeToMessages>((event, emit) async {
+      try {
+        await _subscription?.cancel();
+        List<Message> updatesMessages = List.empty();
+        await for (final message in repository.subscribeToMessages()) {
+          updatesMessages = List<Message>.from(state.messages!)
+            ..insert(0, message);
+          emit(state.copyWith(
+              messages: updatesMessages, status: MessageStatus.success));
+        }
+      } catch (e) {
+        emit(state.copyWith(error: e.toString(), status: MessageStatus.error));
+      }
+    });
+
     on<AddMessage>((event, emit) async {
-      emit(state.copyWith(status: MessageStatus.loading));
       try {
         await repository.addMessage(event.message);
         emit(state.copyWith(status: MessageStatus.addSuccess));
@@ -33,5 +52,11 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         emit(state.copyWith(error: e.toString(), status: MessageStatus.error));
       }
     });
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    return super.close();
   }
 }

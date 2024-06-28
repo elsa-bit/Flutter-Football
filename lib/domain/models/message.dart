@@ -20,14 +20,14 @@ class Message {
 
   factory Message.fromJson(Map<String, dynamic> json) {
     try {
-      final int id = json["id"] as int;
+      final int? id = json["id"] as int?;
       final DateTime date =
           DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json["created_at"]);
       final int idConversation = json["idConversation"] as int;
       final String message = json["message"] as String;
       final int idSender = json["idSender"] as int;
       final String role = json["role"] as String;
-      final String sender = json["sender"] as String;
+      final String? sender = json["sender"] as String?;
 
       return Message(
           id: id,

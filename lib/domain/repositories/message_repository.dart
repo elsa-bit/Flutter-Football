@@ -21,6 +21,15 @@ class MessageRepository {
     }
   }
 
+  Stream<Message> subscribeToMessages() {
+    try {
+      return messageDataSource.subscribeToMessage();
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
   Future<String> addMessage(Message message) {
     return messageDataSource.addMessage(message);
   }
