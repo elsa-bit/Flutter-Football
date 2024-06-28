@@ -20,8 +20,9 @@ class ConversationItem extends StatelessWidget {
       leading: const Icon(Icons.chat),
       title: Text(
         conversation.players.length == 1
-            ? conversation.coach
-            : conversation.coach + " et d'autres joueurs de l'équipe",
+            ? conversation.coachName ?? "Nouvelle conversation"
+            : (conversation.coachName ?? "") +
+                " et d'autres joueurs de l'équipe",
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),

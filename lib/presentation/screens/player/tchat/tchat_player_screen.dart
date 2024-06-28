@@ -27,7 +27,9 @@ class _TchatPlayerScreenState extends State<TchatPlayerScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ConversationBloc>(context).add(GetConversationPlayer());
+    BlocProvider.of<ConversationBloc>(context)
+        ..add(GetConversationPlayer())
+        ..add(SubscribeToConversation());
   }
 
   @override

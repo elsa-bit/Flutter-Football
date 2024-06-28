@@ -22,4 +22,13 @@ class ConversationRepository {
       rethrow;
     }
   }
+
+  Stream<Conversation> subscribeToMessages() {
+    try {
+      return conversationDataSource.subscribeToConversation();
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
 }
