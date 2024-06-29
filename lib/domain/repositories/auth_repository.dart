@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/main.dart';
@@ -64,7 +65,7 @@ class AuthRepository {
 
   // private functions
 
-  void saveUser(User user) {
+  void saveUser(User user) async {
     this.user = user;
     int? idCoach = null;
     int? idPlayer = null;
@@ -76,5 +77,21 @@ class AuthRepository {
     }
     preferencesDataSource.saveIdCoach(idCoach);
     preferencesDataSource.saveIdPlayer(idPlayer);
+
+    await FirebaseMessaging.instance.requestPermission();
+    await FirebaseMessaging.instance.getAPNSToken();
+
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    if (fcmToken != null) {
+      if (idPlayer != null) {
+        await supabase
+            .from('player')
+            .update({'fcm_token': fcmToken}).eq('id', idPlayer);
+      } else if (idCoach != null) {
+        await supabase
+            .from('coach')
+            .update({'fcm_token': fcmToken}).eq('id', idCoach);
+      }
+    }
   }
 }

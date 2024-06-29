@@ -27,13 +27,10 @@ class VideoCarousel extends StatelessWidget {
               );
             },
             child: Container(
-              width: 300,
-              margin: EdgeInsets.all(8),
-              color: AppColors.backGrey,
-              child: Center(
-                child: Text(
-                  videos[index].name,
-                ),
+              width: 275,
+              margin: EdgeInsets.only(top: 8, bottom: 8),
+              child: Image(
+                image: AssetImage('assets/images/training.png'),
               ),
             ),
           );
