@@ -163,8 +163,15 @@ class _FmiScreenState extends State<FmiScreen> {
                   ),
                 ),
                 Spacer(),
-                if (state.actions != null && state.actions!.isNotEmpty)
-                  FmiHistory(actions: state.actions!),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 200),
+                  child: Container(
+                    height: (state.actions != null && state.actions!.isNotEmpty) ? null : 0.0,
+                    child: (state.actions != null && state.actions!.isNotEmpty)
+                        ? FmiHistory(actions: state.actions!)
+                        : null,
+                  ),
+                ),
               ],
             );
           },
@@ -250,6 +257,7 @@ class _FmiHistoryState extends State<FmiHistory> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 20,),
           Text(
             "Historique",
             style: TextStyle(
@@ -262,7 +270,7 @@ class _FmiHistoryState extends State<FmiHistory> {
             height: 15,
           ),
           Container(
-            height: 60,
+            height: 70,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: widget.actions.length,
@@ -308,12 +316,12 @@ class FmiHistoryItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 50,
+        width: 60,
         child: Column(
           children: [
             Container(
-              width: 42,
-              height: 30,
+              width: 50,
+              height: 40,
               padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
               decoration: BoxDecoration(
                 color: currentAppColors.primaryVariantColor1,
@@ -326,7 +334,9 @@ class FmiHistoryItem extends StatelessWidget {
               ),
               child: SvgPicture.asset(
                 action.assetName,
-                colorFilter: (action.assetTint != null) ? ColorFilter.mode(action.assetTint!, BlendMode.srcIn) : null,
+                colorFilter: (action.assetTint != null)
+                    ? ColorFilter.mode(action.assetTint!, BlendMode.srcIn)
+                    : null,
               ),
             ),
             SizedBox(
@@ -336,7 +346,7 @@ class FmiHistoryItem extends StatelessWidget {
               action.createdAt.formatTime(),
               style: TextStyle(
                 fontWeight: FontWeight.normal,
-                fontSize: 11,
+                fontSize: 12,
                 color: currentAppColors.primaryTextColor,
               ),
             ),
@@ -368,9 +378,8 @@ class FmiActionDetails extends StatelessWidget {
           height: 5,
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: action.getActionDetailWidget()
-        ),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: action.getActionDetailWidget()),
       ],
     );
   }
