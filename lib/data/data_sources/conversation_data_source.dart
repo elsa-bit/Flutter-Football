@@ -27,9 +27,9 @@ class ConversationDataSource extends BaseDataSource with ConversationService {
   }
 
   @override
-  Stream<Conversation> subscribeToConversation() {
-    final StreamController<Conversation> controller =
-        StreamController<Conversation>();
+  Stream<ConversationEventRealtime> subscribeToConversation() {
+    final StreamController<ConversationEventRealtime> controller =
+        StreamController<ConversationEventRealtime>();
 
     final channel = supabase
         .channel('todos')
@@ -39,7 +39,21 @@ class ConversationDataSource extends BaseDataSource with ConversationService {
           table: 'conversation',
           callback: (payload) {
             final newConversation = Conversation.fromJson(payload.newRecord);
-            controller.add(newConversation);
+            controller.add(ConversationEventRealtime(
+                eventType: payload.eventType,
+                conversation: newConversation));
+          },
+        )
+        .onPostgresChanges(
+          event: PostgresChangeEvent.update,
+          schema: 'public',
+          table: 'conversation',
+          callback: (payload) {
+            final updatedConversation =
+                Conversation.fromJson(payload.newRecord);
+            controller.add(ConversationEventRealtime(
+                eventType: payload.eventType,
+                conversation: updatedConversation));
           },
         )
         .subscribe();

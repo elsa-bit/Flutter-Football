@@ -7,6 +7,7 @@ import 'package:flutter_football/domain/models/conversation.dart';
 import 'package:flutter_football/domain/repositories/conversation_repository.dart';
 import 'package:flutter_football/presentation/blocs/conversation/conversation_event.dart';
 import 'package:flutter_football/presentation/blocs/conversation/conversation_state.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
   final ConversationRepository repository;
@@ -32,11 +33,23 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       try {
         await _subscription?.cancel();
         List<Conversation> updatesConversations = List.empty();
-        await for (final conversation in repository.subscribeToMessages()) {
+        await for (final event in repository.subscribeToMessages()) {
           var idPlayer = preferences.getIdPlayer();
-          if (conversation.players.contains(idPlayer.toString())) {
-            updatesConversations = List<Conversation>.from(state.conversations!)
-              ..insert(0, conversation);
+          if (event.conversation.players.contains(idPlayer.toString())) {
+            if (event.eventType == PostgresChangeEvent.insert) {
+              updatesConversations =
+                  List<Conversation>.from(state.conversations!)
+                    ..insert(0, event.conversation);
+            } else if (event.eventType == PostgresChangeEvent.update) {
+              updatesConversations =
+                  List<Conversation>.from(state.conversations!);
+              int index = updatesConversations
+                  .indexWhere((c) => c.id == event.conversation.id);
+              if (index != -1) {
+                updatesConversations[index].date = event.conversation.date;
+                updatesConversations.sort((a, b) => b.date.compareTo(a.date));
+              }
+            }
             emit(state.copyWith(
                 conversations: updatesConversations,
                 status: ConversationStatus.success));

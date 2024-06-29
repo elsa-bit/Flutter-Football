@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/domain/models/message.dart';
 import 'package:flutter_football/domain/repositories/message_repository.dart';
 import 'package:flutter_football/presentation/blocs/message/message_event.dart';
@@ -33,7 +34,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         await _subscription?.cancel();
         List<Message> updatesMessages = List.empty();
         await for (final message in repository.subscribeToMessages()) {
-          if (message.idConversation == event.idConversation) {
+          if (message.idConversation.toString() == event.idConversation) {
             updatesMessages = List<Message>.from(state.messages!)
               ..insert(0, message);
             emit(state.copyWith(

@@ -1,8 +1,9 @@
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Conversation {
   final int id;
-  final DateTime date;
+  DateTime date;
   final List<dynamic> players;
   final int coach;
   final String? coachName;
@@ -34,4 +35,11 @@ class Conversation {
       throw const FormatException('Failed to convert Conversation data.');
     }
   }
+}
+
+class ConversationEventRealtime {
+  final PostgresChangeEvent eventType;
+  final Conversation conversation;
+
+  ConversationEventRealtime({required this.eventType, required this.conversation});
 }

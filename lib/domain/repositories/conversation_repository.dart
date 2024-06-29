@@ -23,7 +23,7 @@ class ConversationRepository {
     }
   }
 
-  Stream<Conversation> subscribeToMessages() {
+  Stream<ConversationEventRealtime> subscribeToMessages() {
     try {
       return conversationDataSource.subscribeToConversation();
     } catch (error) {
