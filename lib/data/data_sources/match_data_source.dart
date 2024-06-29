@@ -80,4 +80,12 @@ class MatchDataSource extends BaseDataSource with MatchService {
     return await httpPost(Endpoints.addCardPath, queryParameters);
   }
 
+  @override
+  Future<Response> getActions(int idMatch) async {
+    final queryParameters = {
+      'idmatch': idMatch.toString(),
+    };
+    return await httpGet(Endpoints.getActionsPath, queryParameters);
+  }
+
 }

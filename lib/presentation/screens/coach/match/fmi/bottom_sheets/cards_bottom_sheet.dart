@@ -264,12 +264,9 @@ class _CardsBottomSheetState extends State<CardsBottomSheet> {
       return;
     }
 
-    //widget.onSubmit(widget.matchId, selectedPlayer!.id, selectedCard.value);
     // create card
-    // TODO : understand why context don't have FmiBloc !
-    //final bloc = BlocProvider.of<FmiBloc>(context);
-    //_fmiBloc.add(AddCard(idMatch: widget.matchId, idPlayer: selectedPlayer!.id, color: selectedCard.value));
-
+    final bloc = BlocProvider.of<FmiBloc>(context);
+    bloc.add(AddCard(idMatch: widget.matchId, idPlayer: selectedPlayer!.id, color: selectedCard.value));
     Navigator.pop(context);
   }
 

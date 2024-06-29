@@ -10,13 +10,20 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
   FmiBloc({required this.repository}) : super(FmiState()) {
     on<InitFMI>((event, emit) async {
       try {
+        emit(FmiState());
         // Init state with match data
         emit(state.copyWith(
           status: FmiStatus.success,
           match: event.match,
         ));
 
-        // TODO : retrieve actions's data
+        final actions = await repository.getActions(event.match.id);
+        print(actions);
+        emit(state.copyWith(
+          status: FmiStatus.success,
+          actions: actions,
+        ));
+
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
@@ -88,4 +95,6 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
       }
     });
   }
+
+
 }

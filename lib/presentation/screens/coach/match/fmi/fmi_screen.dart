@@ -11,28 +11,13 @@ import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/cards_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/goal_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/replacement_bottom_sheet.dart';
+import 'package:flutter_football/utils/extensions/date_time_extension.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class FmiScreen extends StatelessWidget {
-  static const String routeName = '/fmi';
-  final MatchDetails match;
+// TODO : A chaque insertion Success d'une action dans la BDD, ajouter manuellement les informations et update les states
+// TODO : state pour afficher le détail d'une action dans l'historique
 
-  static Route route(MatchDetails match) {
-    return MaterialPageRoute(
-      settings: const RouteSettings(name: routeName),
-      builder: (context) => FmiScreen(
-        match: match,
-      ),
-    );
-  }
-
-  const FmiScreen({Key? key, required this.match}) : super(key: key);
-
-  // TODO : A chaque insertion Success d'une action dans la BDD, ajouter manuellement les informations et update les states
-
-  // TODO : state pour afficher le détail d'une action dans l'historique
-
-  /*
+/*
   bloclistener
   switch (state.status) {
                 case FmiStatus.initial:
@@ -52,118 +37,137 @@ class FmiScreen extends StatelessWidget {
                   break;
               }
    */
+class FmiScreen extends StatefulWidget {
+  static const String routeName = '/fmi';
+  final MatchDetails match;
+
+  static Route route(MatchDetails match) {
+    return MaterialPageRoute(
+      settings: const RouteSettings(name: routeName),
+      builder: (context) => FmiScreen(
+        match: match,
+      ),
+    );
+  }
+
+  const FmiScreen({Key? key, required this.match}) : super(key: key);
+
+  @override
+  State<FmiScreen> createState() => _FmiScreenState();
+}
+
+class _FmiScreenState extends State<FmiScreen> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<FmiBloc>(context).add(InitFMI(match: widget.match));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FmiBloc(
-        repository: RepositoryProvider.of<MatchRepository>(context),
-      )..add(InitFMI(match: match)),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("FMI"),
-        ),
-        body: SafeArea(
-          child: BlocBuilder<FmiBloc, FmiState>(
-            builder: (context, state) {
-              return Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(30.0),
-                    child: Text(
-                      "${match.teamGoals} - ${match.opponentGoals}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 30,
-                        color: currentAppColors.primaryTextColor,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("FMI"),
+      ),
+      body: SafeArea(
+        child: BlocBuilder<FmiBloc, FmiState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Text(
+                    "${widget.match.teamGoals} - ${widget.match.opponentGoals}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 30,
+                      color: currentAppColors.primaryTextColor,
+                    ),
+                  ),
+                ),
+                Container(
+                  //margin: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Spacer(),
+                          FmiAction(
+                            onTap: () => {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return GoalBottomSheet();
+                                },
+                              )
+                            },
+                            color: AppColors.mediumBlue,
+                            imageAsset: "assets/football_icon.svg",
+                            title: "But",
+                          ),
+                          SizedBox(
+                            width: 40,
+                          ),
+                          FmiAction(
+                            onTap: () => {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CardsBottomSheet(
+                                    teamId: widget.match.idTeam,
+                                    matchId: widget.match.id,
+                                  );
+                                },
+                              )
+                            },
+                            color: AppColors.mediumBlue,
+                            imageAsset: "assets/cards_icon.svg",
+                            title: "Faute",
+                          ),
+                          Spacer(),
+                        ],
                       ),
-                    ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Row(
+                        children: [
+                          Spacer(),
+                          FmiAction(
+                            onTap: () => {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return ReplacementBottomSheet();
+                                },
+                              )
+                            },
+                            color: AppColors.mediumBlue,
+                            imageAsset: "assets/replacement_icon.svg",
+                            title: "Remplacement",
+                          ),
+                          SizedBox(
+                            width: 40,
+                          ),
+                          FmiAction(
+                            onTap: () => {},
+                            color: AppColors.mediumBlue,
+                            imageAsset: "assets/cards_icon.svg",
+                            title: "Faute",
+                          ),
+                          Spacer(),
+                        ],
+                      ),
+                    ],
                   ),
-                  Container(
-                    //margin: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Spacer(),
-                            FmiAction(
-                              onTap: () => {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return GoalBottomSheet();
-                                  },
-                                )
-                              },
-                              color: AppColors.mediumBlue,
-                              imageAsset: "assets/football_icon.svg",
-                              title: "But",
-                            ),
-                            SizedBox(
-                              width: 40,
-                            ),
-                            FmiAction(
-                              onTap: () => {
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CardsBottomSheet(
-                                      teamId: match.idTeam,
-                                      matchId: match.id,
-                                    );
-                                  },
-                                )
-                              },
-                              color: AppColors.mediumBlue,
-                              imageAsset: "assets/cards_icon.svg",
-                              title: "Faute",
-                            ),
-                            Spacer(),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 40,
-                        ),
-                        Row(
-                          children: [
-                            Spacer(),
-                            FmiAction(
-                              onTap: () => {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return ReplacementBottomSheet();
-                                  },
-                                )
-                              },
-                              color: AppColors.mediumBlue,
-                              imageAsset: "assets/replacement_icon.svg",
-                              title: "Remplacement",
-                            ),
-                            SizedBox(
-                              width: 40,
-                            ),
-                            FmiAction(
-                              onTap: () => {},
-                              color: AppColors.mediumBlue,
-                              imageAsset: "assets/cards_icon.svg",
-                              title: "Faute",
-                            ),
-                            Spacer(),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Spacer(),
-
-                  if(state.actions != null)
-                    FmiHistory(actions: state.actions!),
-                ],
-              );
-            },
-          ),
+                ),
+                Spacer(),
+                if (state.actions != null && state.actions!.isNotEmpty)
+                  FmiHistory(actions: state.actions!),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -250,29 +254,29 @@ class _FmiHistoryState extends State<FmiHistory> {
             "Historique",
             style: TextStyle(
               fontWeight: FontWeight.normal,
-              fontSize: 12,
+              fontSize: 14,
               color: currentAppColors.primaryTextColor,
             ),
           ),
           SizedBox(
             height: 15,
           ),
-          ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.actions.length,
-            itemBuilder: (context, index) {
-              final action = widget.actions[index];
-              return FmiHistoryItem(
-                action: action,
-                isSelected: action.id == actionSelected?.id,
-                onTap: () => {
-                  this.onActionTap(action)
-                },
-              );
-            },
+          Container(
+            height: 60,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.actions.length,
+              itemBuilder: (context, index) {
+                final action = widget.actions[index];
+                return FmiHistoryItem(
+                  action: action,
+                  isSelected: action.id == actionSelected?.id,
+                  onTap: () => {this.onActionTap(action)},
+                );
+              },
+            ),
           ),
-
-          if(this.actionSelected != null)
+          if (this.actionSelected != null)
             FmiActionDetails(action: this.actionSelected!),
         ],
       ),
@@ -281,7 +285,8 @@ class _FmiHistoryState extends State<FmiHistory> {
 
   void onActionTap(MatchAction action) {
     setState(() {
-      this.actionSelected = (action.id != this.actionSelected?.id) ? action : null;
+      this.actionSelected =
+          (action.id != this.actionSelected?.id) ? action : null;
     });
   }
 }
@@ -302,42 +307,45 @@ class FmiHistoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            width: 42,
-            height: 30,
-            decoration: BoxDecoration(
-              color: currentAppColors.primaryVariantColor1,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                  width: 2,
-                  color: isSelected
-                      ? currentAppColors.secondaryColor
-                      : Colors.transparent),
+      child: Container(
+        width: 50,
+        child: Column(
+          children: [
+            Container(
+              width: 42,
+              height: 30,
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+              decoration: BoxDecoration(
+                color: currentAppColors.primaryVariantColor1,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                    width: 2,
+                    color: isSelected
+                        ? currentAppColors.secondaryColor
+                        : Colors.transparent),
+              ),
+              child: SvgPicture.asset(
+                action.assetName,
+                colorFilter: (action.assetTint != null) ? ColorFilter.mode(action.assetTint!, BlendMode.srcIn) : null,
+              ),
             ),
-            child: SvgPicture.asset(action.assetName),
-          ),
-          Text(
-            formatTime(action.createdAt),
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 9,
-              color: currentAppColors.primaryTextColor,
+            SizedBox(
+              height: 5,
             ),
-          ),
-        ],
+            Text(
+              action.createdAt.formatTime(),
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 11,
+                color: currentAppColors.primaryTextColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-
-  String formatTime(DateTime dateTime) {
-    String hour = dateTime.hour.toString().padLeft(2, '0');
-    String minute = dateTime.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
 }
-
 
 class FmiActionDetails extends StatelessWidget {
   final MatchAction action;
@@ -349,6 +357,21 @@ class FmiActionDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(action.id);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Divider(
+          color: currentAppColors.primaryVariantColor1,
+          thickness: 2,
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: action.getActionDetailWidget()
+        ),
+      ],
+    );
   }
 }

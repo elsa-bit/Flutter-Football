@@ -7,4 +7,5 @@ abstract class MatchService {
   Future<Response> addGoal(int idMatch, int? idPlayer);
   Future<Response> addCard(int idMatch, int idPlayer, String color);
   Future<Response> addReplacement(int idMatch, int idPlayerOut, int idPlayerIn, String? reason);
+  Future<Response> getActions(int idMatch);
 }

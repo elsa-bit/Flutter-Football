@@ -41,5 +41,6 @@ class Endpoints {
   static const String addReplacementPath = '/api/addReplacement';
   static const String addCardPath = '/api/addCard';
   static const String addGoalPath = '/api/addGoal';
+  static const String getActionsPath = '/api/getActions';
 
 }

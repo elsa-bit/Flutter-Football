@@ -21,6 +21,7 @@ import 'package:flutter_football/networking/firebase/firebase_analytics_handler.
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
+import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
@@ -152,6 +153,11 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => MediaBloc(
                 repository: RepositoryProvider.of<MediaRepository>(context),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => FmiBloc(
+                repository: RepositoryProvider.of<MatchRepository>(context),
               ),
             ),
           ],
