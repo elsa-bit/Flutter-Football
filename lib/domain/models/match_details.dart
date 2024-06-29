@@ -2,8 +2,8 @@ import 'package:intl/intl.dart';
 
 class MatchDetails {
   final int id;
-  final int teamGoals;
-  final int opponentGoals;
+  int teamGoals;
+  int opponentGoals;
   final DateTime date;
   final String opponentName;
   final String place;
@@ -55,5 +55,24 @@ class MatchDetails {
       print(e);
       throw const FormatException('Failed to convert MatchDetails data.');
     }
+  }
+
+  MatchDetails copyWith({
+    int? teamGoals,
+    int? opponentGoals,
+  }) {
+    return
+      MatchDetails(
+        id: this.id,
+        teamGoals: teamGoals ?? this.teamGoals,
+        opponentGoals: opponentGoals ?? this.opponentGoals,
+        date: this.date,
+        opponentName: this.opponentName,
+        place: this.place,
+        idTeam: this.idTeam,
+        win: this.win,
+        nameTeam: this.nameTeam,
+        FMICompleted: this.FMICompleted,
+      );
   }
 }

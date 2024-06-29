@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/domain/models/fmi/match_action.dart';
 import 'package:flutter_football/domain/repositories/match_repository.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
@@ -60,14 +61,21 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
     on<AddGoal>((event, emit) async {
       try {
         emit(state.copyWith(status: FmiStatus.loading));
-        final response =
-            await repository.addGoal(event.idMatch, event.idPlayer);
-        if (response.statusCode == 200) {
-          emit(state.copyWith(
-              /*TODO : retrieve object in response and add it to success data*/));
-        } else {
-          emit(state.copyWith(/*error: FMIErrorType.Goal */));
-        }
+        final goal = await repository.addGoal(event.idMatch, event.idPlayer);
+        final goalAction = GoalAction(
+          id: "goal-${goal.id}",
+          createdAt: goal.createdAt,
+          assetName: "assets/football_icon.svg",
+          assetTint: goal.fromOpponent ? AppColors.red : AppColors.green,
+          goal: goal,
+        );
+        emit(state.copyWith(
+          action: goalAction,
+          match: state.match?.copyWith(
+            teamGoals: !goal.fromOpponent ? ((state.match?.teamGoals ?? 0) + 1) : null,
+            opponentGoals: goal.fromOpponent ? ((state.match?.opponentGoals ?? 0) + 1) : null,
+          ),
+        ));
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
@@ -79,14 +87,15 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
     on<AddReplacement>((event, emit) async {
       try {
         emit(state.copyWith(status: FmiStatus.loading));
-        final response = await repository.addReplacement(
+        final replacement = await repository.addReplacement(
             event.idMatch, event.idPlayerOut, event.idPlayerIn, event.reason);
-        if (response.statusCode == 200) {
-          emit(state.copyWith(
-              /*TODO : retrieve object in response and add it to success data*/));
-        } else {
-          emit(state.copyWith(/*error: FMIErrorType.Replacement */));
-        }
+        final replacementAction = ReplacementAction(
+          id: "replacement-${replacement.id}",
+          createdAt: replacement.createdAt,
+          assetName: "assets/replacement_icon.svg",
+          replacement: replacement,
+        );
+        emit(state.copyWith(action: replacementAction));
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),

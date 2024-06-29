@@ -61,11 +61,19 @@ class MatchDataSource extends BaseDataSource with MatchService {
 
   @override
   Future<Response> addGoal(int idMatch, int? idPlayer) async {
-    final queryParameters = {
-      'idmatch': idMatch.toString(),
-      'idplayer': idPlayer.toString(),
-      'fromOpponent': (idPlayer == null).toString(),
-    };
+    final queryParameters;
+    if (idPlayer != null) {
+      queryParameters = {
+        'idmatch': idMatch.toString(),
+        'idplayer': idPlayer.toString(),
+        'fromOpponent': (idPlayer == null).toString(),
+      };
+    } else {
+      queryParameters = {
+        'idmatch': idMatch.toString(),
+        'fromOpponent': (idPlayer == null).toString(),
+      };
+    }
     return await httpPost(Endpoints.addGoalPath, queryParameters);
   }
 
@@ -77,7 +85,7 @@ class MatchDataSource extends BaseDataSource with MatchService {
       'idplayerIn': idPlayerIn.toString(),
       'reason': reason.toString(),
     };
-    return await httpPost(Endpoints.addCardPath, queryParameters);
+    return await httpPost(Endpoints.addReplacementPath, queryParameters);
   }
 
   @override

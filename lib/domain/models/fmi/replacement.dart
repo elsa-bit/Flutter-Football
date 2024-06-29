@@ -24,7 +24,7 @@ class Replacement {
       return Replacement(id, createdAt, idMatch, playerIn, playerOut, reason);
     } catch (e) {
       print(e);
-      throw const FormatException('Failed to convert Card data.');
+      throw const FormatException('Failed to convert Replacement data.');
     }
   }
 }

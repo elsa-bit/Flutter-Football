@@ -41,7 +41,7 @@ class GoalActionDetail extends StatelessWidget {
                 ),
                 SizedBox(width: 30,),
                 Text(
-                  "${action.goal.player.firstname} ${action.goal.player.lastname}",
+                  "${action.goal.player?.firstname} ${action.goal.player?.lastname}",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

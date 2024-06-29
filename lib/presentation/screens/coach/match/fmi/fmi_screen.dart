@@ -77,7 +77,7 @@ class _FmiScreenState extends State<FmiScreen> {
                 Container(
                   padding: const EdgeInsets.all(30.0),
                   child: Text(
-                    "${widget.match.teamGoals} - ${widget.match.opponentGoals}",
+                    "${state.match?.teamGoals ?? 0} - ${state.match?.opponentGoals ?? 0}",
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 30,
@@ -96,8 +96,12 @@ class _FmiScreenState extends State<FmiScreen> {
                             onTap: () => {
                               showModalBottomSheet(
                                 context: context,
+                                isScrollControlled: true,
                                 builder: (BuildContext context) {
-                                  return GoalBottomSheet();
+                                  return GoalBottomSheet(
+                                    teamId: widget.match.idTeam,
+                                    matchId: widget.match.id,
+                                  );
                                 },
                               )
                             },
@@ -138,8 +142,12 @@ class _FmiScreenState extends State<FmiScreen> {
                             onTap: () => {
                               showModalBottomSheet(
                                 context: context,
+                                isScrollControlled: true,
                                 builder: (BuildContext context) {
-                                  return ReplacementBottomSheet();
+                                  return ReplacementBottomSheet(
+                                    teamId: widget.match.idTeam,
+                                    matchId: widget.match.id,
+                                  );
                                 },
                               )
                             },
@@ -154,7 +162,7 @@ class _FmiScreenState extends State<FmiScreen> {
                             onTap: () => {},
                             color: AppColors.mediumBlue,
                             imageAsset: "assets/cards_icon.svg",
-                            title: "Faute",
+                            title: "Blessure",
                           ),
                           Spacer(),
                         ],

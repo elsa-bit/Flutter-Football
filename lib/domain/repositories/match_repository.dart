@@ -60,12 +60,32 @@ class MatchRepository {
     }
   }
 
-  Future<Response> addGoal(int idMatch, int? idPlayer) async {
-    return await matchDataSource.addGoal(idMatch, idPlayer);
+  Future<Goal> addGoal(int idMatch, int? idPlayer) async {
+    try {
+      final response = await matchDataSource.addGoal(idMatch, idPlayer);
+      if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMIGoalCreationException
+
+      final body = response.body;
+      final data = jsonDecode(body)["goal"] as Map<String, dynamic>;
+      return Goal.fromJson(data);
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
   }
 
-  Future<Response> addReplacement(int idMatch, int idPlayerOut, int idPlayerIn, String? reason) async {
-    return await matchDataSource.addReplacement(idMatch, idPlayerOut, idPlayerIn, reason);
+  Future<Replacement> addReplacement(int idMatch, int idPlayerOut, int idPlayerIn, String? reason) async {
+    try {
+      final response = await matchDataSource.addReplacement(idMatch, idPlayerOut, idPlayerIn, reason);
+      if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMIReplacementCreationException
+
+      final body = response.body;
+      final data = jsonDecode(body)["replacement"] as Map<String, dynamic>;
+      return Replacement.fromJson(data);
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
   }
 
   Future<List<MatchAction>> getActions(int idMatch) async {

@@ -5,7 +5,7 @@ class Goal {
   final int id;
   final DateTime createdAt;
   final bool fromOpponent;
-  final PlayerShortInfo player;
+  final PlayerShortInfo? player;
 
   Goal(this.id, this.createdAt, this.fromOpponent, this.player);
 
@@ -15,12 +15,13 @@ class Goal {
       final DateTime createdAt =
       DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json["created_at"]);
       final bool fromOpponent = json["fromOpponent"] as bool;
-      final PlayerShortInfo player = PlayerShortInfo.fromJson(json["player"] as Map<String, dynamic>);
+      final playerData = json["player"] as Map<String, dynamic>?;
+      final PlayerShortInfo? player = (playerData != null) ? PlayerShortInfo.fromJson(playerData!) : null;
 
       return Goal(id, createdAt, fromOpponent, player);
     } catch (e) {
       print(e);
-      throw const FormatException('Failed to convert Card data.');
+      throw const FormatException('Failed to convert Goal data.');
     }
   }
 }
