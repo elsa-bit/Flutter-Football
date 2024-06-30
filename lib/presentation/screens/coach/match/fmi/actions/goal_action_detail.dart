@@ -32,7 +32,7 @@ class GoalActionDetail extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  action.createdAt.formatTime(),
+                  action.matchTime,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 14,

@@ -9,7 +9,7 @@ import 'package:flutter_football/domain/models/fmi/match_action.dart';
 import 'package:flutter_football/domain/models/fmi/replacement.dart';
 import 'package:flutter_football/domain/models/match.dart';
 import 'package:flutter_football/domain/models/match_details.dart';
-import 'package:http/http.dart';
+import 'package:flutter_football/utils/extensions/date_time_extension.dart';
 
 class MatchRepository {
   final MatchDataSource matchDataSource;
@@ -88,7 +88,7 @@ class MatchRepository {
     }
   }
 
-  Future<List<MatchAction>> getActions(int idMatch) async {
+  Future<List<MatchAction>> getActions(int idMatch, DateTime matchDateTime) async {
     try {
       final response = await matchDataSource.getActions(idMatch);
       if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMICardCreationException
@@ -100,6 +100,7 @@ class MatchRepository {
         return CardAction(
           id: "card-${card.id}",
           createdAt: card.createdAt,
+          matchTime: card.createdAt.formatMatchTime(matchDateTime),
           assetName: (card.color == "yellow")
               ? "assets/yellow_card.svg"
               : "assets/red_card.svg",
@@ -113,6 +114,7 @@ class MatchRepository {
         return ReplacementAction(
           id: "replacement-${replacement.id}",
           createdAt: replacement.createdAt,
+          matchTime: replacement.createdAt.formatMatchTime(matchDateTime),
           assetName: "assets/replacement_icon.svg",
           replacement: replacement,
           assetTint: AppColors.mediumBlue,
@@ -125,6 +127,7 @@ class MatchRepository {
         return GoalAction(
           id: "goal-${goal.id}",
           createdAt: goal.createdAt,
+          matchTime: goal.createdAt.formatMatchTime(matchDateTime),
           assetName: "assets/football_icon.svg",
           assetTint: goal.fromOpponent ? AppColors.red : AppColors.green,
           goal: goal,

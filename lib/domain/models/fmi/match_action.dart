@@ -9,12 +9,14 @@ import 'package:flutter_football/presentation/screens/coach/match/fmi/actions/re
 abstract class MatchAction {
   final String id;
   final DateTime createdAt;
+  final String matchTime;
   final String assetName;
   final Color? assetTint;
 
   MatchAction({
     required this.id,
     required this.createdAt,
+    required this.matchTime,
     required this.assetName,
     this.assetTint,
   });
@@ -28,6 +30,7 @@ class CardAction extends MatchAction {
   CardAction({
     required super.id,
     required super.createdAt,
+    required super.matchTime,
     required super.assetName,
     super.assetTint,
     required this.card,
@@ -45,6 +48,7 @@ class GoalAction extends MatchAction {
   GoalAction({
     required super.id,
     required super.createdAt,
+    required super.matchTime,
     required super.assetName,
     super.assetTint,
     required this.goal,
@@ -62,6 +66,7 @@ class ReplacementAction extends MatchAction {
   ReplacementAction({
     required super.id,
     required super.createdAt,
+    required super.matchTime,
     required super.assetName,
     super.assetTint,
     required this.replacement,

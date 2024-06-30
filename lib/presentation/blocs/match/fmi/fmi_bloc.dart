@@ -4,6 +4,7 @@ import 'package:flutter_football/domain/models/fmi/match_action.dart';
 import 'package:flutter_football/domain/repositories/match_repository.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_state.dart';
+import 'package:flutter_football/utils/extensions/date_time_extension.dart';
 
 class FmiBloc extends Bloc<FmiEvent, FmiState> {
   final MatchRepository repository;
@@ -18,7 +19,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
           match: event.match,
         ));
 
-        final actions = await repository.getActions(event.match.id);
+        final actions = await repository.getActions(event.match.id, event.match.date);
         emit(state.copyWith(
           status: FmiStatus.success,
           actions: actions,
@@ -40,6 +41,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
         final cardAction = CardAction(
           id: "card-${card.id}",
           createdAt: card.createdAt,
+          matchTime: card.createdAt.formatMatchTime(state.match!.date),
           assetName: (card.color == "yellow")
               ? "assets/yellow_card.svg"
               : "assets/red_card.svg",
@@ -64,6 +66,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
         final goalAction = GoalAction(
           id: "goal-${goal.id}",
           createdAt: goal.createdAt,
+          matchTime: goal.createdAt.formatMatchTime(state.match!.date),
           assetName: "assets/football_icon.svg",
           assetTint: goal.fromOpponent ? AppColors.red : AppColors.green,
           goal: goal,
@@ -91,6 +94,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
         final replacementAction = ReplacementAction(
           id: "replacement-${replacement.id}",
           createdAt: replacement.createdAt,
+          matchTime: replacement.createdAt.formatMatchTime(state.match!.date),
           assetName: "assets/replacement_icon.svg",
           replacement: replacement,
           assetTint: AppColors.mediumBlue,

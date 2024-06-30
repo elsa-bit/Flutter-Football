@@ -38,6 +38,20 @@ class MatchItem extends StatelessWidget {
                       fontSize: 16.0,
                     ),
                   ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.black.withOpacity(0.2),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
+                    child: Text(
+                      match.date.formatTime(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
                   Text(
                     match.nameTeam,
                     style: TextStyle(
@@ -64,6 +78,7 @@ class MatchItem extends StatelessWidget {
                         fontSize: 16.0,
                       ),
                     ),
+
                     if(match.win != null || match.date.isEqualOrBefore(DateTime.now()))
                       Row(
                         children: [

@@ -30,7 +30,7 @@ class ReplacementActionDetail extends StatelessWidget {
         Row(
           children: [
             Text(
-              action.createdAt.formatTime(),
+              action.matchTime,
               style: TextStyle(
                 fontWeight: FontWeight.normal,
                 fontSize: 14,
@@ -38,30 +38,35 @@ class ReplacementActionDetail extends StatelessWidget {
               ),
             ),
             SizedBox(width: 30,),
-            Text(
-              "${action.replacement.playerOut.firstname} ${action.replacement.playerOut.lastname}",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: currentAppColors.primaryTextColor,
-              ),
-            ),
-            SizedBox(width: 25,),
             Container(
               width: 30,
               height: 30,
               child: SvgPicture.asset(
                 action.assetName,
+                colorFilter: ColorFilter.mode(action.assetTint!, BlendMode.srcIn),
               ),
             ),
             SizedBox(width: 25,),
-            Text(
-              "${action.replacement.playerIn.firstname} ${action.replacement.playerIn.lastname}",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: currentAppColors.primaryTextColor,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${action.replacement.playerOut.firstname} ${action.replacement.playerOut.lastname}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: currentAppColors.primaryTextColor,
+                  ),
+                ),
+                Text(
+                  "${action.replacement.playerIn.firstname} ${action.replacement.playerIn.lastname}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: currentAppColors.primaryTextColor,
+                  ),
+                ),
+              ],
             ),
           ],
         )

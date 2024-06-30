@@ -79,12 +79,21 @@ class MatchDataSource extends BaseDataSource with MatchService {
 
   @override
   Future<Response> addReplacement(int idMatch, int idPlayerOut, int idPlayerIn, String? reason) async {
-    final queryParameters = {
-      'idmatch': idMatch.toString(),
-      'idplayerOut': idPlayerOut.toString(),
-      'idplayerIn': idPlayerIn.toString(),
-      'reason': reason.toString(),
-    };
+    final queryParameters;
+    if (reason != null && reason.isNotEmpty) {
+      queryParameters = {
+        'idmatch': idMatch.toString(),
+        'idplayerOut': idPlayerOut.toString(),
+        'idplayerIn': idPlayerIn.toString(),
+        'reason': reason.toString(),
+      };
+    } else {
+      queryParameters = {
+        'idmatch': idMatch.toString(),
+        'idplayerOut': idPlayerOut.toString(),
+        'idplayerIn': idPlayerIn.toString(),
+      };
+    }
     return await httpPost(Endpoints.addReplacementPath, queryParameters);
   }
 

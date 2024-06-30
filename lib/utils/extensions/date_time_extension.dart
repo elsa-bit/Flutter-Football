@@ -21,4 +21,16 @@ extension DateTimeExtension on DateTime {
     String minute = this.minute.toString().padLeft(2, '0');
     return '$hour:$minute';
   }
+
+  String formatMatchTime(DateTime matchDate) {
+    int millis = this.difference(matchDate).inMilliseconds;
+    int minutes = (millis ~/ 1000) ~/ 60;
+    if(minutes >= 45 && minutes < 60) {
+      minutes = 45;
+    } else if (minutes >= 60) {
+      minutes -= 15;
+    }
+    //int seconds = (millis ~/ 1000) - (60 * minutes);
+    return "$minutes\"";
+  }
 }

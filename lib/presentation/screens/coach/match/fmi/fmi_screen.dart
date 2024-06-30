@@ -76,13 +76,54 @@ class _FmiScreenState extends State<FmiScreen> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(30.0),
-                  child: Text(
-                    "${state.match?.teamGoals ?? 0} - ${state.match?.opponentGoals ?? 0}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 30,
-                      color: currentAppColors.primaryTextColor,
-                    ),
+                  child: Column(
+                    children: [
+                      /*Row(
+                        children: [
+                          Text(
+                            "${state.match?.nameTeam}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 24,
+                              color: currentAppColors.primaryTextColor,
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                            "VS",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 30,
+                              color: currentAppColors.primaryTextColor,
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                            "${state.match?.opponentName}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 24,
+                              color: currentAppColors.primaryTextColor,
+                            ),
+                          ),
+                        ],
+                      ),*/
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.black.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          "${state.match?.teamGoals ?? 0} - ${state.match?.opponentGoals ?? 0}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 30,
+                            color: currentAppColors.primaryTextColor,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(
@@ -133,7 +174,7 @@ class _FmiScreenState extends State<FmiScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 30,
                       ),
                       Row(
                         children: [
@@ -155,7 +196,7 @@ class _FmiScreenState extends State<FmiScreen> {
                             imageAsset: "assets/replacement_icon.svg",
                             title: "Remplacement",
                           ),
-                          SizedBox(
+                          /*SizedBox(
                             width: 40,
                           ),
                           FmiAction(
@@ -163,7 +204,7 @@ class _FmiScreenState extends State<FmiScreen> {
                             color: AppColors.mediumBlue,
                             imageAsset: "assets/cards_icon.svg",
                             title: "Blessure",
-                          ),
+                          ),*/
                           Spacer(),
                         ],
                       ),
@@ -351,7 +392,7 @@ class FmiHistoryItem extends StatelessWidget {
               height: 5,
             ),
             Text(
-              action.createdAt.formatTime(),
+              action.matchTime,
               style: TextStyle(
                 fontWeight: FontWeight.normal,
                 fontSize: 12,
