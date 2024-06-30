@@ -43,3 +43,11 @@ class GetCoachPlayer extends PlayersEvent {
 class SubscribeToPlayer extends PlayersEvent {
   SubscribeToPlayer();
 }
+
+class Search extends PlayersEvent {
+  final String search;
+
+  Search({
+    required this.search,
+  });
+}

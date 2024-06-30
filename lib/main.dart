@@ -8,12 +8,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_router.dart';
 import 'package:flutter_football/config/app_themes.dart';
+import 'package:flutter_football/data/data_sources/match_data_source.dart';
 import 'package:flutter_football/data/data_sources/conversation_data_source.dart';
 import 'package:flutter_football/data/data_sources/media_data_source.dart';
 import 'package:flutter_football/data/data_sources/message_data_source.dart';
 import 'package:flutter_football/data/data_sources/player_data_source.dart';
 import 'package:flutter_football/data/data_sources/team_data_source.dart';
 import 'package:flutter_football/domain/repositories/auth_repository.dart';
+import 'package:flutter_football/domain/repositories/match_repository.dart';
 import 'package:flutter_football/domain/repositories/conversation_repository.dart';
 import 'package:flutter_football/domain/repositories/media_repository.dart';
 import 'package:flutter_football/domain/repositories/message_repository.dart';
@@ -24,6 +26,7 @@ import 'package:flutter_football/networking/firebase/firebase_analytics_handler.
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
+import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
 import 'package:flutter_football/presentation/blocs/conversation/conversation_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/message/message_bloc.dart';
@@ -129,6 +132,12 @@ class MyApp extends StatelessWidget {
           ),
         ),
         RepositoryProvider(
+          create: (context) => MatchRepository(
+            matchDataSource: MatchDataSource(),
+            preferencesDataSource: SharedPreferencesDataSource(),
+          ),
+        ),
+        RepositoryProvider(
           create: (context) => TeamRepository(
             teamDataSource: TeamDataSource(),
             preferences: SharedPreferencesDataSource(),
@@ -170,6 +179,11 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => MediaBloc(
                 repository: RepositoryProvider.of<MediaRepository>(context),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => FmiBloc(
+                repository: RepositoryProvider.of<MatchRepository>(context),
               ),
             ),
             BlocProvider(
