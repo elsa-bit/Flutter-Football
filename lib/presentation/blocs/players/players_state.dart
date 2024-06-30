@@ -2,7 +2,7 @@ import 'package:flutter_football/data/services/player_service.dart';
 import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/models/user.dart';
 
-enum PlayersStatus { initial, loading, success, error }
+enum PlayersStatus { initial, loading, success, modifySuccess, error }
 
 class PlayersState {
   final PlayersStatus status;

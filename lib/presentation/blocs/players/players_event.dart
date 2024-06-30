@@ -39,3 +39,7 @@ class ModifyPlayer extends PlayersEvent {
 class GetCoachPlayer extends PlayersEvent {
   GetCoachPlayer();
 }
+
+class SubscribeToPlayer extends PlayersEvent {
+  SubscribeToPlayer();
+}
