@@ -19,7 +19,7 @@ class _PlayerBottomNavBarState extends State<PlayerBottomNavBar> {
   List<BottomNavigationBarItem> navItems = const [
     BottomNavigationBarItem(
         icon: Icon(Icons.calendar_month), label: 'Calendrier'),
-    BottomNavigationBarItem(icon: Icon(Icons.speaker_notes_rounded), label: 'Tchat'),
+    BottomNavigationBarItem(icon: Icon(Icons.forum), label: 'Tchat'),
     BottomNavigationBarItem(icon: Icon(Icons.query_stats), label: 'Mes stats'),
     BottomNavigationBarItem(
         icon: Icon(

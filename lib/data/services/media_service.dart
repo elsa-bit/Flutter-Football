@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
 
 abstract class MediaService {

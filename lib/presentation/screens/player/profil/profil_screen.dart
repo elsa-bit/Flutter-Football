@@ -6,7 +6,6 @@ import 'package:flutter_football/data/data_sources/shared_preferences_data_sourc
 import 'package:flutter_football/domain/models/player_min.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
-import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
@@ -53,7 +52,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
     BlocProvider.of<MediaBloc>(context)
         .add(GetAvatar(imageName: user?.getAvatar(), identifier: identifier));
 
-    BlocProvider.of<PlayersBloc>(context).add(GetPlayerDetails());
+    BlocProvider.of<PlayersBloc>(context)
+      ..add(GetPlayerDetails())
+      ..add(SubscribeToPlayer());
   }
 
   @override
@@ -75,142 +76,185 @@ class _ProfilScreenState extends State<ProfilScreen> {
             break;
         }
       },
-      child: BlocBuilder<AuthBloc, AuthState>(
+      child: BlocBuilder<PlayersBloc, PlayersState>(
         builder: (context, state) {
-          return Column(
-            children: [
-              Container(
-                height: 350,
-                child: Stack(
-                  children: [
-                    if (avatarUrl != null) ...[
-                      Image.network(
-                        avatarUrl!,
-                        height: 300,
-                        fit: BoxFit.cover,
-                      )
-                    ] else ...[
-                      Container(
-                        height: 300,
-                        color: currentAppColors.secondaryTextColor,
-                      ),
-                    ],
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 30.0),
-                        child: ElevatedButton(
-                          onPressed: () =>
-                              _displayAlertDialogToModifyPlayer(context),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                          ),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Card(
-                        color: Colors.white,
-                        child: Container(
-                          height: 100,
-                          width: 250,
-                          alignment: Alignment.center,
-                          child: Column(
-                            children: [
-                              Spacer(flex: 2),
-                              Text(
-                                "${state.user?.getFirstname() ?? " "} ${state.user?.getLastname() ?? ""}",
-                                style: AppTextStyle.subtitle2.copyWith(
-                                    color: currentAppColors.secondaryColor,
-                                    fontSize: 20.0),
-                              ),
-                              Spacer(),
-                              Text(
-                                state.user?.getEmail() ?? "",
-                                style: AppTextStyle.regular.copyWith(
-                                    color: currentAppColors.secondaryColor,
-                                    fontStyle: FontStyle.italic),
-                              ),
-                              Spacer(flex: 2),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Spacer(),
-              Container(
-                child: Column(
-                  children: [
-                    OutlinedButton.icon(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            WidgetStateProperty.all<Color>(AppColors.lightBlue),
-                        side: WidgetStateProperty.all<BorderSide>(
-                            BorderSide(width: 0.2, color: Colors.grey)),
-                      ),
-                      onPressed: () => _navigateToNewsScreen(context),
-                      label: Text(
-                        "Actualités du club",
-                      ),
-                      icon: Icon(Icons.feed, size: 18),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: OutlinedButton.icon(
-                        style: ButtonStyle(
-                          foregroundColor: WidgetStateProperty.all<Color>(
-                              AppColors.lightBlue),
-                          side: WidgetStateProperty.all<BorderSide>(
-                              BorderSide(width: 0.2, color: Colors.grey)),
-                        ),
-                        onPressed: () => _navigateToInfoClubScreen(context),
-                        label: Text(
-                          "Contact et réglement du club",
-                        ),
-                        icon: Icon(Icons.contact_mail, size: 18),
-                      ),
-                    ),
-                    OutlinedButton.icon(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            WidgetStateProperty.all<Color>(AppColors.lightBlue),
-                        side: WidgetStateProperty.all<BorderSide>(
-                            BorderSide(width: 0.2, color: Colors.grey)),
-                      ),
-                      onPressed: () => _navigateToResourceScreen(context),
-                      label: Text(
-                        "Ressources entrainement",
-                      ),
-                      icon: Icon(Icons.directions_run, size: 18),
-                    ),
-                  ],
-                ),
-              ),
-              Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  final authBloc = BlocProvider.of<AuthBloc>(context);
-                  authBloc.add(Logout());
-                },
+          switch (state.status) {
+            case PlayersStatus.loading:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            case PlayersStatus.error:
+              return Center(
                 child: Text(
-                  "Déconnexion",
-                  style: AppTextStyle.subtitle1.copyWith(color: Colors.red),
+                  state.error,
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              )
-            ],
-          );
+              );
+            case PlayersStatus.modifySuccess:
+            case PlayersStatus.success:
+              if (state.detailsPlayer == null) {
+                return const Center(
+                  child: Text("Ce joueur n'existe pas"),
+                );
+              }
+              return Column(
+                children: [
+                  Container(
+                    height: 350,
+                    child: Stack(
+                      children: [
+                        if (avatarUrl != null) ...[
+                          Image.network(
+                            avatarUrl!,
+                            height: 300,
+                            fit: BoxFit.cover,
+                          )
+                        ] else ...[
+                          Container(
+                            height: 300,
+                            color: currentAppColors.secondaryTextColor,
+                          ),
+                        ],
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 30.0),
+                            child: ElevatedButton(
+                              onPressed: () =>
+                                  _displayAlertDialogToModifyPlayer(context),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                              ),
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Card(
+                            color: Colors.white,
+                            child: Container(
+                              height: 100,
+                              width: 250,
+                              alignment: Alignment.center,
+                              child: Column(
+                                children: [
+                                  Spacer(flex: 2),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "${state.detailsPlayer?.firstname} ${state.detailsPlayer?.lastname}",
+                                        style: AppTextStyle.subtitle2.copyWith(
+                                            color:
+                                                currentAppColors.secondaryColor,
+                                            fontSize: 20.0),
+                                      ),
+                                      SizedBox(width: 15.0),
+                                      Icon(
+                                        Icons.emoji_events,
+                                        color: Colors.yellow,
+                                        size: 20.0,
+                                      ),
+                                      Text(
+                                        state.detailsPlayer!.trophy.toString(),
+                                        style: TextStyle(
+                                          color:
+                                              currentAppColors.secondaryColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    state.detailsPlayer!.email,
+                                    style: AppTextStyle.regular.copyWith(
+                                        color: currentAppColors.secondaryColor,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                  Spacer(flex: 2),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Spacer(),
+                  Container(
+                    child: Column(
+                      children: [
+                        OutlinedButton.icon(
+                          style: ButtonStyle(
+                            foregroundColor: WidgetStateProperty.all<Color>(
+                                AppColors.lightBlue),
+                            side: WidgetStateProperty.all<BorderSide>(
+                                BorderSide(width: 0.2, color: Colors.grey)),
+                          ),
+                          onPressed: () => _navigateToNewsScreen(context),
+                          label: Text(
+                            "Actualités du club",
+                          ),
+                          icon: Icon(Icons.feed, size: 18),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          child: OutlinedButton.icon(
+                            style: ButtonStyle(
+                              foregroundColor: WidgetStateProperty.all<Color>(
+                                  AppColors.lightBlue),
+                              side: WidgetStateProperty.all<BorderSide>(
+                                  BorderSide(width: 0.2, color: Colors.grey)),
+                            ),
+                            onPressed: () => _navigateToInfoClubScreen(context),
+                            label: Text(
+                              "Contact et réglement du club",
+                            ),
+                            icon: Icon(Icons.contact_mail, size: 18),
+                          ),
+                        ),
+                        OutlinedButton.icon(
+                          style: ButtonStyle(
+                            foregroundColor: WidgetStateProperty.all<Color>(
+                                AppColors.lightBlue),
+                            side: WidgetStateProperty.all<BorderSide>(
+                                BorderSide(width: 0.2, color: Colors.grey)),
+                          ),
+                          onPressed: () => _navigateToResourceScreen(context),
+                          label: Text(
+                            "Ressources entrainement",
+                          ),
+                          icon: Icon(Icons.directions_run, size: 18),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+                      final authBloc = BlocProvider.of<AuthBloc>(context);
+                      authBloc.add(Logout());
+                    },
+                    child: Text(
+                      "Déconnexion",
+                      style: AppTextStyle.subtitle1.copyWith(color: Colors.red),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  )
+                ],
+              );
+            default:
+              return const Center(
+                child: Text("Ce joueur n'existe pas"),
+              );
+          }
         },
       ),
     );
@@ -224,7 +268,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
             value: BlocProvider.of<PlayersBloc>(context),
             child: BlocConsumer<PlayersBloc, PlayersState>(
               listener: (context, state) {
-                if (state.status == PlayersStatus.success) {
+                if (state.status == PlayersStatus.modifySuccess) {
                   _showSnackBar(
                       context, 'Joueur modifié !', Colors.greenAccent);
                   _mailController.clear();

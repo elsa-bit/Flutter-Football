@@ -39,4 +39,10 @@ class Endpoints {
   static const String modifyPlayerPath = '/api/modifyPlayer';
   static const String coachPlayerPath = '/api/coachTeams';
   static const String specificVideosPlayerPath = '/api/videosPlayer';
+
+  //tchat paths
+  static const String conversationPlayerPath = '/api/conversationPlayer';
+  static const String messageConversationPlayerPath = '/api/messageConversation';
+  static const String createMessageConversationPath = '/api/addMessage';
+  static const String subscribeMessageConversationPath = '/api/subscribeToMessage';
 }

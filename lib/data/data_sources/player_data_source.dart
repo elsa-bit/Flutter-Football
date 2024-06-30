@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,8 @@ import 'package:flutter_football/data/data_sources/base_data_source.dart';
 import 'package:flutter_football/data/services/player_service.dart';
 import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/models/player_min.dart';
+import 'package:flutter_football/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../networking/endpoints.dart';
 import '../../networking/exceptions_factory.dart';
 
@@ -95,5 +98,29 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
       throw ExceptionsFactory()
           .handleStatusCode(response.statusCode, errorMessage: errorMessage);
     }
+  }
+
+  @override
+  Stream<Player> subscribeToPlayer() {
+    final StreamController<Player> controller = StreamController<Player>();
+
+    final channel = supabase
+        .channel('todos')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.update,
+          schema: 'public',
+          table: 'player',
+          callback: (payload) {
+            final newPlayer = Player.fromJson(payload.newRecord);
+            controller.add(newPlayer);
+          },
+        )
+        .subscribe();
+
+    controller.onCancel = () {
+      channel.unsubscribe();
+    };
+
+    return controller.stream;
   }
 }

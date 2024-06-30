@@ -74,8 +74,16 @@ class PlayerRepository {
     try {
       final coachs = await playerDataSource.getCoachPlayer(teamsId);
       final data = jsonDecode(coachs)["coachs"] as List<dynamic>;
-      debugPrint("JSON : "+ data.toString());
       return List<Coach>.from(data.map((model) => Coach.fromJson(model)));
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Stream<Player> subscribeToPlayer() {
+    try {
+      return playerDataSource.subscribeToPlayer();
     } catch (error) {
       print(error);
       rethrow;

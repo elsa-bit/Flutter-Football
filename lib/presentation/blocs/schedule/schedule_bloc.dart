@@ -1,10 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/domain/repositories/schedule_repository.dart';
-import 'package:flutter_football/domain/repositories/team_repository.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_state.dart';
-import 'package:flutter_football/presentation/blocs/teams/teams_event.dart';
-import 'package:flutter_football/presentation/blocs/teams/teams_state.dart';
 
 class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   final ScheduleRepository repository;
