@@ -115,6 +115,7 @@ class MatchRepository {
           createdAt: replacement.createdAt,
           assetName: "assets/replacement_icon.svg",
           replacement: replacement,
+          assetTint: AppColors.mediumBlue,
         );
       }));
 

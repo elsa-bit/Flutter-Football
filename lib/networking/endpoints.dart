@@ -6,7 +6,7 @@ class Endpoints {
 
   static const String prodURL = 'api-csbretigny.vercel.app';
 
-  static const String baseURL = localHostURL;
+  static const String baseURL = prodURL;
 
   static const int receiveTimeout = 5000;
 

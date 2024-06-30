@@ -19,7 +19,6 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
         ));
 
         final actions = await repository.getActions(event.match.id);
-        print(actions);
         emit(state.copyWith(
           status: FmiStatus.success,
           actions: actions,
@@ -94,6 +93,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
           createdAt: replacement.createdAt,
           assetName: "assets/replacement_icon.svg",
           replacement: replacement,
+          assetTint: AppColors.mediumBlue,
         );
         emit(state.copyWith(action: replacementAction));
       } catch (error) {
