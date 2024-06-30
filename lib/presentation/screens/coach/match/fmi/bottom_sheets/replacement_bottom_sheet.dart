@@ -140,7 +140,7 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
                   controller: commentController,
                   enableSuggestions: false,
                   autocorrect: false,
-                  maxLines: 4,
+                  maxLines: 3,
                 ),
               ),
 

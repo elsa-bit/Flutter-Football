@@ -9,6 +9,7 @@ import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_state.dart';
 import 'package:flutter_football/presentation/screens/coach/teams/player_selectable_item.dart';
+import 'package:flutter_football/presentation/widgets/csb_search_bar.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CSBCard {
@@ -45,13 +46,8 @@ class _CardsBottomSheetState extends State<CardsBottomSheet> {
   ];
   BottomSheetError? errorMessage = null;
   Player? selectedPlayer = null;
-  /*late FmiBloc _fmiBloc;
+  final searchController = TextEditingController();
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _fmiBloc = BlocProvider.of<FmiBloc>(context);
-  }*/
 
   @override
   void initState() {
@@ -194,8 +190,21 @@ class _CardsBottomSheetState extends State<CardsBottomSheet> {
                 SizedBox(
                   height: 20,
                 ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 60.0),
+                  child: CsbSearchBar(
+                    hint: "Rechercher par nom et/ou prénom",
+                    controller: searchController,
+                    onChanged: (v) {
+                      BlocProvider.of<PlayersBloc>(context).add(Search(search: v));
+                    },
+                  ),
+                ),
                 SizedBox(
-                  height: 300,
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 260,
                   child: BlocBuilder<PlayersBloc, PlayersState>(
                     builder: (context, state) {
                       switch (state.status) {
@@ -204,16 +213,16 @@ class _CardsBottomSheetState extends State<CardsBottomSheet> {
                         case PlayersStatus.error:
                           return Text(state.error);
                         case PlayersStatus.success:
-                          if (state.players!.isEmpty) {
+                          if (state.playerSearch!.isEmpty) {
                             return const Center(
                               child: Text("Aucun joueur dans cette équipe."),
                             );
                           }
                           return ListView.builder(
                             shrinkWrap: true,
-                            itemCount: state.players?.length ?? 0,
+                            itemCount: state.playerSearch?.length ?? 0,
                             itemBuilder: (context, index) {
-                              final player = state.players![index];
+                              final player = state.playerSearch![index];
                               return PlayerSelectableItem(
                                 player: player,
                                 isSelected: player.id == this.selectedPlayer?.id,

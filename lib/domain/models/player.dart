@@ -66,4 +66,9 @@ class Player {
       throw const FormatException('Failed to convert Player data.');
     }
   }
+
+  bool isMatching(String searchValue) {
+    final search = searchValue.toLowerCase();
+    return this.firstname.toLowerCase().contains(search) || this.lastname.toLowerCase().contains(search) || "${this.firstname.toLowerCase()} ${this.lastname.toLowerCase()}".contains(search) || "${this.lastname.toLowerCase()} ${this.firstname.toLowerCase()}".contains(search);
+  }
 }

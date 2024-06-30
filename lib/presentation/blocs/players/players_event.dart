@@ -25,3 +25,11 @@ class AddFriend extends PlayersEvent {
     required this.idFriend,
   });
 }
+
+class Search extends PlayersEvent {
+  final String search;
+
+  Search({
+    required this.search,
+  });
+}
