@@ -11,7 +11,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<IsUserAuthenticated>((event, emit) async {
       try {
-        emit(state.copyWith(status: AuthStatus.loading));
+        //emit(state.copyWith(status: AuthStatus.loading));
         final isAuthenticated = await repository.isUserAuthenticated();
         final user = repository.user;
 
@@ -35,8 +35,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<AuthenticateUser>((event, emit) async {
-      emit(state.copyWith(status: AuthStatus.loading));
-      await repository.authenticateUser(event.auth);
+      //emit(state.copyWith(status: AuthStatus.loading));
       final user = event.auth.user;
 
       if(user == null) {
@@ -45,9 +44,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
 
       if (user.userMetadata?["role"] == "coach") {
+        await repository.authenticateUser(event.auth);
         emit(state.copyWith(status: AuthStatus.authenticatedAsCoach, user: repository.user));
       } else if (user.userMetadata?["role"] == "player") {
-        emit(state.copyWith(status: AuthStatus.authenticatedAsPlayer, user: repository.user));
+        final int? idPlayer = user.userMetadata?["idPlayer"] as int?;
+
+        if (idPlayer != null) {
+          final bool hasAccess = await repository.playerHasAccess(idPlayer);
+          if (hasAccess) {
+            await repository.authenticateUser(event.auth);
+            emit(state.copyWith(status: AuthStatus.authenticatedAsPlayer, user: repository.user));
+          } else {
+            emit(state.copyWith(status: AuthStatus.playerAccessForbidden, user: null));
+          }
+        } else {
+          emit(state.copyWith(status: AuthStatus.unauthenticated, user: repository.user));
+        }
       } else {
         emit(state.copyWith(status: AuthStatus.unauthenticated, user: repository.user));
       }

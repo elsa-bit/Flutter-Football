@@ -1,6 +1,14 @@
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
-enum AuthStatus { unknown, loading, authenticatedAsCoach, authenticatedAsPlayer, unauthenticated, error }
+enum AuthStatus {
+  unknown,
+  loading,
+  authenticatedAsCoach,
+  authenticatedAsPlayer,
+  playerAccessForbidden,
+  unauthenticated,
+  error
+}
 
 class AuthState {
   final AuthStatus status;

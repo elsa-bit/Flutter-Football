@@ -1,14 +1,16 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_football/data/data_sources/auth_data_source.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepository {
-  User? user;
+  User? user = null;
   SharedPreferencesDataSource preferencesDataSource;
+  AuthDataSource authDataSource;
 
-  AuthRepository({required this.preferencesDataSource});
+  AuthRepository({required this.preferencesDataSource, required this.authDataSource});
 
   Future<bool> isUserAuthenticated() async {
     final accessToken = preferencesDataSource.getAccessToken();
@@ -62,6 +64,16 @@ class AuthRepository {
     user = null;
     await preferencesDataSource.clear();
   }
+
+  Future<bool> playerHasAccess(int playerId) async {
+    try {
+      final res = await authDataSource.getPlayerAccess(playerId.toString());
+      return res.isNotEmpty;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 
   // private functions
 

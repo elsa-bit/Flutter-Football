@@ -11,6 +11,9 @@ class Endpoints {
 
   static const int connectionTimeout = 3000;
 
+
+  static const String accessPlayerPath = '/api/playerAccess';
+
   // login paths
   static const String loginAdmin = '/api/loginAdmin';
   static const String loginCoach = '/api/loginCoach';

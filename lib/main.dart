@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_router.dart';
 import 'package:flutter_football/config/app_themes.dart';
+import 'package:flutter_football/data/data_sources/auth_data_source.dart';
 import 'package:flutter_football/data/data_sources/match_data_source.dart';
 import 'package:flutter_football/data/data_sources/conversation_data_source.dart';
 import 'package:flutter_football/data/data_sources/media_data_source.dart';
@@ -33,6 +34,7 @@ import 'package:flutter_football/presentation/blocs/message/message_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/blocs/teams/teams_bloc.dart';
+import 'package:flutter_football/presentation/dialogs/player_forbidden_access_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/home.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/player/home_player.dart';
@@ -80,10 +82,13 @@ final supabase = Supabase.instance.client;
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  void listenAuthState(AuthState state) {
+  void listenAuthState(BuildContext context, AuthState state) {
     switch (state.status) {
       case AuthStatus.error:
         print(state.error);
+        break;
+      case AuthStatus.playerAccessForbidden:
+        PlayerForbiddenAccessDialog.show(context);
         break;
       case AuthStatus.authenticatedAsCoach:
       case AuthStatus.authenticatedAsPlayer:
@@ -99,7 +104,6 @@ class MyApp extends StatelessWidget {
 
   // TODO : implement Go_router
   // TODO : implement theme_tailor
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -111,6 +115,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => AuthRepository(
             preferencesDataSource: SharedPreferencesDataSource(),
+            authDataSource: AuthDataSource(),
           ),
         ),
         RepositoryProvider(
@@ -209,20 +214,28 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: ThemeMode.system,
-            home: BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                switch (state.status) {
-                  case AuthStatus.authenticatedAsCoach:
-                    return const Home();
-                  case AuthStatus.authenticatedAsPlayer:
-                    return const HomePlayer();
-                  case AuthStatus.unauthenticated:
-                    return LoginScreen();
-                  default:
-                    return const SplashScreen();
-                }
-              },
-            ),
+            home: Builder(builder: (context) {
+              return BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  listenAuthState(context, state);
+                },
+                child: BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    switch (state.status) {
+                      case AuthStatus.authenticatedAsCoach:
+                        return const Home();
+                      case AuthStatus.authenticatedAsPlayer:
+                        return const HomePlayer();
+                      case AuthStatus.unauthenticated:
+                      case AuthStatus.playerAccessForbidden:
+                        return LoginScreen();
+                      default:
+                        return const SplashScreen();
+                    }
+                  },
+                ),
+              );
+            }),
             onGenerateRoute: AppRouter.onGenerateRoute,
             //initialRoute: SplashScreen.routeName,
           ),
