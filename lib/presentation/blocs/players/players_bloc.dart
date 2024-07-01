@@ -130,5 +130,19 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         emit(state.copyWith(error: e.toString(), status: PlayersStatus.error));
       }
     });
+
+    on<GetNewTrophy>((event, emit) async {
+      try {
+        emit(state.copyWith(status: PlayersStatus.loading));
+        final detailsPlayer = await repository.getNewTrophy(event.oldDate);
+        emit(state.copyWith(
+            detailsPlayer: detailsPlayer, status: PlayersStatus.success));
+      } catch (error) {
+        emit(state.copyWith(
+          error: error.toString(),
+          status: PlayersStatus.error,
+        ));
+      }
+    });
   }
 }

@@ -89,4 +89,16 @@ class PlayerRepository {
       rethrow;
     }
   }
+
+  Future<Player> getNewTrophy(String oldDate) async {
+    final idPlayer = preferencesDataSource.getIdPlayer();
+
+    try {
+      final detailsPlayer = await playerDataSource.getNewTrophy(oldDate, idPlayer!);
+      return detailsPlayer;
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
 }

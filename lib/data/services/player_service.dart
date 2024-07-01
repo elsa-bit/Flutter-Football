@@ -15,4 +15,6 @@ abstract class PlayerService {
   Future<String> getCoachPlayer(String idteam);
 
   Stream<Player> subscribeToPlayer();
+
+  Future<Player> getNewTrophy(String oldDate, int idplayer);
 }
