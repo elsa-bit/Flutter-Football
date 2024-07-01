@@ -13,9 +13,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(state.copyWith(status: LoginStatus.loading));
         final response = await repository.login(event.email, event.password);
         emit(state.copyWith(authResponse: response, status: LoginStatus.success));
-      } catch (error) {
+      } on Exception catch (error) {
         emit(state.copyWith(
-          error: error.toString(),
+          error: error,
           status: LoginStatus.error,
         ));
       }

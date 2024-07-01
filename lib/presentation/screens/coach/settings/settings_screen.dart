@@ -8,6 +8,7 @@ import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
+import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
 import 'package:flutter_football/utils/extensions/user_extension.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -126,8 +127,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Spacer(),
               ElevatedButton(
                 onPressed: () {
-                  final authBloc = BlocProvider.of<AuthBloc>(context);
-                  authBloc.add(Logout());
+                  ConfirmationDialog.show(
+                      context,
+                      "Déconnexion",
+                      "Annuler",
+                      "Déconnexion",
+                      description: "Es-tu sûr de vouloir te deconnecter ?",
+                      onCancelAction: (){},
+                      onValidateAction: (){
+                        final authBloc = BlocProvider.of<AuthBloc>(context);
+                        authBloc.add(Logout());
+                      },
+                      validateActionTint: Colors.red
+                  );
                 },
                 child: Text(
                   "Déconnexion",

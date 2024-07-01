@@ -7,18 +7,22 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? error;
   final Function(String)? onChanged;
+  final VoidCallback? onEditingComplete;
   final String labelText;
   final bool obscureText;
   final Widget? icon;
+  FocusNode? focusNode;
 
-  const CustomTextField({
+  CustomTextField({
     Key? key,
     this.hint,
     this.controller,
     this.error,
     this.onChanged,
+    this.onEditingComplete,
     this.obscureText = false,
     this.icon,
+    this.focusNode,
     required this.labelText,
   }) : super(key: key);
 
@@ -43,6 +47,8 @@ class CustomTextField extends StatelessWidget {
       enableSuggestions: false,
       autocorrect: false,
       onChanged: onChanged,
+      onEditingComplete: onEditingComplete,
+      focusNode: focusNode,
     );
   }
 }

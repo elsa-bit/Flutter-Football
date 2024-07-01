@@ -10,7 +10,7 @@ enum LoginStatus {
 
 class LoginState {
   final LoginStatus status;
-  final String? error;
+  final Exception? error;
   final String? token;
   final AuthResponse? authResponse;
 
@@ -23,7 +23,7 @@ class LoginState {
 
   LoginState copyWith({
     LoginStatus? status,
-    String? error,
+    Exception? error,
     String? token,
     AuthResponse? authResponse,
   }) {

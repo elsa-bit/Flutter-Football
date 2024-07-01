@@ -12,6 +12,7 @@ import 'package:flutter_football/presentation/blocs/media/media_state.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_state.dart';
+import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
 import 'package:flutter_football/presentation/screens/player/profil/infoClub_screen.dart';
 import 'package:flutter_football/presentation/screens/player/profil/news_screen.dart';
 import 'package:flutter_football/presentation/screens/player/profil/resource_screen.dart';
@@ -237,8 +238,19 @@ class _ProfilScreenState extends State<ProfilScreen> {
                   Spacer(),
                   ElevatedButton(
                     onPressed: () {
-                      final authBloc = BlocProvider.of<AuthBloc>(context);
-                      authBloc.add(Logout());
+                      ConfirmationDialog.show(
+                        context,
+                        "Déconnexion",
+                        "Annuler",
+                        "Déconnexion",
+                        description: "Es-tu sûr de vouloir te deconnecter ?",
+                        onCancelAction: (){},
+                        onValidateAction: (){
+                          final authBloc = BlocProvider.of<AuthBloc>(context);
+                          authBloc.add(Logout());
+                        },
+                        validateActionTint: Colors.red
+                      );
                     },
                     child: Text(
                       "Déconnexion",

@@ -12,6 +12,7 @@ import 'package:flutter_football/presentation/blocs/login/login_state.dart';
 import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
 import 'package:flutter_football/presentation/widgets/custom_text_field.dart';
 import 'package:flutter_football/utils/extensions/text_extension.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -28,15 +29,6 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreen();
 }
-
-// Conditional widget creation (for Column, List, etc.)
-/*
-if (_selectedIndex == 0) ...[
-          DayScreen(),
-        ] else ...[
-          StatsScreen(),
-        ],
- */
 
 class _LoginScreen extends State<LoginScreen> {
   late final Function onLoginCallback;
@@ -62,18 +54,19 @@ class _LoginScreen extends State<LoginScreen> {
   String? emailError = null;
   String? passwordError = null;
   String? loginError = null;
+  FocusNode passwordFocusNode = FocusNode();
 
-  void handleError(String error) {
+  void handleError(Exception error) {
     setState(() {
-      if (error.contains("Email")) {
-        emailError = error;
-      } else if (error.contains("Mot de passe")) {
-        passwordError = error;
+      final String errorMessage;
+      if(error is AuthException) {
+        errorMessage = "Les identifiants de connexion ne sont pas valides";
       } else {
-        loginError = error;
-        passwordError = "";
-        emailError = "";
+        errorMessage = "Une erreur est survenue lors de la connexion";
       }
+      loginError = errorMessage;
+      passwordError = "";
+      emailError = "";
     });
   }
 
@@ -127,7 +120,7 @@ class _LoginScreen extends State<LoginScreen> {
                 print("[Login] error");
                 print(state.error);
                 LoadingDialog.hide(context);
-                handleError(state.error.toString());
+                if(state.error != null) handleError(state.error!);
                 break;
             }
           },
@@ -188,12 +181,16 @@ class _LoginScreen extends State<LoginScreen> {
                                     });
                                   }
                                 },
+                                onEditingComplete: () {
+                                  passwordFocusNode.requestFocus();
+                                },
                               ),
                               const SizedBox(height: 15),
                               CustomTextField(
                                 labelText: "Mot de passe",
                                 hint: "*********",
                                 icon: Icon(Icons.key),
+                                focusNode: passwordFocusNode,
                                 controller: passwordController,
                                 obscureText: true,
                                 error: passwordError,
@@ -203,6 +200,10 @@ class _LoginScreen extends State<LoginScreen> {
                                       passwordError = null;
                                     });
                                   }
+                                },
+                                onEditingComplete: () {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  this._login(context);
                                 },
                               ),
                             ],
@@ -228,19 +229,7 @@ class _LoginScreen extends State<LoginScreen> {
                             ),
                           ),
                           onPressed: () {
-                            setState(() {
-                              emailError = null;
-                              passwordError = null;
-                              loginError = null;
-                            });
-                            print("Login ...");
-                            final loginBloc = BlocProvider.of<LoginBloc>(context);
-                            loginBloc.add(
-                              Login(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              ),
-                            );
+                            this._login(context);
                           },
                           child: Text(
                             "Se connecter",
@@ -256,6 +245,22 @@ class _LoginScreen extends State<LoginScreen> {
             );
           }),
         ),
+      ),
+    );
+  }
+
+  void _login(BuildContext context) {
+    setState(() {
+      emailError = null;
+      passwordError = null;
+      loginError = null;
+    });
+    print("Login ...");
+    final loginBloc = BlocProvider.of<LoginBloc>(context);
+    loginBloc.add(
+      Login(
+        email: emailController.text,
+        password: passwordController.text,
       ),
     );
   }
