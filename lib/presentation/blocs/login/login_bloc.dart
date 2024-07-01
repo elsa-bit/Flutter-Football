@@ -8,52 +8,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc({required this.repository}) : super(LoginState()) {
 
-    on<LoginCoach>((event, emit) async {
-      try {
-        emit(state.copyWith(status: LoginStatus.loading));
-        final user = await repository.loginCoach(event.email, event.password);
-        print(user);
-        emit(state.copyWith(token: "token", status: LoginStatus.success));
-      } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: LoginStatus.error,
-        ));
-      }
-    });
-
-    on<LoginMember>((event, emit) async {
-      try {
-        emit(state.copyWith(status: LoginStatus.loading));
-        final user = await repository.loginMember(event.email, event.password);
-        print(user);
-        emit(state.copyWith(token: "token", status: LoginStatus.success));
-      } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: LoginStatus.error,
-        ));
-      }
-    });
-
     on<Login>((event, emit) async {
       try {
         emit(state.copyWith(status: LoginStatus.loading));
-        final response = await repository.loginTest(event.email, event.password);
+        final response = await repository.login(event.email, event.password);
         emit(state.copyWith(authResponse: response, status: LoginStatus.success));
-      } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: LoginStatus.error,
-        ));
-      }
-    });
-
-    on<SignUpTest>((event, emit) async {
-      try {
-        emit(state.copyWith(status: LoginStatus.loading));
-        final response = await repository.signUpTest(event.email, event.password, event.role);
-        emit(state.copyWith(token: response.session?.accessToken, status: LoginStatus.success));
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
