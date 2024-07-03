@@ -58,3 +58,7 @@ class GetNewTrophy extends PlayersEvent {
 
   GetNewTrophy({required this.oldDate});
 }
+
+class ClearPlayerState extends PlayersEvent {
+  ClearPlayerState();
+}

@@ -20,3 +20,7 @@ class AddMessage extends MessageEvent {
 
   AddMessage({required this.message});
 }
+
+class ClearMessageState extends MessageEvent {
+  ClearMessageState();
+}

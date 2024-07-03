@@ -26,3 +26,7 @@ class AuthenticateUserWithToken extends AuthEvent {
 class Logout extends AuthEvent {
   Logout();
 }
+
+class ClearAuthStates extends AuthEvent {
+  ClearAuthStates();
+}

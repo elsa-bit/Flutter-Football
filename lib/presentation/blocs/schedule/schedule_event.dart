@@ -30,3 +30,7 @@ class AddPlayerAttendance extends ScheduleEvent {
     required this.idPlayers,
   });
 }
+
+class ClearScheduleStates extends ScheduleEvent {
+  ClearScheduleStates();
+}

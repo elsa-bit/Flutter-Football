@@ -23,3 +23,7 @@ class GetVideosBucket extends MediaEvent {
 class GetSpecificVideos extends MediaEvent {
   GetSpecificVideos();
 }
+
+class ClearMediaState extends MediaEvent {
+  ClearMediaState();
+}

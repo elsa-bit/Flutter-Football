@@ -144,5 +144,9 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         ));
       }
     });
+
+    on<ClearPlayerState>((event, emit) async {
+      emit(PlayersState());
+    });
   }
 }

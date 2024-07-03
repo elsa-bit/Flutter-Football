@@ -30,3 +30,7 @@ class GetSpecificTeamPlayer extends TeamsEvent {
     required this.idPlayer
   });
 }
+
+class ClearTeamsState extends TeamsEvent {
+  ClearTeamsState();
+}

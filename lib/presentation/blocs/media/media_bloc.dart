@@ -75,5 +75,9 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
             response: null));
       }
     });
+
+    on<ClearMediaState>((event, emit) async {
+      emit(MediaState());
+    });
   }
 }

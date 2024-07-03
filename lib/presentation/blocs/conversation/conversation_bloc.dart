@@ -60,6 +60,10 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
             error: e.toString(), status: ConversationStatus.error));
       }
     });
+
+    on<ClearConversationState>((event, emit) async {
+      emit(ConversationState());
+    });
   }
 
   @override

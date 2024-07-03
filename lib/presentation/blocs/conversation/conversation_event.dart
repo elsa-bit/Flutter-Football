@@ -7,3 +7,7 @@ class GetConversationPlayer extends ConversationEvent {
 class SubscribeToConversation extends ConversationEvent {
   SubscribeToConversation();
 }
+
+class ClearConversationState extends ConversationEvent {
+  ClearConversationState();
+}

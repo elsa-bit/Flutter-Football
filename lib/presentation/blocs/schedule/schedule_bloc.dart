@@ -59,5 +59,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         emit(state.copyWith(error: e.toString(), status: ScheduleStatus.error));
       }
     });
+
+    on<ClearScheduleStates>((event, emit) async {
+      emit(ScheduleState());
+    });
   }
 }

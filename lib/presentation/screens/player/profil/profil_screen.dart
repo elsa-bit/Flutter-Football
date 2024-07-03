@@ -6,12 +6,22 @@ import 'package:flutter_football/data/data_sources/shared_preferences_data_sourc
 import 'package:flutter_football/domain/models/player_min.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
+import 'package:flutter_football/presentation/blocs/conversation/conversation_bloc.dart';
+import 'package:flutter_football/presentation/blocs/conversation/conversation_event.dart';
+import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
+import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
+import 'package:flutter_football/presentation/blocs/message/message_bloc.dart';
+import 'package:flutter_football/presentation/blocs/message/message_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_state.dart';
+import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
+import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
+import 'package:flutter_football/presentation/blocs/teams/teams_bloc.dart';
+import 'package:flutter_football/presentation/blocs/teams/teams_event.dart';
 import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
 import 'package:flutter_football/presentation/screens/player/profil/infoClub_screen.dart';
 import 'package:flutter_football/presentation/screens/player/profil/news_screen.dart';
@@ -248,6 +258,22 @@ class _ProfilScreenState extends State<ProfilScreen> {
                         onValidateAction: (){
                           final authBloc = BlocProvider.of<AuthBloc>(context);
                           authBloc.add(Logout());
+
+                          /*final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
+                          final playersBloc = BlocProvider.of<PlayersBloc>(context);
+                          final mediaBloc = BlocProvider.of<MediaBloc>(context);
+                          final fmiBloc = BlocProvider.of<FmiBloc>(context);
+                          final teamsBloc = BlocProvider.of<TeamsBloc>(context);
+                          final conversationBloc = BlocProvider.of<ConversationBloc>(context);
+                          final messageBloc = BlocProvider.of<MessageBloc>(context);
+                          authBloc.add(ClearAuthStates());
+                          scheduleBloc.add(ClearScheduleStates());
+                          playersBloc.add(ClearPlayerState());
+                          mediaBloc.add(ClearMediaState());
+                          fmiBloc.add(ClearFMIState());
+                          teamsBloc.add(ClearTeamsState());
+                          conversationBloc.add(ClearConversationState());
+                          messageBloc.add(ClearMessageState());*/
                         },
                         validateActionTint: Colors.red
                       );

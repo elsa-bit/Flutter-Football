@@ -54,6 +54,10 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         emit(state.copyWith(error: e.toString(), status: MessageStatus.error));
       }
     });
+
+    on<ClearMessageState>((event, emit) async {
+      emit(MessageState());
+    });
   }
 
   @override

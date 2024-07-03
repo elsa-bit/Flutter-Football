@@ -43,3 +43,7 @@ class AddCard extends FmiEvent {
     required this.color,
   });
 }
+
+class ClearFMIState extends FmiEvent {
+  ClearFMIState();
+}

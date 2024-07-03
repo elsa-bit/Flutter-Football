@@ -75,5 +75,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(status: AuthStatus.unauthenticated, user: null));
     });
 
+    on<ClearAuthStates>((event, emit) async {
+      emit(state.copyWith(status: AuthStatus.unauthenticated, user: null, error: null));
+    });
+
   }
 }

@@ -64,7 +64,7 @@ class _HomePlayerState extends State<HomePlayer> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(milliseconds: 5000), () {
-        if (detailsPlayer != null)
+        if (detailsPlayer != null && (detailsPlayer!.goal != 0 || detailsPlayer!.redCard != 0 || detailsPlayer!.yellowCard != 0))
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {

@@ -107,6 +107,10 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
         ));
       }
     });
+
+    on<ClearFMIState>((event, emit) async {
+     emit(FmiState());
+    });
   }
 
 
