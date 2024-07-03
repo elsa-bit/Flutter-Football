@@ -5,7 +5,7 @@ class Message {
   final DateTime? date;
   final int idConversation;
   final String message;
-  final int idSender;
+  final String idSender;
   final String role;
   final String? sender;
 
@@ -25,7 +25,7 @@ class Message {
           DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json["created_at"]);
       final int idConversation = json["idConversation"] as int;
       final String message = json["message"] as String;
-      final int idSender = json["idSender"] as int;
+      final String idSender = json["idSender"] as String;
       final String role = json["role"] as String;
       final String? sender = json["sender"] as String?;
 

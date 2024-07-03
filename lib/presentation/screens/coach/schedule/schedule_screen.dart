@@ -523,10 +523,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
             setState(() {
               _selectedEvents.value = _getEventsForDay(_selectedDay!);
-              debugPrint(
-                  "_onAddSchedule // SELECT DAY: " + _selectedDay.toString());
-              debugPrint(" _onAddSchedule // SELECT EVENTS: " +
-                  _selectedEvents.value.toString());
             });
           }
         } else {

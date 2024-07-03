@@ -16,7 +16,7 @@ class ConversationRepository {
       final idPlayer = preferences.getIdPlayer();
 
       return await conversationDataSource
-          .getConversationPlayer(idPlayer.toString());
+          .getConversationPlayer(idPlayer!);
     } catch (error) {
       print(error);
       rethrow;

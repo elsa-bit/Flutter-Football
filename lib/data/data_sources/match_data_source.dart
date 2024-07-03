@@ -50,22 +50,22 @@ class MatchDataSource extends BaseDataSource with MatchService {
   }
 
   @override
-  Future<Response> addCard(int idMatch, int idPlayer, String color) async {
+  Future<Response> addCard(int idMatch, String idPlayer, String color) async {
     final queryParameters = {
       'idmatch': idMatch.toString(),
-      'idplayer': idPlayer.toString(),
+      'idplayer': idPlayer,
       'color': color,
     };
     return await httpPost(Endpoints.addCardPath, queryParameters);
   }
 
   @override
-  Future<Response> addGoal(int idMatch, int? idPlayer) async {
+  Future<Response> addGoal(int idMatch, String? idPlayer) async {
     final queryParameters;
     if (idPlayer != null) {
       queryParameters = {
         'idmatch': idMatch.toString(),
-        'idplayer': idPlayer.toString(),
+        'idplayer': idPlayer,
         'fromOpponent': (idPlayer == null).toString(),
       };
     } else {
@@ -78,13 +78,13 @@ class MatchDataSource extends BaseDataSource with MatchService {
   }
 
   @override
-  Future<Response> addReplacement(int idMatch, int idPlayerOut, int idPlayerIn, String? reason) async {
+  Future<Response> addReplacement(int idMatch, String idPlayerOut, String idPlayerIn, String? reason) async {
     final queryParameters;
     if (reason != null && reason.isNotEmpty) {
       queryParameters = {
         'idmatch': idMatch.toString(),
-        'idplayerOut': idPlayerOut.toString(),
-        'idplayerIn': idPlayerIn.toString(),
+        'idplayerOut': idPlayerOut,
+        'idplayerIn': idPlayerIn,
         'reason': reason.toString(),
       };
     } else {

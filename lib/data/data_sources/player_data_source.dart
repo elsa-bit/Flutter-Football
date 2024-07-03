@@ -26,8 +26,8 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
   }
 
   @override
-  Future<Player> getPlayerDetails(int idplayer) async {
-    final queryParameters = {'idplayer': idplayer.toString()};
+  Future<Player> getPlayerDetails(String idplayer) async {
+    final queryParameters = {'idplayer': idplayer};
     final response =
         await httpGet(Endpoints.detailsPlayerPath, queryParameters);
     if (response.statusCode == 200) {
@@ -67,7 +67,7 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
   }
 
   @override
-  Future<String> modifyPlayer(PlayerMin player, int idPlayer) async {
+  Future<String> modifyPlayer(PlayerMin player, String idPlayer) async {
     final body = {
       'id': idPlayer,
       'email': player.email,
@@ -125,10 +125,10 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
   }
 
   @override
-  Future<Player> getNewTrophy(String oldDate, int idplayer) async {
+  Future<Player> getNewTrophy(String oldDate, String idplayer) async {
     final queryParameters = {
       'olddate': oldDate,
-      'idplayer': idplayer.toString()
+      'idplayer': idplayer
     };
     final response =
         await httpGet(Endpoints.newStatisticPlayerPath, queryParameters);

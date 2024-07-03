@@ -35,7 +35,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         List<Conversation> updatesConversations = List.empty();
         await for (final event in repository.subscribeToMessages()) {
           var idPlayer = preferences.getIdPlayer();
-          if (event.conversation.players.contains(idPlayer.toString())) {
+          if (event.conversation.players.contains(idPlayer)) {
             if (event.eventType == PostgresChangeEvent.insert) {
               updatesConversations =
                   List<Conversation>.from(state.conversations!)

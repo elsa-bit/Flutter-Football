@@ -66,9 +66,9 @@ class AuthRepository {
     await preferencesDataSource.clear();
   }
 
-  Future<bool> playerHasAccess(int playerId) async {
+  Future<bool> playerHasAccess(String playerId) async {
     try {
-      final res = await authDataSource.getPlayerAccess(playerId.toString());
+      final res = await authDataSource.getPlayerAccess(playerId);
       preferencesDataSource
           .saveTeamsIds(res.map((string) => int.parse(string)).toList());
 
@@ -83,7 +83,7 @@ class AuthRepository {
   void saveUser(User user) async {
     this.user = user;
     int? idCoach = null;
-    int? idPlayer = null;
+    String? idPlayer = null;
 
     if (user.userMetadata?["role"] == "coach") {
       idCoach = user.userMetadata?["idCoach"];

@@ -197,6 +197,7 @@ class _HomePlayerState extends State<HomePlayer> {
                   "-${(2 * detailsPlayer!.redCard) + detailsPlayer!.yellowCard}pts",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
                     fontSize: 24.0,
                     color: Colors.red,
                   ),

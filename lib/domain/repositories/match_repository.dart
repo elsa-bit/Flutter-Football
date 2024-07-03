@@ -46,7 +46,7 @@ class MatchRepository {
     }
   }
 
-  Future<Card> addCard(int idMatch, int idPlayer, String color) async {
+  Future<Card> addCard(int idMatch, String idPlayer, String color) async {
     try {
       final response = await matchDataSource.addCard(idMatch, idPlayer, color);
       if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMICardCreationException
@@ -60,7 +60,7 @@ class MatchRepository {
     }
   }
 
-  Future<Goal> addGoal(int idMatch, int? idPlayer) async {
+  Future<Goal> addGoal(int idMatch, String? idPlayer) async {
     try {
       final response = await matchDataSource.addGoal(idMatch, idPlayer);
       if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMIGoalCreationException
@@ -74,7 +74,7 @@ class MatchRepository {
     }
   }
 
-  Future<Replacement> addReplacement(int idMatch, int idPlayerOut, int idPlayerIn, String? reason) async {
+  Future<Replacement> addReplacement(int idMatch, String idPlayerOut, String idPlayerIn, String? reason) async {
     try {
       final response = await matchDataSource.addReplacement(idMatch, idPlayerOut, idPlayerIn, reason);
       if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMIReplacementCreationException

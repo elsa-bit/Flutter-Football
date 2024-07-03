@@ -35,7 +35,7 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-  late int idPlayer;
+  late String idPlayer;
   SharedPreferencesDataSource sharedPreferencesDataSource =
       SharedPreferencesDataSource();
   final TextEditingController _messageController = TextEditingController();

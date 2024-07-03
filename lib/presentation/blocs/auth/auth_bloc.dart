@@ -47,7 +47,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await repository.authenticateUser(event.auth);
         emit(state.copyWith(status: AuthStatus.authenticatedAsCoach, user: repository.user));
       } else if (user.userMetadata?["role"] == "player") {
-        final int? idPlayer = user.userMetadata?["idPlayer"] as int?;
+        final String? idPlayer = user.userMetadata?["idPlayer"] as String?;
 
         if (idPlayer != null) {
           final bool hasAccess = await repository.playerHasAccess(idPlayer);
