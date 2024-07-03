@@ -38,8 +38,8 @@ class MediaDataSource extends BaseDataSource with MediaService {
     return videos;
   }
 
-  Future<String> getSpecificVideos(int? idplayer) async {
-    final queryParameters = {'idplayer': idplayer.toString()};
+  Future<String> getSpecificVideos(String idplayer) async {
+    final queryParameters = {'idplayer': idplayer};
     final response = await httpGet(Endpoints.specificVideosPlayerPath, queryParameters);
     if (response.statusCode == 200) {
       return response.body;

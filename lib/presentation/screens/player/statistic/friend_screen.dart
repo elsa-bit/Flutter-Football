@@ -10,10 +10,10 @@ import 'package:flutter_football/presentation/blocs/players/players_state.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class FriendScreen extends StatefulWidget {
-  final int idPlayer;
+  final String idPlayer;
   static const String routeName = '/player/friend';
 
-  static void navigateTo(BuildContext context, int idPlayer) {
+  static void navigateTo(BuildContext context, String idPlayer) {
     Navigator.of(context).pushNamed(
       routeName,
       arguments: {'idPlayer': idPlayer},
@@ -21,7 +21,7 @@ class FriendScreen extends StatefulWidget {
   }
 
   static Route route(RouteSettings settings) {
-    final args = settings.arguments as Map<String, int>;
+    final args = settings.arguments as Map<String, String>;
     final idPlayer = args['idPlayer']!;
     return MaterialPageRoute(
       builder: (context) => FriendScreen(idPlayer: idPlayer),
@@ -106,7 +106,7 @@ class _FriendScreenState extends State<FriendScreen> {
                   ),
                 ),
                 QrImageView(
-                  data: widget.idPlayer.toString(),
+                  data: widget.idPlayer,
                   version: QrVersions.auto,
                   size: 200,
                   backgroundColor: Colors.white,
@@ -151,9 +151,9 @@ class _FriendScreenState extends State<FriendScreen> {
       qrCodeScanRes = 'Failed to get platform version.';
     }
 
-    if (widget.idPlayer.toString() != idFriend) {
+    if (widget.idPlayer != idFriend) {
       BlocProvider.of<PlayersBloc>(context).add(
-          AddFriend(idPlayer: widget.idPlayer.toString(), idFriend: idFriend));
+          AddFriend(idPlayer: widget.idPlayer, idFriend: idFriend));
     } else {
       _showSnackBar(context, "Tu ne peux pas t'ajouter toi-même en ami !",
           Colors.orangeAccent);

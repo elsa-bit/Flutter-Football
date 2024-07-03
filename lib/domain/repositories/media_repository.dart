@@ -54,7 +54,7 @@ class MediaRepository {
     final idPlayer = preferencesDataSource.getIdPlayer();
 
     try {
-      final videos = await mediaDataSource.getSpecificVideos(idPlayer);
+      final videos = await mediaDataSource.getSpecificVideos(idPlayer!);
       final data = jsonDecode(videos)["videos"] as List<dynamic>;
       return List<Video>.from(data.map((model) => Video.fromJson(model)));
     } catch (error) {

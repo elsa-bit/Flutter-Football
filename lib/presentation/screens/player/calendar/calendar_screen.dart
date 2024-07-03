@@ -33,8 +33,6 @@ class _ScheduleScreenState extends State<CalendarScreen> {
   DateTime? _selectedDay;
   Map<DateTime, List<Event>> events = {};
   late ValueNotifier<List<Event>> _selectedEvents;
-  SharedPreferencesDataSource sharedPreferencesDataSource =
-      SharedPreferencesDataSource();
 
   @override
   void initState() {

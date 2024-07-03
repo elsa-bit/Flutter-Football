@@ -1,5 +1,5 @@
 class Player {
-  final int id;
+  final String id;
   final String firstname;
   final String lastname;
   final String email;
@@ -35,7 +35,7 @@ class Player {
 
   factory Player.fromJson(Map<String, dynamic> json) {
     try {
-      final int id = json["id"] as int;
+      final String id = json["id"] as String;
       final String firstname = json["firstname"] as String;
       final String lastname = json["lastname"] as String;
       final String email = json["email"] as String;

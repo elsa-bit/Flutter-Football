@@ -95,8 +95,8 @@ class _PlayerAttendanceScreenState extends State<PlayerAttendanceScreen> {
                               onChanged: (bool? isChecked) {
                                 setState(() {
                                   if (isChecked!) {
-                                    _selectedPlayers
-                                        .add(state.players![index].id);
+                                    _selectedPlayers.add(
+                                        int.parse(state.players![index].id));
                                   } else {
                                     _selectedPlayers
                                         .remove(state.players![index].id);

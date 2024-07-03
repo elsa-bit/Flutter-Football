@@ -45,18 +45,18 @@ class SharedPreferencesDataSource {
         SharedPreferencesKeys.teamsId.name);
   }
 
-  Future<bool> saveIdPlayer(int? id) async {
+  Future<bool> saveIdPlayer(String? id) async {
     if (id == null) {
       await SharedPreferencesUtils.removeKey(
           SharedPreferencesKeys.idPlayer.name);
       return false;
     }
-    return await SharedPreferencesUtils.setInt(
+    return await SharedPreferencesUtils.setString(
         SharedPreferencesKeys.idPlayer.name, id);
   }
 
-  int? getIdPlayer() {
-    return SharedPreferencesUtils.getInt(SharedPreferencesKeys.idPlayer.name);
+  String? getIdPlayer() {
+    return SharedPreferencesUtils.getString(SharedPreferencesKeys.idPlayer.name);
   }
 
   Future<bool> saveDateTrophy(String dateUpdate) async {
