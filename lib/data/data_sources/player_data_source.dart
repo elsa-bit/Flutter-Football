@@ -123,4 +123,22 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
 
     return controller.stream;
   }
+
+  @override
+  Future<Player> getNewTrophy(String oldDate, int idplayer) async {
+    final queryParameters = {
+      'olddate': oldDate,
+      'idplayer': idplayer.toString()
+    };
+    final response =
+        await httpGet(Endpoints.newStatisticPlayerPath, queryParameters);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)["info"] as Map<String, dynamic>;
+      return Player.fromJson(data);
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
+  }
 }

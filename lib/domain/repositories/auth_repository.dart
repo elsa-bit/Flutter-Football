@@ -61,7 +61,7 @@ class AuthRepository {
   }
 
   Future<void> logout() async {
-    supabase.auth.signOut();
+    await supabase.auth.signOut();
     user = null;
     await preferencesDataSource.clear();
   }

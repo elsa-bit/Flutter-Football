@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/domain/models/event.dart';
+import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
+import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_state.dart';
@@ -39,6 +41,9 @@ class _ScheduleScreenState extends State<CalendarScreen> {
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     BlocProvider.of<ScheduleBloc>(context).add(GetSchedulesPlayer());
+    final idteams = SharedPreferencesDataSource().getTeamsIds();
+    debugPrint(idteams.toString() ?? "RIEN");
+
   }
 
   @override

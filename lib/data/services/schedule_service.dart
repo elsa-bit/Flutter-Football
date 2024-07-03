@@ -6,7 +6,7 @@ import 'package:flutter_football/domain/models/match.dart';
 abstract class ScheduleService {
   Future<ScheduleResult> getSchedule(int idcoach, String idteams);
 
-  Future<ScheduleResultPlayer> getSchedulePlayer(int idcoach);
+  Future<ScheduleResultPlayer> getSchedulePlayer(String idTeams);
 
   Future<String> addSchedule(Event event, DateTime date);
 }
@@ -42,12 +42,10 @@ class ScheduleResult {
 class ScheduleResultPlayer {
   final List<Match> matchs;
   final List<Training> trainings;
-  final String idTeams;
 
   ScheduleResultPlayer({
     required this.matchs,
     required this.trainings,
-    required this.idTeams,
   });
 
   factory ScheduleResultPlayer.fromJson(Map<String, dynamic> json) {
@@ -60,7 +58,6 @@ class ScheduleResultPlayer {
               .map((e) => Training.fromJson(e))
               .toList()
           : [],
-      idTeams: json['idTeams'] as String,
     );
   }
 }

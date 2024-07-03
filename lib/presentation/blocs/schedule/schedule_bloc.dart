@@ -10,8 +10,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<GetSchedules>((event, emit) async {
       try {
         emit(state.copyWith(status: ScheduleStatus.loading));
-        final schedule =
-            await repository.getSchedule();
+        final schedule = await repository.getSchedule();
         emit(state.copyWith(
             matchs: schedule.matchs,
             trainings: schedule.trainings,
@@ -28,12 +27,10 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<GetSchedulesPlayer>((event, emit) async {
       try {
         emit(state.copyWith(status: ScheduleStatus.loading));
-        final schedule =
-        await repository.getSchedulePlayer();
+        final schedule = await repository.getSchedulePlayer();
         emit(state.copyWith(
             matchs: schedule.matchs,
             trainings: schedule.trainings,
-            idTeams: schedule.idTeams,
             status: ScheduleStatus.success));
       } catch (error) {
         emit(state.copyWith(

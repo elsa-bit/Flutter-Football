@@ -71,7 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<Logout>((event, emit) async {
-      repository.logout();
+      await repository.logout();
       emit(state.copyWith(status: AuthStatus.unauthenticated, user: null));
     });
 

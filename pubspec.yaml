@@ -54,6 +54,7 @@ dependencies:
   video_player: ^2.8.7
   firebase_messaging: ^14.9.4
   another_flushbar: ^1.12.30
+  lottie: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +88,7 @@ flutter:
   assets:
     - assets/images/
     - assets/
+    - assets/json/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

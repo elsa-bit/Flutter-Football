@@ -247,8 +247,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           ),
                           todayDecoration: BoxDecoration(
                             color: AppColors.darkBlue,
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(5.0),
+                            shape: BoxShape.circle,
                           ),
                         ),
                         selectedDayPredicate: (day) {

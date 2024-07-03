@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/domain/models/player_min.dart';
 
 abstract class PlayersEvent {}
@@ -50,4 +51,10 @@ class Search extends PlayersEvent {
   Search({
     required this.search,
   });
+}
+
+class GetNewTrophy extends PlayersEvent {
+  final String oldDate;
+
+  GetNewTrophy({required this.oldDate});
 }

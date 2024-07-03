@@ -225,7 +225,7 @@ class MyApp extends StatelessWidget {
                       case AuthStatus.authenticatedAsCoach:
                         return const Home();
                       case AuthStatus.authenticatedAsPlayer:
-                        return const HomePlayer();
+                        return HomePlayer();
                       case AuthStatus.unauthenticated:
                       case AuthStatus.playerAccessForbidden:
                         return LoginScreen();
