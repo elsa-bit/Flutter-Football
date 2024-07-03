@@ -117,7 +117,8 @@ class _RankingTeamScreenState extends State<RankingTeamScreen> {
                                       items: <String>[
                                         'buts',
                                         'carton rouge',
-                                        'carton jaune'
+                                        'carton jaune',
+                                        'trophée',
                                       ].map((String value) {
                                         return DropdownMenuItem<String>(
                                           value: value,
@@ -140,7 +141,8 @@ class _RankingTeamScreenState extends State<RankingTeamScreen> {
                           builder: (context, playerState) {
                             if (_selectedTeam == null) {
                               return Center(
-                                child: Text("Sélectionnez une équipe pour afficher les joueurs"),
+                                child: Text(
+                                    "Sélectionnez une équipe pour afficher les joueurs"),
                               );
                             }
 
@@ -173,6 +175,9 @@ class _RankingTeamScreenState extends State<RankingTeamScreen> {
                                     'carton jaune') {
                                   listPlayer.sort((a, b) =>
                                       b.yellowCard.compareTo(a.yellowCard));
+                                } else if (_selectedCriteria == 'trophée') {
+                                  listPlayer.sort(
+                                      (a, b) => b.trophy.compareTo(a.trophy));
                                 }
 
                                 return ListView.builder(

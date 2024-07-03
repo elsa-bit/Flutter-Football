@@ -10,7 +10,8 @@ class AuthRepository {
   SharedPreferencesDataSource preferencesDataSource;
   AuthDataSource authDataSource;
 
-  AuthRepository({required this.preferencesDataSource, required this.authDataSource});
+  AuthRepository(
+      {required this.preferencesDataSource, required this.authDataSource});
 
   Future<bool> isUserAuthenticated() async {
     final accessToken = preferencesDataSource.getAccessToken();
@@ -68,12 +69,14 @@ class AuthRepository {
   Future<bool> playerHasAccess(int playerId) async {
     try {
       final res = await authDataSource.getPlayerAccess(playerId.toString());
+      preferencesDataSource
+          .saveTeamsIds(res.map((string) => int.parse(string)).toList());
+
       return res.isNotEmpty;
     } catch (e) {
       rethrow;
     }
   }
-
 
   // private functions
 

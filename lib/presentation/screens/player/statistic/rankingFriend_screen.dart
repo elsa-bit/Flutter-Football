@@ -71,8 +71,9 @@ class _RankingFriendScreenState extends State<RankingFriendScreen> {
               } else if (_selectedCriteria == 'carton rouge') {
                 listPlayer.sort((a, b) => b.redCard.compareTo(a.redCard));
               } else if (_selectedCriteria == 'carton jaune') {
-                listPlayer
-                    .sort((a, b) => b.yellowCard.compareTo(a.yellowCard));
+                listPlayer.sort((a, b) => b.yellowCard.compareTo(a.yellowCard));
+              } else if (_selectedCriteria == 'trophée') {
+                listPlayer.sort((a, b) => b.trophy.compareTo(a.trophy));
               }
 
               return Column(
@@ -91,7 +92,8 @@ class _RankingFriendScreenState extends State<RankingFriendScreen> {
                           items: <String>[
                             'buts',
                             'carton rouge',
-                            'carton jaune'
+                            'carton jaune',
+                            'trophée',
                           ].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
