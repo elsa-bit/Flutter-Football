@@ -33,7 +33,8 @@ class _ScheduleScreenState extends State<CalendarScreen> {
   DateTime? _selectedDay;
   Map<DateTime, List<Event>> events = {};
   late ValueNotifier<List<Event>> _selectedEvents;
-  SharedPreferencesDataSource sharedPreferencesDataSource = SharedPreferencesDataSource();
+  SharedPreferencesDataSource sharedPreferencesDataSource =
+      SharedPreferencesDataSource();
 
   @override
   void initState() {
@@ -41,9 +42,6 @@ class _ScheduleScreenState extends State<CalendarScreen> {
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     BlocProvider.of<ScheduleBloc>(context).add(GetSchedulesPlayer());
-    final idteams = SharedPreferencesDataSource().getTeamsIds();
-    debugPrint(idteams.toString() ?? "RIEN");
-
   }
 
   @override
