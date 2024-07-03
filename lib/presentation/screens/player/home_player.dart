@@ -13,6 +13,7 @@ import 'package:flutter_football/presentation/screens/player/profil/profil_scree
 import 'package:flutter_football/presentation/screens/player/statistic/statistic_screen.dart';
 import 'package:flutter_football/presentation/screens/player/tchat/tchat_player_screen.dart';
 import 'package:flutter_football/presentation/widgets/player_bottom_nav_bar.dart';
+import 'package:lottie/lottie.dart';
 
 class HomePlayer extends StatefulWidget {
   final SharedPreferencesDataSource sharedPreferences =
@@ -59,13 +60,7 @@ class _HomePlayerState extends State<HomePlayer> {
       }
     });
 
-    var dateTrophy = widget.sharedPreferences.getDateTrophy();
-    var newDateTrophy = DateTime.now().toString();
-    if (dateTrophy != null) {
-      BlocProvider.of<PlayersBloc>(context)
-          .add(GetNewTrophy(oldDate: dateTrophy));
-    }
-    widget.sharedPreferences.saveDateTrophy(newDateTrophy);
+    updatePoint();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(milliseconds: 5000), () {
@@ -75,6 +70,7 @@ class _HomePlayerState extends State<HomePlayer> {
             builder: (BuildContext context) {
               PageController _pageController = PageController();
               int currentPage = 0;
+              final pages = buildPages();
 
               return StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
@@ -85,50 +81,13 @@ class _HomePlayerState extends State<HomePlayer> {
                   });
 
                   return SizedBox(
-                    height: 300,
+                    height: 400,
                     child: Column(
                       children: [
                         Expanded(
                           child: PageView(
                             controller: _pageController,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 50.0, vertical: 30.0),
-                                decoration: BoxDecoration(
-                                  color: Color(0x91F6E213),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10)),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                        "Vous avez marqué ${detailsPlayer!.goal} buts !"),
-                                    Text("+${10 * detailsPlayer!.goal}pts"),
-                                    SizedBox(height: 20),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 50.0, vertical: 30.0),
-                                decoration: BoxDecoration(
-                                  color: currentAppColors.primaryVariantColor1,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10)),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                        "Vous avez écopé de ${detailsPlayer!.redCard + detailsPlayer!.yellowCard} cartons..."),
-                                    Text(
-                                        "-${(2 * detailsPlayer!.redCard) + detailsPlayer!.yellowCard}pts"),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            children: pages,
                           ),
                         ),
                         Container(
@@ -137,30 +96,8 @@ class _HomePlayerState extends State<HomePlayer> {
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.all(4.0),
-                                width: 10.0,
-                                height: 10.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: currentPage == 0
-                                      ? currentAppColors.secondaryColor
-                                      : Colors.grey,
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.all(4.0),
-                                width: 10.0,
-                                height: 10.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: currentPage == 1
-                                      ? currentAppColors.secondaryColor
-                                      : Colors.grey,
-                                ),
-                              ),
-                            ],
+                            children:
+                                buildIndicators(pages.length, currentPage),
                           ),
                         ),
                       ],
@@ -172,6 +109,110 @@ class _HomePlayerState extends State<HomePlayer> {
           );
       });
     });
+  }
+
+  void updatePoint() {
+    var dateTrophy = widget.sharedPreferences.getDateTrophy();
+    var newDateTrophy = DateTime.now().toString();
+    if (dateTrophy != null) {
+      BlocProvider.of<PlayersBloc>(context)
+          .add(GetNewTrophy(oldDate: dateTrophy));
+    }
+    widget.sharedPreferences.saveDateTrophy(newDateTrophy);
+  }
+
+  List<Widget> buildPages() {
+    List<Widget> pages = [];
+    if (detailsPlayer?.goal != 0) {
+      pages.add(
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
+          decoration: BoxDecoration(
+            color: Color(0x91F6E213),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+          ),
+          child: Column(
+            children: [
+              Flexible(
+                child: Lottie.asset('assets/json/trophy.json'),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Vous avez marqué ${detailsPlayer!.goal} buts!",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              Text(
+                "+${10 * detailsPlayer!.goal}pts",
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 24.0,
+                  color: currentAppColors.secondaryColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    if (detailsPlayer?.redCard != 0 || detailsPlayer?.yellowCard != 0) {
+      pages.add(
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+          decoration: BoxDecoration(
+            color: currentAppColors.primaryVariantColor1,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+          ),
+          child: Column(
+            children: [
+              Flexible(
+                child: Lottie.asset('assets/json/x_pop.json'),
+              ),
+              Text(
+                "Vous avez écopé de ${detailsPlayer!.redCard + detailsPlayer!.yellowCard} cartons...",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              Text(
+                "-${(2 * detailsPlayer!.redCard) + detailsPlayer!.yellowCard}pts",
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 24.0,
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return pages;
+  }
+
+  List<Widget> buildIndicators(int pageCount, int currentPage) {
+    List<Widget> indicators = [];
+    for (int i = 0; i < pageCount; i++) {
+      indicators.add(
+        Container(
+          margin: EdgeInsets.all(4.0),
+          width: 10.0,
+          height: 10.0,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: currentPage == i
+                ? currentAppColors.secondaryColor
+                : Colors.grey,
+          ),
+        ),
+      );
+    }
+    return indicators;
   }
 
   @override
