@@ -3,15 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/domain/models/fmi/match_action.dart';
 import 'package:flutter_football/domain/models/match_details.dart';
-import 'package:flutter_football/domain/repositories/match_repository.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_state.dart';
-import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/cards_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/goal_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/replacement_bottom_sheet.dart';
-import 'package:flutter_football/utils/extensions/date_time_extension.dart';
+import 'package:flutter_football/presentation/screens/coach/match/fmi/tactics_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // TODO : A chaque insertion Success d'une action dans la BDD, ajouter manuellement les informations et update les states
@@ -109,7 +107,8 @@ class _FmiScreenState extends State<FmiScreen> {
                         ],
                       ),*/
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
                           color: AppColors.black.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(8),
@@ -150,9 +149,25 @@ class _FmiScreenState extends State<FmiScreen> {
                             imageAsset: "assets/football_icon.svg",
                             title: "But",
                           ),
-                          SizedBox(
-                            width: 40,
+                          Spacer(),
+                          FmiAction(
+                            onTap: () => {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return ReplacementBottomSheet(
+                                    teamId: widget.match.idTeam,
+                                    matchId: widget.match.id,
+                                  );
+                                },
+                              )
+                            },
+                            color: AppColors.mediumBlue,
+                            imageAsset: "assets/replacement_icon.svg",
+                            title: "Remplacement",
                           ),
+                          Spacer(),
                           FmiAction(
                             onTap: () => {
                               showModalBottomSheet(
@@ -176,36 +191,76 @@ class _FmiScreenState extends State<FmiScreen> {
                       SizedBox(
                         height: 30,
                       ),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Spacer(),
-                          FmiAction(
-                            onTap: () => {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (BuildContext context) {
-                                  return ReplacementBottomSheet(
-                                    teamId: widget.match.idTeam,
-                                    matchId: widget.match.id,
-                                  );
-                                },
-                              )
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  TacticsScreen.route(widget.match)
+                              );
                             },
-                            color: AppColors.mediumBlue,
-                            imageAsset: "assets/replacement_icon.svg",
-                            title: "Remplacement",
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+                              width: 115.0,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    AppColors.darkBlue,
+                                    AppColors.mediumBlue,
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Tactique",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                          /*SizedBox(
-                            width: 40,
+                          SizedBox(height: 20,),
+                          GestureDetector(
+                            onTap: () {
+
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    AppColors.darkGreen,
+                                    AppColors.green,
+                                  ],
+                                ),
+                                color: AppColors.darkGreen,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Terminer le match",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                          FmiAction(
-                            onTap: () => {},
-                            color: AppColors.mediumBlue,
-                            imageAsset: "assets/cards_icon.svg",
-                            title: "Blessure",
-                          ),*/
-                          Spacer(),
+
                         ],
                       ),
                     ],
@@ -215,7 +270,9 @@ class _FmiScreenState extends State<FmiScreen> {
                 AnimatedSize(
                   duration: const Duration(milliseconds: 200),
                   child: Container(
-                    height: (state.actions != null && state.actions!.isNotEmpty) ? null : 0.0,
+                    height: (state.actions != null && state.actions!.isNotEmpty)
+                        ? null
+                        : 0.0,
                     child: (state.actions != null && state.actions!.isNotEmpty)
                         ? FmiHistory(actions: state.actions!)
                         : null,
@@ -250,8 +307,8 @@ class FmiAction extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(12.0),
-        width: 150.0,
-        height: 150.0,
+        width: 115.0,
+        height: 115.0,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(8),
@@ -262,8 +319,8 @@ class FmiAction extends StatelessWidget {
             children: [
               SvgPicture.asset(
                 imageAsset,
-                height: 80,
-                width: 80,
+                height: 55,
+                width: 55,
               ),
               SizedBox(
                 height: 10,
@@ -271,10 +328,10 @@ class FmiAction extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 18,
-                  color: Colors.white,
-                ),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18,
+                    color: Colors.white,
+                    overflow: TextOverflow.ellipsis),
               ),
             ],
           ),
@@ -306,7 +363,9 @@ class _FmiHistoryState extends State<FmiHistory> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           Text(
             "Historique",
             style: TextStyle(
