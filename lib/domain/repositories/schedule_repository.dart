@@ -31,14 +31,10 @@ class ScheduleRepository {
   }
 
   Future<ScheduleResultPlayer> getSchedulePlayer() async {
-    final idPlayer = preferencesDataSource.getIdPlayer();
+    final idTeams = preferencesDataSource.getTeamsIds();
 
     try {
-      final schedules = await scheduleDataSource.getSchedulePlayer(idPlayer!);
-      var listIdTeams = schedules.idTeams.split(",");
-      preferencesDataSource.saveTeamsIds(
-          listIdTeams.map((string) => int.parse(string)).toList());
-
+      final schedules = await scheduleDataSource.getSchedulePlayer(idTeams!.join(","));
       return schedules;
     } catch (error) {
       print(error);

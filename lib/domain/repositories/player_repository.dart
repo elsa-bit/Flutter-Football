@@ -64,15 +64,10 @@ class PlayerRepository {
   }
 
   Future<List<Coach>> getCoachPlayer() async {
-    final teamsId = preferencesDataSource
-            .getTeamsIds()
-            ?.toString()
-            .replaceAll("[", "")
-            .replaceAll("]", "") ??
-        "";
+    final teamsId = preferencesDataSource.getTeamsIds();
 
     try {
-      final coachs = await playerDataSource.getCoachPlayer(teamsId);
+      final coachs = await playerDataSource.getCoachPlayer(teamsId!.join(","));
       final data = jsonDecode(coachs)["coachs"] as List<dynamic>;
       return List<Coach>.from(data.map((model) => Coach.fromJson(model)));
     } catch (error) {
@@ -94,7 +89,8 @@ class PlayerRepository {
     final idPlayer = preferencesDataSource.getIdPlayer();
 
     try {
-      final detailsPlayer = await playerDataSource.getNewTrophy(oldDate, idPlayer!);
+      final detailsPlayer =
+          await playerDataSource.getNewTrophy(oldDate, idPlayer!);
       return detailsPlayer;
     } catch (error) {
       print(error);
