@@ -36,7 +36,7 @@ class PlayerProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             PlayerStatItem(name: "Matchs joués", value: player.matchPlayed.toString()),
-            PlayerStatItem(name: "Position", value: player.position?.toString().capitalize() ?? "_"),
+            PlayerStatItem(name: "Position", value: (player.position?.isNotEmpty == true) ? player.position!.toString().capitalize() : "_"),
             PlayerStatItem(name: "Licence", value: player.num_licence?.toString() ?? "_"),
           ],
         ),

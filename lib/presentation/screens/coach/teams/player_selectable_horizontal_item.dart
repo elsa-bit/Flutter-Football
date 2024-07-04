@@ -93,7 +93,7 @@ class _PlayerHorizontalItemState extends State<PlayerSelectableHorizontalItem> {
                       color: currentAppColors.primaryTextColor,
                     ),
                   ),
-                  if (widget.player.position != null) ...[
+                  if (widget.player.position != null && widget.player.position!.isNotEmpty) ...[
                     Text(
                       "${widget.player.position}".capitalize(),
                       style: AppTextStyle.small
