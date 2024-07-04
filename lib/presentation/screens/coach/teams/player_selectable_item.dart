@@ -91,7 +91,7 @@ class _PlayerItemState extends State<PlayerSelectableItem> {
                       color: currentAppColors.primaryTextColor,
                     ),
                   ),
-                  if (widget.player.position != null) ...[
+                  if (widget.player.position != null && widget.player.position!.isNotEmpty) ...[
                     Text(
                       "${widget.player.position}".capitalize(),
                       style: AppTextStyle.small
