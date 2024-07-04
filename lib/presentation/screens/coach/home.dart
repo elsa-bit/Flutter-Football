@@ -35,7 +35,11 @@ class _HomeState extends State<Home> {
         Flushbar(
           title: notification.title,
           titleColor: currentAppColors.primaryTextColor,
-          message: notification.body,
+          messageText: Text(
+            notification.body!,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
           messageColor: currentAppColors.primaryTextColor,
           flushbarPosition: FlushbarPosition.TOP,
           flushbarStyle: FlushbarStyle.FLOATING,
