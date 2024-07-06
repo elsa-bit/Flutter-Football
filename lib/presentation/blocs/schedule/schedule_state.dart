@@ -2,7 +2,7 @@ import 'package:flutter_football/domain/models/match.dart';
 import 'package:flutter_football/domain/models/meeting.dart';
 import 'package:flutter_football/domain/models/training.dart';
 
-enum ScheduleStatus { initial, loading, success, addSuccess, error }
+enum ScheduleStatus { initial, loading, success, addSuccess, error, getError }
 
 class ScheduleState {
   final ScheduleStatus status;

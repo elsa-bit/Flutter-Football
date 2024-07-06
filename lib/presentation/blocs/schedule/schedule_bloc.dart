@@ -18,7 +18,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             status: ScheduleStatus.success));
       } catch (error) {
         final errorMessage = error.toString().replaceFirst('Exception: ', '');
-        emit(state.copyWith(error: errorMessage, status: ScheduleStatus.error));
+        emit(state.copyWith(error: errorMessage, status: ScheduleStatus.getError));
       }
     });
 
