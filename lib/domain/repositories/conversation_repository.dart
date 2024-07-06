@@ -43,4 +43,10 @@ class ConversationRepository {
       rethrow;
     }
   }
+
+  Future<String> addConversation(String players) {
+    final idCoach = preferences.getIdCoach();
+
+    return conversationDataSource.addConversation(players, idCoach.toString());
+  }
 }

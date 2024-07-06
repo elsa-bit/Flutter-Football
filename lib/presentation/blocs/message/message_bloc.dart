@@ -22,10 +22,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
               status: MessageStatus.success));
         }
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: MessageStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: MessageStatus.error));
       }
     });
 
@@ -42,7 +40,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           }
         }
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: MessageStatus.error));
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: MessageStatus.error));
       }
     });
 
@@ -51,7 +50,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         await repository.addMessage(event.message);
         emit(state.copyWith(status: MessageStatus.addSuccess));
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: MessageStatus.error));
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: MessageStatus.error));
       }
     });
 

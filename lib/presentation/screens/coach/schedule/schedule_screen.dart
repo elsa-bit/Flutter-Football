@@ -452,6 +452,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         ),
                         actions: [
                           ElevatedButton(
+                              style: ButtonStyle(
+                                foregroundColor: WidgetStateProperty.all<Color>(
+                                    AppColors.lightBlue),
+                              ),
                               onPressed: () => _onAddSchedule(context),
                               child: Text("Enregistrer"))
                         ],

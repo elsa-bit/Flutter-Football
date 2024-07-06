@@ -19,9 +19,23 @@ class PlayerRepository {
     required this.preferencesDataSource,
   });
 
-  Future<List<Player>> getPlayersTeams(String teamId) async {
+  Future<List<Player>> getPlayersTeam(String teamId) async {
     try {
       final players = await playerDataSource.getPlayersTeam(teamId);
+      final data = jsonDecode(players)["players"] as List<dynamic>;
+      return List<Player>.from(data.map((model) => Player.fromJson(model)));
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Future<List<Player>> getPlayersTeams() async {
+    final teamsId = preferencesDataSource.getTeamsIds();
+
+    try {
+      final players =
+          await playerDataSource.getPlayersTeams(teamsId!.join(","));
       final data = jsonDecode(players)["players"] as List<dynamic>;
       return List<Player>.from(data.map((model) => Player.fromJson(model)));
     } catch (error) {

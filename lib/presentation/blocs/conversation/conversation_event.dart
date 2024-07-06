@@ -12,6 +12,14 @@ class SubscribeToConversation extends ConversationEvent {
   });
 }
 
+class AddConversation extends ConversationEvent {
+  final String players;
+
+  AddConversation({
+    required this.players
+  });
+}
+
 class ClearConversationState extends ConversationEvent {
   ClearConversationState();
 }

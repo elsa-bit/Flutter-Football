@@ -22,10 +22,9 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         emit(state.copyWith(
             conversations: conversations, status: ConversationStatus.success));
       } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(
-          error: error.toString(),
-          status: ConversationStatus.error,
-        ));
+            error: errorMessage, status: ConversationStatus.error));
       }
     });
 
@@ -36,10 +35,9 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         emit(state.copyWith(
             conversations: conversations, status: ConversationStatus.success));
       } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(
-          error: error.toString(),
-          status: ConversationStatus.error,
-        ));
+            error: errorMessage, status: ConversationStatus.error));
       }
     });
 
@@ -98,8 +96,21 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
           }
         }
       } catch (e) {
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(
-            error: e.toString(), status: ConversationStatus.error));
+            error: errorMessage, status: ConversationStatus.error));
+      }
+    });
+
+    on<AddConversation>((event, emit) async {
+      emit(state.copyWith(status: ConversationStatus.loading));
+      try {
+        await repository.addConversation(event.players);
+        emit(state.copyWith(status: ConversationStatus.addSuccess));
+      } catch (e) {
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(
+            error: errorMessage, status: ConversationStatus.addError));
       }
     });
 

@@ -6,4 +6,6 @@ abstract class ConversationService {
   Future<List<Conversation>> getConversationCoach(int idcoach);
 
   Stream<ConversationEventRealtime> subscribeToConversation();
+
+  Future<String> addConversation(String players, String idCoach);
 }

@@ -17,10 +17,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             meetings: schedule.meetings,
             status: ScheduleStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: ScheduleStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: ScheduleStatus.error));
       }
     });
 
@@ -33,10 +31,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             trainings: schedule.trainings,
             status: ScheduleStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: ScheduleStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: ScheduleStatus.error));
       }
     });
 
@@ -46,7 +42,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         await repository.addSchedule(event.event, event.date);
         emit(state.copyWith(status: ScheduleStatus.addSuccess));
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: ScheduleStatus.error));
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: ScheduleStatus.error));
       }
     });
 
@@ -56,7 +53,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         await repository.addPlayerAttendance(event.idEvent, event.idPlayers);
         emit(state.copyWith(status: ScheduleStatus.addSuccess));
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: ScheduleStatus.error));
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: ScheduleStatus.error));
       }
     });
 

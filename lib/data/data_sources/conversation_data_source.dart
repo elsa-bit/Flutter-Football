@@ -31,7 +31,7 @@ class ConversationDataSource extends BaseDataSource with ConversationService {
     final queryParameters = {'idcoach': idcoach.toString()};
 
     final response =
-    await httpGet(Endpoints.conversationCoachPath, queryParameters);
+        await httpGet(Endpoints.conversationCoachPath, queryParameters);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body)["conversations"];
       return List<Conversation>.from(
@@ -57,8 +57,7 @@ class ConversationDataSource extends BaseDataSource with ConversationService {
           callback: (payload) {
             final newConversation = Conversation.fromJson(payload.newRecord);
             controller.add(ConversationEventRealtime(
-                eventType: payload.eventType,
-                conversation: newConversation));
+                eventType: payload.eventType, conversation: newConversation));
           },
         )
         .onPostgresChanges(
@@ -80,5 +79,23 @@ class ConversationDataSource extends BaseDataSource with ConversationService {
     };
 
     return controller.stream;
+  }
+
+  @override
+  Future<String> addConversation(String players, String idCoach) async {
+    final queryParameters = {
+      'idplayers': players,
+      'idcoach': idCoach,
+    };
+    final response =
+        await httpPost(Endpoints.createConversationPath, queryParameters);
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
   }
 }
