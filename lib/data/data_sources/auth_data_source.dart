@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_football/networking/endpoints.dart';
 import 'package:flutter_football/networking/exceptions_factory.dart';
 
@@ -19,5 +20,10 @@ class AuthDataSource extends BaseDataSource {
       throw ExceptionsFactory()
           .handleStatusCode(response.statusCode, errorMessage: errorMessage);
     }
+  }
+
+  Future<void> logout(String idUser, String mode) async {
+    final queryParameters = {'iduser': idUser, 'mode': mode};
+    await httpPost(Endpoints.logout, queryParameters);
   }
 }

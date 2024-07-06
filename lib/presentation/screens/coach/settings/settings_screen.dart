@@ -5,21 +5,9 @@ import 'package:flutter_football/config/app_themes.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_state.dart';
-import 'package:flutter_football/presentation/blocs/conversation/conversation_bloc.dart';
-import 'package:flutter_football/presentation/blocs/conversation/conversation_event.dart';
-import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
-import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
-import 'package:flutter_football/presentation/blocs/message/message_bloc.dart';
-import 'package:flutter_football/presentation/blocs/message/message_event.dart';
-import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
-import 'package:flutter_football/presentation/blocs/players/players_event.dart';
-import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
-import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
-import 'package:flutter_football/presentation/blocs/teams/teams_bloc.dart';
-import 'package:flutter_football/presentation/blocs/teams/teams_event.dart';
 import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
 import 'package:flutter_football/utils/extensions/user_extension.dart';
 
@@ -58,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       listener: (context, state) {
         switch (state.status) {
           case MediaStatus.success:
-            if(state.response?.identifier == identifier) {
+            if (state.response?.identifier == identifier) {
               setState(() {
                 avatarUrl = state.response?.url;
               });
@@ -84,23 +72,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         height: 300,
                         fit: BoxFit.cover,
                       )
-                    ] else
-                      ...[
-                        Container(
-                          height: 300,
-                          color: currentAppColors.secondaryTextColor,
-                        ),
-                      ],
+                    ] else ...[
+                      Container(
+                        height: 300,
+                        color: currentAppColors.secondaryTextColor,
+                      ),
+                    ],
                     Align(
                       alignment: Alignment.topRight,
                       child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 30.0),
                         child: ElevatedButton(
-                          onPressed: () {  },
+                          onPressed: () {},
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                           ),
-                          child: Icon(Icons.edit, color: Colors.white,),
+                          child: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -116,8 +107,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             children: [
                               Spacer(flex: 2),
                               Text(
-                                "${state.user?.getFirstname() ?? " "} ${state
-                                    .user?.getLastname() ?? ""}",
+                                "${state.user?.getFirstname() ?? " "} ${state.user?.getLastname() ?? ""}",
                                 style: AppTextStyle.subtitle2.copyWith(
                                     color: currentAppColors.secondaryColor),
                               ),
@@ -140,17 +130,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ElevatedButton(
                 onPressed: () {
                   ConfirmationDialog.show(
-                      context,
-                      "Déconnexion",
-                      "Annuler",
-                      "Déconnexion",
+                      context, "Déconnexion", "Annuler", "Déconnexion",
                       description: "Es-tu sûr de vouloir te deconnecter ?",
-                      onCancelAction: (){},
-                      onValidateAction: (){
-                        final authBloc = BlocProvider.of<AuthBloc>(context);
-                        authBloc.add(Logout());
+                      onCancelAction: () {}, onValidateAction: () {
+                    final authBloc = BlocProvider.of<AuthBloc>(context);
+                    authBloc
+                      ..add(Logout(mode: 'coach'))
+                      ..add(AuthLogout());
 
-                        /*final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
+                    /*final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
                         final playersBloc = BlocProvider.of<PlayersBloc>(context);
                         final mediaBloc = BlocProvider.of<MediaBloc>(context);
                         final fmiBloc = BlocProvider.of<FmiBloc>(context);
@@ -166,9 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         teamsBloc.add(ClearTeamsState());
                         conversationBloc.add(ClearConversationState());
                         messageBloc.add(ClearMessageState());*/
-                      },
-                      validateActionTint: Colors.red
-                  );
+                  }, validateActionTint: Colors.red);
                 },
                 child: Text(
                   "Déconnexion",

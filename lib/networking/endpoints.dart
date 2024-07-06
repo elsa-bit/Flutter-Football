@@ -5,7 +5,7 @@ class Endpoints {
   static const String localHostURL = '192.168.1.107:3000'; //192.168.1.107:3000 - 10.0.2.2:3000
   static const String prodURL = 'api-csbretigny.vercel.app';
 
-  static const String baseURL = prodURL;
+  static const String baseURL = localHostURL;
 
   static const int receiveTimeout = 5000;
 
@@ -18,6 +18,7 @@ class Endpoints {
   static const String loginAdmin = '/api/loginAdmin';
   static const String loginCoach = '/api/loginCoach';
   static const String loginPlayer = '/api/loginPlayer';
+  static const String logout = '/api/logout';
 
   // team paths
   static const String teamPath = '/api/team';
