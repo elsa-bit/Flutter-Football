@@ -27,6 +27,23 @@ class ConversationDataSource extends BaseDataSource with ConversationService {
   }
 
   @override
+  Future<List<Conversation>> getConversationCoach(int idcoach) async {
+    final queryParameters = {'idcoach': idcoach.toString()};
+
+    final response =
+    await httpGet(Endpoints.conversationCoachPath, queryParameters);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)["conversations"];
+      return List<Conversation>.from(
+          data.map((model) => Conversation.fromJson(model)));
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
+  }
+
+  @override
   Stream<ConversationEventRealtime> subscribeToConversation() {
     final StreamController<ConversationEventRealtime> controller =
         StreamController<ConversationEventRealtime>();

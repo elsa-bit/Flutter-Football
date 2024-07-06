@@ -8,11 +8,11 @@ import 'package:flutter_football/presentation/blocs/message/message_event.dart';
 import 'package:flutter_football/presentation/blocs/message/message_state.dart';
 import 'package:flutter_football/presentation/screens/player/tchat/message_item.dart';
 
-class MessageScreen extends StatefulWidget {
-  static const String routeName = '/player/messages';
+class MessageCoachScreen extends StatefulWidget {
+  static const String routeName = '/coach/messages';
   final String idConversation;
 
-  const MessageScreen({Key? key, required this.idConversation})
+  const MessageCoachScreen({Key? key, required this.idConversation})
       : super(key: key);
 
   static void navigateTo(BuildContext context, String idConversation) {
@@ -26,16 +26,16 @@ class MessageScreen extends StatefulWidget {
     final args = settings.arguments as Map<String, String>;
     final idConversation = args['idConversation']!;
     return MaterialPageRoute(
-      builder: (context) => MessageScreen(idConversation: idConversation),
+      builder: (context) => MessageCoachScreen(idConversation: idConversation),
     );
   }
 
   @override
-  State<MessageScreen> createState() => _MessageScreenState();
+  State<MessageCoachScreen> createState() => _MessageCoachScreenState();
 }
 
-class _MessageScreenState extends State<MessageScreen> {
-  late String idPlayer;
+class _MessageCoachScreenState extends State<MessageCoachScreen> {
+  late String idCoach;
   SharedPreferencesDataSource sharedPreferencesDataSource =
       SharedPreferencesDataSource();
   final TextEditingController _messageController = TextEditingController();
@@ -43,7 +43,7 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   void initState() {
     super.initState();
-    idPlayer = sharedPreferencesDataSource.getIdPlayer()!;
+    idCoach = sharedPreferencesDataSource.getIdCoach().toString();
 
     BlocProvider.of<MessageBloc>(context)
       ..add(GetMessage(idConversation: widget.idConversation))
@@ -90,8 +90,8 @@ class _MessageScreenState extends State<MessageScreen> {
                           final message = state.messages![index];
                           return MessageItem(
                             message: message,
-                            isCurrentUser: message.role == 'player' &&
-                                message.idSender == idPlayer,
+                            isCurrentUser: message.role == 'coach' &&
+                                message.idSender == idCoach,
                           );
                         },
                       );
@@ -105,8 +105,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   _showSnackBar(context, 'Message ajouté', Colors.green);
                   _messageController.text = "";
                 } else if (state.status == MessageStatus.error) {
-                  _showSnackBar(
-                      context, state.error, Colors.yellowAccent);
+                  _showSnackBar(context, state.error, Colors.yellowAccent);
                 }
               },
               builder: (context, state) {
@@ -125,12 +124,6 @@ class _MessageScreenState extends State<MessageScreen> {
                               ),
                             ),
                           ),
-                          /*
-                          IconButton(
-                            icon: Icon(Icons.attach_file),
-                            onPressed: () => _selectImage(),
-                          ),
-                           */
                           IconButton(
                             icon: Icon(Icons.send),
                             onPressed: () => {_onAddMessage(context)},
@@ -153,8 +146,8 @@ class _MessageScreenState extends State<MessageScreen> {
       final message = Message(
         idConversation: int.parse(widget.idConversation),
         message: _messageController.text,
-        idSender: idPlayer,
-        role: "player",
+        idSender: idCoach,
+        role: "coach",
       );
       bloc.add(AddMessage(message: message));
     } else {

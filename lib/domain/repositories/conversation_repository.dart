@@ -23,7 +23,19 @@ class ConversationRepository {
     }
   }
 
-  Stream<ConversationEventRealtime> subscribeToMessages() {
+  Future<List<Conversation>> getConversationCoach() async {
+    try {
+      final idCoach = preferences.getIdCoach();
+
+      return await conversationDataSource
+          .getConversationCoach(idCoach!);
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Stream<ConversationEventRealtime> subscribeToConversation() {
     try {
       return conversationDataSource.subscribeToConversation();
     } catch (error) {

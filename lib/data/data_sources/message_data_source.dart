@@ -14,7 +14,7 @@ class MessageDataSource extends BaseDataSource with MessageService {
   Stream<List<Message>> getMessageConversation(String idconversation) async* {
     final queryParameters = {'idconversation': idconversation};
     final response =
-        await httpGet(Endpoints.messageConversationPlayerPath, queryParameters);
+        await httpGet(Endpoints.messageConversationPath, queryParameters);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body)["messages"];
@@ -50,13 +50,6 @@ class MessageDataSource extends BaseDataSource with MessageService {
     };
 
     return controller.stream;
-  }
-
-  void getMessage(Map<String, dynamic> message) {
-    debugPrint("-------------MESSAGE---------");
-    debugPrint(message.toString());
-    var result = Message.fromJson(message);
-    debugPrint(result.toString());
   }
 
   @override

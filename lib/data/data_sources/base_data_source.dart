@@ -6,7 +6,7 @@ import '../../networking/endpoints.dart';
 class BaseDataSource {
   Future<http.Response> httpGet(String path,
       [Map<String, String>? queryParameters]) async {
-    var uri = Uri.https(Endpoints.baseURL, path, queryParameters);
+    var uri = Uri.http(Endpoints.baseURL, path, queryParameters);
     return await http.get(
       uri,
       // Send authorization headers to the backend.
@@ -23,7 +23,7 @@ class BaseDataSource {
    */
   Future<http.Response> httpPost(String path,
       [Map<String, String?>? query, String? body]) {
-    final uri = Uri.https(Endpoints.baseURL, path, query);
+    final uri = Uri.http(Endpoints.baseURL, path, query);
     print(uri);
     return http.post(
       uri,
@@ -35,7 +35,7 @@ class BaseDataSource {
   }
 
   Future<http.Response> httpPostBody(String path, Map<String, dynamic> body) {
-    final uri = Uri.https(Endpoints.baseURL, path);
+    final uri = Uri.http(Endpoints.baseURL, path);
     print(uri);
     return http.post(
       uri,

@@ -12,7 +12,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   StreamSubscription<Message>? _subscription;
 
   MessageBloc({required this.repository}) : super(MessageState()) {
-    on<GetMessagePlayer>((event, emit) async {
+    on<GetMessage>((event, emit) async {
       try {
         emit(state.copyWith(status: MessageStatus.loading));
         await for (var messages
