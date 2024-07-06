@@ -43,7 +43,7 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamState> {
     on<GetSpecificTeamPlayer>((event, emit) async {
       try {
         emit(state.copyWith(status: TeamStatus.loading));
-        final teams = await repository.getSpecificTeamPlayer(event.idPlayer);
+        final teams = await repository.getSpecificTeamPlayer();
         emit(state.copyWith(teams: teams, status: TeamStatus.success));
       } catch (error) {
         final errorMessage = error.toString().replaceFirst('Exception: ', '');

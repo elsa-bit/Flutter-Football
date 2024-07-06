@@ -81,7 +81,9 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
                     if (state.conversations!.isEmpty) {
                       return const Center(
                         child: Text(
-                            "Aucune Conversation, créer en une dès maintenant !"),
+                          "Aucune conversation, créer en une dès maintenant !",
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
                       );
                     }
                     return ListView.builder(
@@ -206,7 +208,7 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
     var bloc = BlocProvider.of<ConversationBloc>(context);
 
     if (selectedPlayers.length > 0) {
-      bloc.add(AddConversation(players : selectedPlayers.join(",")));
+      bloc.add(AddConversation(players: selectedPlayers.join(",")));
     } else {
       _showSnackBar(
           context, 'Veuillez cocher au moins un joueur', Colors.orangeAccent);

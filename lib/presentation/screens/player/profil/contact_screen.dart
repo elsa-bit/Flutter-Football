@@ -90,9 +90,15 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                     );
                   case PlayersStatus.success:
-                    if (state.coachs == null) {
-                      return const Center(
-                        child: Text("Pas de coach disponible"),
+                    if (state.coachs!.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 46.0),
+                        child: const Center(
+                          child: Text(
+                            "Pas de coach disponible",
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
                       );
                     }
                     final groupedCoaches = _groupCoaches(state.coachs!);
@@ -124,8 +130,14 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                     );
                   default:
-                    return const Center(
-                      child: Text("Pas de coach disponible"),
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 46.0),
+                      child: const Center(
+                        child: Text(
+                          "Pas de coach disponible",
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
                     );
                 }
               },

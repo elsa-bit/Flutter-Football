@@ -53,10 +53,56 @@ class _ScheduleScreenState extends State<CalendarScreen> {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            case ScheduleStatus.error:
+            case ScheduleStatus.getError:
               return Center(
-                child: Text(
-                  state.error,
+                child: Container(
+                  margin: EdgeInsets.only(top: 30.0),
+                  child: TableCalendar(
+                    locale: 'fr_FR',
+                    firstDay: DateTime.utc(2010, 10, 16),
+                    lastDay: DateTime.utc(2100, 12, 31),
+                    focusedDay: _focusedDay,
+                    headerStyle: HeaderStyle(
+                        formatButtonVisible: false, titleCentered: true),
+                    calendarFormat: _calendarFormat,
+                    calendarStyle: CalendarStyle(
+                      defaultTextStyle:
+                          TextStyle(color: currentAppColors.secondaryColor),
+                      weekendTextStyle:
+                          TextStyle(color: currentAppColors.secondaryColor),
+                      selectedDecoration: BoxDecoration(
+                        color: currentAppColors.secondaryColor,
+                        shape: BoxShape.circle,
+                      ),
+                      todayDecoration: BoxDecoration(
+                        color: AppColors.darkBlue,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      if (!isSameDay(_selectedDay, selectedDay)) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                          _selectedEvents.value = _getEventsForDay(selectedDay);
+                        });
+                      }
+                    },
+                    onFormatChanged: (format) {
+                      if (_calendarFormat != format) {
+                        setState(() {
+                          _calendarFormat = format;
+                        });
+                      }
+                    },
+                    onPageChanged: (focusedDay) {
+                      _focusedDay = focusedDay;
+                    },
+                    eventLoader: (day) => _getEventsForDay(day),
+                  ),
                 ),
               );
             case ScheduleStatus.success:
@@ -64,7 +110,56 @@ class _ScheduleScreenState extends State<CalendarScreen> {
                   state.trainings!.isEmpty &&
                   state.meetings!.isEmpty) {
                 return Center(
-                  child: Text("Calendrier vide !"),
+                  child: Container(
+                    margin: EdgeInsets.only(top: 30.0),
+                    child: TableCalendar(
+                      locale: 'fr_FR',
+                      firstDay: DateTime.utc(2010, 10, 16),
+                      lastDay: DateTime.utc(2100, 12, 31),
+                      focusedDay: _focusedDay,
+                      headerStyle: HeaderStyle(
+                          formatButtonVisible: false, titleCentered: true),
+                      calendarFormat: _calendarFormat,
+                      calendarStyle: CalendarStyle(
+                        defaultTextStyle:
+                            TextStyle(color: currentAppColors.secondaryColor),
+                        weekendTextStyle:
+                            TextStyle(color: currentAppColors.secondaryColor),
+                        selectedDecoration: BoxDecoration(
+                          color: currentAppColors.secondaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        todayDecoration: BoxDecoration(
+                          color: AppColors.darkBlue,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      selectedDayPredicate: (day) {
+                        return isSameDay(_selectedDay, day);
+                      },
+                      onDaySelected: (selectedDay, focusedDay) {
+                        if (!isSameDay(_selectedDay, selectedDay)) {
+                          setState(() {
+                            _selectedDay = selectedDay;
+                            _focusedDay = focusedDay;
+                            _selectedEvents.value =
+                                _getEventsForDay(selectedDay);
+                          });
+                        }
+                      },
+                      onFormatChanged: (format) {
+                        if (_calendarFormat != format) {
+                          setState(() {
+                            _calendarFormat = format;
+                          });
+                        }
+                      },
+                      onPageChanged: (focusedDay) {
+                        _focusedDay = focusedDay;
+                      },
+                      eventLoader: (day) => _getEventsForDay(day),
+                    ),
+                  ),
                 );
               }
 
@@ -182,7 +277,55 @@ class _ScheduleScreenState extends State<CalendarScreen> {
               );
             default:
               return Center(
-                child: Text("Calendrier vide !"),
+                child: Container(
+                  margin: EdgeInsets.only(top: 30.0),
+                  child: TableCalendar(
+                    locale: 'fr_FR',
+                    firstDay: DateTime.utc(2010, 10, 16),
+                    lastDay: DateTime.utc(2100, 12, 31),
+                    focusedDay: _focusedDay,
+                    headerStyle: HeaderStyle(
+                        formatButtonVisible: false, titleCentered: true),
+                    calendarFormat: _calendarFormat,
+                    calendarStyle: CalendarStyle(
+                      defaultTextStyle:
+                          TextStyle(color: currentAppColors.secondaryColor),
+                      weekendTextStyle:
+                          TextStyle(color: currentAppColors.secondaryColor),
+                      selectedDecoration: BoxDecoration(
+                        color: currentAppColors.secondaryColor,
+                        shape: BoxShape.circle,
+                      ),
+                      todayDecoration: BoxDecoration(
+                        color: AppColors.darkBlue,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      if (!isSameDay(_selectedDay, selectedDay)) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                          _selectedEvents.value = _getEventsForDay(selectedDay);
+                        });
+                      }
+                    },
+                    onFormatChanged: (format) {
+                      if (_calendarFormat != format) {
+                        setState(() {
+                          _calendarFormat = format;
+                        });
+                      }
+                    },
+                    onPageChanged: (focusedDay) {
+                      _focusedDay = focusedDay;
+                    },
+                    eventLoader: (day) => _getEventsForDay(day),
+                  ),
+                ),
               );
           }
         },

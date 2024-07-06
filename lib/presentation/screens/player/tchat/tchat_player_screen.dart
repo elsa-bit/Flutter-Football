@@ -60,7 +60,9 @@ class _TchatPlayerScreenState extends State<TchatPlayerScreen> {
                   if (state.conversations!.isEmpty) {
                     return const Center(
                       child: Text(
-                          "Aucune Conversation, Attendez un message de votre entraineur !"),
+                        "Aucune conversation, \nAttendez un message de vos entraineurs !",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
                     );
                   }
                   return ListView.builder(

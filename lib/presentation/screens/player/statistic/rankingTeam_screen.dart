@@ -11,27 +11,25 @@ import 'package:flutter_football/presentation/screens/player/statistic/ranking_i
 class RankingTeamScreen extends StatefulWidget {
   static const String routeName = '/player/rankingTeam';
   final String idPlayer;
-  final String idTeams;
 
   const RankingTeamScreen(
-      {Key? key, required this.idPlayer, required this.idTeams})
+      {Key? key, required this.idPlayer})
       : super(key: key);
 
   static void navigateTo(
-      BuildContext context, String idPlayer, String idTeams) {
+      BuildContext context, String idPlayer) {
     Navigator.of(context).pushNamed(
       routeName,
-      arguments: {'idPlayer': idPlayer, 'idTeams': idTeams},
+      arguments: {'idPlayer': idPlayer},
     );
   }
 
   static Route route(RouteSettings settings) {
     final args = settings.arguments as Map<String, String>;
     final idPlayer = args['idPlayer']!;
-    final idTeams = args['idTeams']!;
     return MaterialPageRoute(
       builder: (context) =>
-          RankingTeamScreen(idPlayer: idPlayer, idTeams: idTeams),
+          RankingTeamScreen(idPlayer: idPlayer),
     );
   }
 
@@ -49,7 +47,7 @@ class _RankingTeamScreenState extends State<RankingTeamScreen> {
     final teamsBloc = BlocProvider.of<TeamsBloc>(context);
     final playersBloc = BlocProvider.of<PlayersBloc>(context);
 
-    teamsBloc.add(GetSpecificTeamPlayer(idPlayer: widget.idPlayer));
+    teamsBloc.add(GetSpecificTeamPlayer());
     if (_selectedTeam != null) {
       playersBloc.add(GetPlayersTeam(teamId: _selectedTeam!));
     }
@@ -59,7 +57,7 @@ class _RankingTeamScreenState extends State<RankingTeamScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           BlocBuilder<TeamsBloc, TeamState>(
             builder: (context, teamState) {
@@ -76,6 +74,17 @@ class _RankingTeamScreenState extends State<RankingTeamScreen> {
                   );
                 case TeamStatus.success:
                 default:
+                if (teamState.teams!.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: const Center(
+                      child: Text(
+                        "Demander à vos entraineurs de vous ajouter dans une équipe !",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                  );
+                }
                   return Expanded(
                     child: Column(
                       children: [
