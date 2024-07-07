@@ -9,6 +9,10 @@ class GetPlayersTeam extends PlayersEvent {
   GetPlayersTeam({required this.teamId});
 }
 
+class GetPlayersTeams extends PlayersEvent {
+  GetPlayersTeams();
+}
+
 class GetPlayerDetails extends PlayersEvent {
   GetPlayerDetails();
 }

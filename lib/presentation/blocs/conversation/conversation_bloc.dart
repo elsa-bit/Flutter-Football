@@ -22,10 +22,22 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         emit(state.copyWith(
             conversations: conversations, status: ConversationStatus.success));
       } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(
-          error: error.toString(),
-          status: ConversationStatus.error,
-        ));
+            error: errorMessage, status: ConversationStatus.error));
+      }
+    });
+
+    on<GetConversationCoach>((event, emit) async {
+      try {
+        emit(state.copyWith(status: ConversationStatus.loading));
+        final conversations = await repository.getConversationCoach();
+        emit(state.copyWith(
+            conversations: conversations, status: ConversationStatus.success));
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(
+            error: errorMessage, status: ConversationStatus.error));
       }
     });
 
@@ -33,31 +45,72 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       try {
         await _subscription?.cancel();
         List<Conversation> updatesConversations = List.empty();
-        await for (final event in repository.subscribeToMessages()) {
-          var idPlayer = preferences.getIdPlayer();
-          if (event.conversation.players.contains(idPlayer)) {
-            if (event.eventType == PostgresChangeEvent.insert) {
-              updatesConversations =
-                  List<Conversation>.from(state.conversations!)
-                    ..insert(0, event.conversation);
-            } else if (event.eventType == PostgresChangeEvent.update) {
-              updatesConversations =
-                  List<Conversation>.from(state.conversations!);
-              int index = updatesConversations
-                  .indexWhere((c) => c.id == event.conversation.id);
-              if (index != -1) {
-                updatesConversations[index].date = event.conversation.date;
-                updatesConversations.sort((a, b) => b.date.compareTo(a.date));
+        await for (final eventConversation
+            in repository.subscribeToConversation()) {
+          if (event.mode == 'player') {
+            var idPlayer = preferences.getIdPlayer();
+            if (eventConversation.conversation.players.contains(idPlayer)) {
+              if (eventConversation.eventType == PostgresChangeEvent.insert) {
+                updatesConversations =
+                    List<Conversation>.from(state.conversations!)
+                      ..insert(0, eventConversation.conversation);
+              } else if (eventConversation.eventType ==
+                  PostgresChangeEvent.update) {
+                updatesConversations =
+                    List<Conversation>.from(state.conversations!);
+                int index = updatesConversations.indexWhere(
+                    (c) => c.id == eventConversation.conversation.id);
+                if (index != -1) {
+                  updatesConversations[index].date =
+                      eventConversation.conversation.date;
+                  updatesConversations.sort((a, b) => b.date.compareTo(a.date));
+                }
               }
+              emit(state.copyWith(
+                  conversations: updatesConversations,
+                  status: ConversationStatus.success));
             }
-            emit(state.copyWith(
-                conversations: updatesConversations,
-                status: ConversationStatus.success));
+          } else if (event.mode == 'coach') {
+            var idCoach = preferences.getIdCoach();
+            if (eventConversation.conversation.coach == idCoach) {
+              if (eventConversation.eventType == PostgresChangeEvent.insert) {
+                updatesConversations =
+                    List<Conversation>.from(state.conversations!)
+                      ..insert(0, eventConversation.conversation);
+              } else if (eventConversation.eventType ==
+                  PostgresChangeEvent.update) {
+                updatesConversations =
+                    List<Conversation>.from(state.conversations!);
+                int index = updatesConversations.indexWhere(
+                    (c) => c.id == eventConversation.conversation.id);
+                if (index != -1) {
+                  updatesConversations[index].date =
+                      eventConversation.conversation.date;
+                  updatesConversations.sort((a, b) => b.date.compareTo(a.date));
+                }
+              }
+              emit(state.copyWith(
+                  conversations: updatesConversations,
+                  status: ConversationStatus.success));
+            }
           }
         }
       } catch (e) {
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(
-            error: e.toString(), status: ConversationStatus.error));
+            error: errorMessage, status: ConversationStatus.error));
+      }
+    });
+
+    on<AddConversation>((event, emit) async {
+      emit(state.copyWith(status: ConversationStatus.loading));
+      try {
+        await repository.addConversation(event.players);
+        emit(state.copyWith(status: ConversationStatus.addSuccess));
+      } catch (e) {
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(
+            error: errorMessage, status: ConversationStatus.addError));
       }
     });
 

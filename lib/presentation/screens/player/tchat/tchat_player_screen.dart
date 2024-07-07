@@ -28,8 +28,8 @@ class _TchatPlayerScreenState extends State<TchatPlayerScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<ConversationBloc>(context)
-        ..add(GetConversationPlayer())
-        ..add(SubscribeToConversation());
+      ..add(GetConversationPlayer())
+      ..add(SubscribeToConversation(mode: 'player'));
   }
 
   @override
@@ -60,7 +60,9 @@ class _TchatPlayerScreenState extends State<TchatPlayerScreen> {
                   if (state.conversations!.isEmpty) {
                     return const Center(
                       child: Text(
-                          "Aucune Conversation, Attendez un message de votre entraineur !"),
+                        "Aucune conversation, \nAttendez un message de vos entraineurs !",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
                     );
                   }
                   return ListView.builder(

@@ -37,12 +37,20 @@ class MessageItem extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 4),
-              Text(
-                "${formatter.format(message.date!)}",
-                style: const TextStyle(
-                  color: Colors.white70,
+              if (message.sender != null && !isCurrentUser)
+                Text(
+                  "${message.sender} - ${formatter.format(message.date!)}",
+                  style: const TextStyle(
+                    color: Colors.white70,
+                  ),
+                )
+              else
+                Text(
+                  "${formatter.format(message.date!)}",
+                  style: const TextStyle(
+                    color: Colors.white70,
+                  ),
                 ),
-              ),
             ],
           ),
         ),

@@ -2,10 +2,10 @@ import 'package:flutter_football/domain/models/message.dart';
 
 abstract class MessageEvent {}
 
-class GetMessagePlayer extends MessageEvent {
+class GetMessage extends MessageEvent {
   String idConversation;
 
-  GetMessagePlayer({required this.idConversation});
+  GetMessage({required this.idConversation});
 }
 
 class SubscribeToMessages extends MessageEvent {
@@ -13,7 +13,6 @@ class SubscribeToMessages extends MessageEvent {
 
   SubscribeToMessages({required this.idConversation});
 }
-
 
 class AddMessage extends MessageEvent {
   Message message;

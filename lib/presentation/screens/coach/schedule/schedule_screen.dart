@@ -1,11 +1,9 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
-import 'package:flutter_football/data/data_sources/schedule_data_source.dart';
-import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/domain/models/event.dart';
 import 'package:flutter_football/domain/models/team.dart';
-import 'package:flutter_football/domain/repositories/schedule_repository.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_state.dart';
@@ -75,31 +73,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         onPressed: () => _displayAlertDialogToAddSchedule(context),
         child: Icon(Icons.add),
       ),
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<ScheduleBloc, ScheduleState>(
-            listener: (context, state) {
-              if (state.status == ScheduleStatus.addSuccess) {
-                _showSnackBar(context, 'Événement ajouté', Colors.greenAccent);
-                _placeController.text = "";
-                _opponentController?.text = "";
-              } else if (state.status == ScheduleStatus.error) {
-                _showSnackBar(context, state.error, Colors.orangeAccent);
-                _placeController.text = "";
-                _opponentController?.text = "";
-              }
-            },
-          ),
-          BlocListener<TeamsBloc, TeamState>(
-            listener: (context, state) {
-              if (state.status == TeamStatus.success) {
-                _updateEventTeam(state.teams!);
-              } else if (state.status == TeamStatus.error) {
-                _showSnackBar(context, state.error, Colors.orangeAccent);
-              }
-            },
-          ),
-        ],
+      body: BlocListener<TeamsBloc, TeamState>(
+        listener: (context, state) {
+          if (state.status == TeamStatus.success) {
+            _updateEventTeam(state.teams!);
+          } else if (state.status == TeamStatus.error) {
+            _showSnackBar(context, state.error, Colors.orangeAccent);
+          }
+        },
         child: BlocBuilder<ScheduleBloc, ScheduleState>(
           builder: (context, state) {
             switch (state.status) {
@@ -107,10 +88,57 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              case ScheduleStatus.error:
+              case ScheduleStatus.getError:
                 return Center(
-                  child: Text(
-                    state.error,
+                  child: Container(
+                    margin: EdgeInsets.only(top: 30.0),
+                    child: TableCalendar(
+                      locale: 'fr_FR',
+                      firstDay: DateTime.utc(2010, 10, 16),
+                      lastDay: DateTime.utc(2100, 12, 31),
+                      focusedDay: _focusedDay,
+                      headerStyle: HeaderStyle(
+                          formatButtonVisible: false, titleCentered: true),
+                      calendarFormat: _calendarFormat,
+                      calendarStyle: CalendarStyle(
+                        defaultTextStyle:
+                            TextStyle(color: currentAppColors.secondaryColor),
+                        weekendTextStyle:
+                            TextStyle(color: currentAppColors.secondaryColor),
+                        selectedDecoration: BoxDecoration(
+                          color: currentAppColors.secondaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        todayDecoration: BoxDecoration(
+                          color: AppColors.darkBlue,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      selectedDayPredicate: (day) {
+                        return isSameDay(_selectedDay, day);
+                      },
+                      onDaySelected: (selectedDay, focusedDay) {
+                        if (!isSameDay(_selectedDay, selectedDay)) {
+                          setState(() {
+                            _selectedDay = selectedDay;
+                            _focusedDay = focusedDay;
+                            _selectedEvents.value =
+                                _getEventsForDay(selectedDay);
+                          });
+                        }
+                      },
+                      onFormatChanged: (format) {
+                        if (_calendarFormat != format) {
+                          setState(() {
+                            _calendarFormat = format;
+                          });
+                        }
+                      },
+                      onPageChanged: (focusedDay) {
+                        _focusedDay = focusedDay;
+                      },
+                      eventLoader: (day) => _getEventsForDay(day),
+                    ),
                   ),
                 );
               case ScheduleStatus.success:
@@ -118,7 +146,56 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     state.trainings!.isEmpty &&
                     state.meetings!.isEmpty) {
                   return Center(
-                    child: Text("Calendrier vide !"),
+                    child: Container(
+                      margin: EdgeInsets.only(top: 30.0),
+                      child: TableCalendar(
+                        locale: 'fr_FR',
+                        firstDay: DateTime.utc(2010, 10, 16),
+                        lastDay: DateTime.utc(2100, 12, 31),
+                        focusedDay: _focusedDay,
+                        headerStyle: HeaderStyle(
+                            formatButtonVisible: false, titleCentered: true),
+                        calendarFormat: _calendarFormat,
+                        calendarStyle: CalendarStyle(
+                          defaultTextStyle:
+                              TextStyle(color: currentAppColors.secondaryColor),
+                          weekendTextStyle:
+                              TextStyle(color: currentAppColors.secondaryColor),
+                          selectedDecoration: BoxDecoration(
+                            color: currentAppColors.secondaryColor,
+                            shape: BoxShape.circle,
+                          ),
+                          todayDecoration: BoxDecoration(
+                            color: AppColors.darkBlue,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        selectedDayPredicate: (day) {
+                          return isSameDay(_selectedDay, day);
+                        },
+                        onDaySelected: (selectedDay, focusedDay) {
+                          if (!isSameDay(_selectedDay, selectedDay)) {
+                            setState(() {
+                              _selectedDay = selectedDay;
+                              _focusedDay = focusedDay;
+                              _selectedEvents.value =
+                                  _getEventsForDay(selectedDay);
+                            });
+                          }
+                        },
+                        onFormatChanged: (format) {
+                          if (_calendarFormat != format) {
+                            setState(() {
+                              _calendarFormat = format;
+                            });
+                          }
+                        },
+                        onPageChanged: (focusedDay) {
+                          _focusedDay = focusedDay;
+                        },
+                        eventLoader: (day) => _getEventsForDay(day),
+                      ),
+                    ),
                   );
                 }
 
@@ -306,7 +383,56 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 );
               default:
                 return Center(
-                  child: Text("Calendrier vide !"),
+                  child: Container(
+                    margin: EdgeInsets.only(top: 30.0),
+                    child: TableCalendar(
+                      locale: 'fr_FR',
+                      firstDay: DateTime.utc(2010, 10, 16),
+                      lastDay: DateTime.utc(2100, 12, 31),
+                      focusedDay: _focusedDay,
+                      headerStyle: HeaderStyle(
+                          formatButtonVisible: false, titleCentered: true),
+                      calendarFormat: _calendarFormat,
+                      calendarStyle: CalendarStyle(
+                        defaultTextStyle:
+                            TextStyle(color: currentAppColors.secondaryColor),
+                        weekendTextStyle:
+                            TextStyle(color: currentAppColors.secondaryColor),
+                        selectedDecoration: BoxDecoration(
+                          color: currentAppColors.secondaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        todayDecoration: BoxDecoration(
+                          color: AppColors.darkBlue,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      selectedDayPredicate: (day) {
+                        return isSameDay(_selectedDay, day);
+                      },
+                      onDaySelected: (selectedDay, focusedDay) {
+                        if (!isSameDay(_selectedDay, selectedDay)) {
+                          setState(() {
+                            _selectedDay = selectedDay;
+                            _focusedDay = focusedDay;
+                            _selectedEvents.value =
+                                _getEventsForDay(selectedDay);
+                          });
+                        }
+                      },
+                      onFormatChanged: (format) {
+                        if (_calendarFormat != format) {
+                          setState(() {
+                            _calendarFormat = format;
+                          });
+                        }
+                      },
+                      onPageChanged: (focusedDay) {
+                        _focusedDay = focusedDay;
+                      },
+                      eventLoader: (day) => _getEventsForDay(day),
+                    ),
+                  ),
                 );
             }
           },
@@ -452,6 +578,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         ),
                         actions: [
                           ElevatedButton(
+                              style: ButtonStyle(
+                                foregroundColor: WidgetStateProperty.all<Color>(
+                                    AppColors.lightBlue),
+                              ),
                               onPressed: () => _onAddSchedule(context),
                               child: Text("Enregistrer"))
                         ],
@@ -468,23 +598,56 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     var bloc = BlocProvider.of<ScheduleBloc>(context);
 
     if (_placeController.text != '') {
-      if (_selectedEventIdTeam != null) {
-        if (_selectedEventType != null) {
-          DateTime newDate = DateTime(_selectedDay!.year, _selectedDay!.month,
-              _selectedDay!.day, _selectedTime!.hour, _selectedTime!.minute);
+      if (_timeController.text != '') {
+        if (_selectedEventIdTeam != null) {
+          if (_selectedEventType != null) {
+            DateTime newDate = DateTime(_selectedDay!.year, _selectedDay!.month,
+                _selectedDay!.day, _selectedTime!.hour, _selectedTime!.minute);
 
-          if (_selectedEventType == 'match') {
-            if (_opponentController!.text != "") {
+            if (_selectedEventType == 'match') {
+              if (_opponentController!.text != "") {
+                final event = Event(
+                    null,
+                    "Match",
+                    _selectedEventType!,
+                    newDate,
+                    _selectEventNameTeam,
+                    _selectedEventIdTeam,
+                    _placeController.text,
+                    null,
+                    _opponentController?.text,
+                    null);
+                bloc.add(AddSchedule(event: event, date: newDate));
+
+                DateTime eventDate = DateTime(
+                    _selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
+                events.update(
+                  eventDate,
+                  (existingEvents) => existingEvents..add(event),
+                  ifAbsent: () => [event],
+                );
+              } else {
+                Flushbar(
+                  message: "Veuillez saisir le nom de l\'adversaire.",
+                  messageColor: Colors.black,
+                  flushbarPosition: FlushbarPosition.BOTTOM,
+                  flushbarStyle: FlushbarStyle.FLOATING,
+                  backgroundGradient: LinearGradient(
+                      colors: [Colors.orangeAccent, Colors.white]),
+                  duration: Duration(seconds: 4),
+                ).show(context);
+              }
+            } else {
               final event = Event(
                   null,
-                  "Match",
+                  "Entrainement",
                   _selectedEventType!,
                   newDate,
                   _selectEventNameTeam,
                   _selectedEventIdTeam,
                   _placeController.text,
                   null,
-                  _opponentController?.text,
+                  null,
                   null);
               bloc.add(AddSchedule(event: event, date: newDate));
 
@@ -495,47 +658,54 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 (existingEvents) => existingEvents..add(event),
                 ifAbsent: () => [event],
               );
-            } else {
-              _showSnackBar(context, 'Veuillez saisir le nom de l\'adversaire.',
-                  Colors.orangeAccent);
+
+              setState(() {
+                _selectedEvents.value = _getEventsForDay(_selectedDay!);
+              });
             }
           } else {
-            final event = Event(
-                null,
-                "Entrainement",
-                _selectedEventType!,
-                newDate,
-                _selectEventNameTeam,
-                _selectedEventIdTeam,
-                _placeController.text,
-                null,
-                null,
-                null);
-            bloc.add(AddSchedule(event: event, date: newDate));
-
-            DateTime eventDate = DateTime(
-                _selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
-            events.update(
-              eventDate,
-              (existingEvents) => existingEvents..add(event),
-              ifAbsent: () => [event],
-            );
-
-            setState(() {
-              _selectedEvents.value = _getEventsForDay(_selectedDay!);
-            });
+            Flushbar(
+              message: "Veuillez sélectionner un type d\'événement.",
+              messageColor: Colors.black,
+              flushbarPosition: FlushbarPosition.BOTTOM,
+              flushbarStyle: FlushbarStyle.FLOATING,
+              backgroundGradient:
+                  LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+              duration: Duration(seconds: 4),
+            ).show(context);
           }
         } else {
-          _showSnackBar(context, 'Veuillez sélectionner un type d\'événement.',
-              Colors.orangeAccent);
+          Flushbar(
+            message: "Veuillez sélectionner une équipe.",
+            messageColor: Colors.black,
+            flushbarPosition: FlushbarPosition.BOTTOM,
+            flushbarStyle: FlushbarStyle.FLOATING,
+            backgroundGradient:
+                LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+            duration: Duration(seconds: 4),
+          ).show(context);
         }
       } else {
-        _showSnackBar(
-            context, 'Veuillez sélectionner une équipe', Colors.orangeAccent);
+        Flushbar(
+          message: "Veuillez remplir l'horaire de l\'événement.",
+          messageColor: Colors.black,
+          flushbarPosition: FlushbarPosition.BOTTOM,
+          flushbarStyle: FlushbarStyle.FLOATING,
+          backgroundGradient:
+              LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+          duration: Duration(seconds: 4),
+        ).show(context);
       }
     } else {
-      _showSnackBar(context, 'Veuillez remplir le lieu de l\'événement.',
-          Colors.orangeAccent);
+      Flushbar(
+        message: "Veuillez remplir le lieu de l\'événement.",
+        messageColor: Colors.black,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        backgroundGradient:
+            LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+        duration: Duration(seconds: 4),
+      ).show(context);
     }
   }
 

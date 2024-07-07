@@ -5,9 +5,26 @@ class GetConversationPlayer extends ConversationEvent {
 }
 
 class SubscribeToConversation extends ConversationEvent {
-  SubscribeToConversation();
+  final String mode;
+
+  SubscribeToConversation({
+    required this.mode
+  });
+}
+
+class AddConversation extends ConversationEvent {
+  final String players;
+
+  AddConversation({
+    required this.players
+  });
 }
 
 class ClearConversationState extends ConversationEvent {
   ClearConversationState();
 }
+
+class GetConversationCoach extends ConversationEvent {
+  GetConversationCoach();
+}
+

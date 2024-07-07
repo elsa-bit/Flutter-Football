@@ -26,6 +26,19 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
   }
 
   @override
+  Future<String> getPlayersTeams(String idteams) async {
+    final queryParameters = {'idteams': idteams};
+    final response = await httpGet(Endpoints.playersTeamsPath, queryParameters);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      final errorMessage = response.body;
+      throw ExceptionsFactory()
+          .handleStatusCode(response.statusCode, errorMessage: errorMessage);
+    }
+  }
+
+  @override
   Future<Player> getPlayerDetails(String idplayer) async {
     final queryParameters = {'idplayer': idplayer};
     final response =
@@ -126,10 +139,7 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
 
   @override
   Future<Player> getNewTrophy(String oldDate, String idplayer) async {
-    final queryParameters = {
-      'olddate': oldDate,
-      'idplayer': idplayer
-    };
+    final queryParameters = {'olddate': oldDate, 'idplayer': idplayer};
     final response =
         await httpGet(Endpoints.newStatisticPlayerPath, queryParameters);
     if (response.statusCode == 200) {

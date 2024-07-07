@@ -62,7 +62,10 @@ class _RankingFriendScreenState extends State<RankingFriendScreen> {
               var listPlayer = state.players;
               if (listPlayer == null || listPlayer.isEmpty) {
                 return const Center(
-                  child: Text("Aucun joueur reconnu !"),
+                  child: Text(
+                    "Ajouter des amis pour vous challenger !",
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
                 );
               }
 

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/domain/repositories/team_repository.dart';
 import 'package:flutter_football/presentation/blocs/teams/teams_event.dart';
@@ -9,17 +7,14 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamState> {
   final TeamRepository repository;
 
   TeamsBloc({required this.repository}) : super(TeamState()) {
-
     on<GetTeamDetails>((event, emit) async {
       try {
         emit(state.copyWith(status: TeamStatus.loading));
         final team = await repository.getTeam(event.teamId);
         emit(state.copyWith(teamDetail: team, status: TeamStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: TeamStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: TeamStatus.error));
       }
     });
 
@@ -29,10 +24,8 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamState> {
         final teams = await repository.getCoachTeams();
         emit(state.copyWith(teams: teams, status: TeamStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: TeamStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: TeamStatus.error));
       }
     });
 
@@ -42,23 +35,19 @@ class TeamsBloc extends Bloc<TeamsEvent, TeamState> {
         final players = await repository.getPlayers(event.teamId);
         //emit(state.copyWith(teams: teams, status: TeamStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: TeamStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: TeamStatus.error));
       }
     });
 
     on<GetSpecificTeamPlayer>((event, emit) async {
       try {
         emit(state.copyWith(status: TeamStatus.loading));
-        final teams = await repository.getSpecificTeamPlayer(event.idPlayer);
+        final teams = await repository.getSpecificTeamPlayer();
         emit(state.copyWith(teams: teams, status: TeamStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: TeamStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: TeamStatus.error));
       }
     });
 

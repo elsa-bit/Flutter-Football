@@ -4,6 +4,8 @@ import 'package:flutter_football/domain/models/player_min.dart';
 abstract class PlayerService {
   Future<String> getPlayersTeam(String idteam);
 
+  Future<String> getPlayersTeams(String idteams);
+
   Future<Player> getPlayerDetails(String idplayer);
 
   Future<String> addFriend(String idplayer, String idfriend);

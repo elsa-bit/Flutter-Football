@@ -38,10 +38,9 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
         emit(state.copyWith(
             response: MediaResponse(url: url), status: MediaStatus.success));
       } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(
-            error: error.toString(),
-            status: MediaStatus.error,
-            response: null));
+            error: errorMessage, status: MediaStatus.error, response: null));
       }
     });
 
@@ -50,16 +49,16 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
         emit(state.copyWith(status: MediaStatus.loading));
         final videos = await repository.getVideosBucket(event.bucketName);
 
-        if(event.bucketName == 'trainingGeneral'){
-          emit(state.copyWith(videosGeneral: videos, status: MediaStatus.success));
-        }else if(event.bucketName == 'trainingPhysical'){
-          emit(state.copyWith(videosPhysical: videos, status: MediaStatus.success));
+        if (event.bucketName == 'trainingGeneral') {
+          emit(state.copyWith(
+              videosGeneral: videos, status: MediaStatus.success));
+        } else if (event.bucketName == 'trainingPhysical') {
+          emit(state.copyWith(
+              videosPhysical: videos, status: MediaStatus.success));
         }
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: MediaStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: MediaStatus.error));
       }
     });
 
@@ -67,12 +66,12 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
       try {
         emit(state.copyWith(status: MediaStatus.loading));
         final videos = await repository.getSpecificVideos();
-        emit(state.copyWith(videosSpecific: videos, status: MediaStatus.success));
-      } catch (error) {
         emit(state.copyWith(
-            error: error.toString(),
-            status: MediaStatus.error,
-            response: null));
+            videosSpecific: videos, status: MediaStatus.success));
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(
+            error: errorMessage, status: MediaStatus.error, response: null));
       }
     });
 

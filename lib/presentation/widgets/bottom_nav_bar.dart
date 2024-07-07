@@ -14,29 +14,15 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  int _selectedItem = 1;
+  int _selectedItem = 2;
 
   List<BottomNavigationBarItem> navItems = const [
     BottomNavigationBarItem(
-        icon: Icon(
-          Icons.calendar_month
-        ),
-        label: 'Programme'),
-    BottomNavigationBarItem(
-        icon: Icon(
-          Icons.sports_soccer,
-        ),
-        label: 'Équipes'),
-    BottomNavigationBarItem(
-        icon: Icon(
-          Icons.sports_football,
-        ),
-        label: 'Match'),
-    BottomNavigationBarItem(
-        icon: Icon(
-          Icons.settings,
-        ),
-        label: 'Paramètres'),
+        icon: Icon(Icons.calendar_month), label: 'Programme'),
+    BottomNavigationBarItem(icon: Icon(Icons.forum), label: 'Tchat'),
+    BottomNavigationBarItem(icon: Icon(Icons.sports_soccer), label: 'Équipes'),
+    BottomNavigationBarItem(icon: Icon(Icons.sports_football), label: 'Match'),
+    BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Paramètres'),
   ];
 
   void _onItemTapped(int index) {

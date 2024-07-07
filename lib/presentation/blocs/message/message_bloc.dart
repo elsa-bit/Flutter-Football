@@ -12,7 +12,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   StreamSubscription<Message>? _subscription;
 
   MessageBloc({required this.repository}) : super(MessageState()) {
-    on<GetMessagePlayer>((event, emit) async {
+    on<GetMessage>((event, emit) async {
       try {
         emit(state.copyWith(status: MessageStatus.loading));
         await for (var messages
@@ -22,10 +22,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
               status: MessageStatus.success));
         }
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: MessageStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: MessageStatus.error));
       }
     });
 
@@ -42,7 +40,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           }
         }
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: MessageStatus.error));
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: MessageStatus.error));
       }
     });
 
@@ -51,7 +50,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         await repository.addMessage(event.message);
         emit(state.copyWith(status: MessageStatus.addSuccess));
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: MessageStatus.error));
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: MessageStatus.error));
       }
     });
 

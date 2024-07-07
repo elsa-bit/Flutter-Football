@@ -18,6 +18,7 @@ class Endpoints {
   static const String loginAdmin = '/api/loginAdmin';
   static const String loginCoach = '/api/loginCoach';
   static const String loginPlayer = '/api/loginPlayer';
+  static const String logout = '/api/logout';
 
   // team paths
   static const String teamPath = '/api/team';
@@ -46,9 +47,12 @@ class Endpoints {
 
   //tchat paths
   static const String conversationPlayerPath = '/api/conversationPlayer';
-  static const String messageConversationPlayerPath = '/api/messageConversation';
+  static const String messageConversationPath = '/api/messageConversation';
   static const String createMessageConversationPath = '/api/addMessage';
   static const String subscribeMessageConversationPath = '/api/subscribeToMessage';
+  static const String conversationCoachPath = '/api/conversationCoach';
+  static const String playersTeamsPath = '/api/playersTeams';
+  static const String createConversationPath = '/api/createConversation';
 
   //match paths
   static const String matchDetailsPath = '/api/getCoachMatchesDetails';

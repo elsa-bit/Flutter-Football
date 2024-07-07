@@ -60,10 +60,25 @@ class AuthRepository {
     }
   }
 
-  Future<void> logout() async {
+  Future<void> authLogout() async {
     await supabase.auth.signOut();
     user = null;
     await preferencesDataSource.clear();
+  }
+
+  Future<void> logout(String mode) async {
+    var idUser;
+    if (mode == 'player') {
+      idUser = preferencesDataSource.getIdPlayer();
+    } else if (mode == 'coach') {
+      idUser = preferencesDataSource.getIdCoach().toString();
+    }
+
+    try {
+      await authDataSource.logout(idUser, mode);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<bool> playerHasAccess(String playerId) async {

@@ -6,25 +6,23 @@ import 'package:flutter_football/presentation/screens/player/statistic/rankingTe
 class RankingScreen extends StatefulWidget {
   static const String routeName = '/player/ranking';
   final String idPlayer;
-  final String idTeams;
 
-  const RankingScreen({Key? key, required this.idPlayer, required this.idTeams})
+  const RankingScreen({Key? key, required this.idPlayer})
       : super(key: key);
 
   static void navigateTo(
-      BuildContext context, String idPlayer, String idTeams) {
+      BuildContext context, String idPlayer) {
     Navigator.of(context).pushNamed(
       routeName,
-      arguments: {'idPlayer': idPlayer, 'idTeams': idTeams},
+      arguments: {'idPlayer': idPlayer},
     );
   }
 
   static Route route(RouteSettings settings) {
     final args = settings.arguments as Map<String, String>;
     final idPlayer = args['idPlayer']!;
-    final idTeams = args['idTeams']!;
     return MaterialPageRoute(
-      builder: (context) => RankingScreen(idPlayer: idPlayer, idTeams: idTeams),
+      builder: (context) => RankingScreen(idPlayer: idPlayer),
     );
   }
 
@@ -75,7 +73,7 @@ class _RankingScreenState extends State<RankingScreen> {
       case 0:
         return RankingFriendScreen(idPlayer: widget.idPlayer);
       case 1:
-        return RankingTeamScreen(idPlayer: widget.idPlayer, idTeams: widget.idTeams);
+        return RankingTeamScreen(idPlayer: widget.idPlayer);
       default:
         return RankingFriendScreen(idPlayer: widget.idPlayer);
     }

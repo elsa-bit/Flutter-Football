@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/data/data_sources/base_data_source.dart';
 import 'package:flutter_football/data/services/team_service.dart';
 
@@ -44,8 +45,8 @@ class TeamDataSource extends BaseDataSource with TeamService {
   }
 
   @override
-  Future<String> getSpecificTeamPlayer(String idplayer) async {
-    final queryParameters = {'idplayer': idplayer};
+  Future<String> getSpecificTeamPlayer(String idteams) async {
+    final queryParameters = {'idteams': idteams};
     final response =
         await httpGet(Endpoints.specificTeamPlayerPath, queryParameters);
     if (response.statusCode == 200) {

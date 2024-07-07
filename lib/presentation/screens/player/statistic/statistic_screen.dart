@@ -186,10 +186,8 @@ class _StatisticScreenState extends State<StatisticScreen> {
   void _navigateToRankingScreen(BuildContext context) {
     var sharedPref = SharedPreferencesDataSource();
     var idPlayer = sharedPref.getIdPlayer();
-    var idTeams = sharedPref.getTeamsIds();
 
-    RankingScreen.navigateTo(
-        context, idPlayer!, utf8.decode(idTeams!));
+    RankingScreen.navigateTo(context, idPlayer!);
   }
 
   void _navigateToFriendScreen(BuildContext context) {

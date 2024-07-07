@@ -24,11 +24,7 @@ class GetTeamPlayers extends TeamsEvent {
 }
 
 class GetSpecificTeamPlayer extends TeamsEvent {
-  final String idPlayer;
-
-  GetSpecificTeamPlayer({
-    required this.idPlayer
-  });
+  GetSpecificTeamPlayer();
 }
 
 class ClearTeamsState extends TeamsEvent {

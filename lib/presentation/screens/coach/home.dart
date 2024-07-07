@@ -5,6 +5,7 @@ import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/presentation/screens/coach/match/match_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/schedule/schedule_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/settings/settings_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/tchat/tchat_coach_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/teams/teams_screen.dart';
 
 import '../../widgets/bottom_nav_bar.dart';
@@ -17,9 +18,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _currentIndex = 1;
+  int _currentIndex = 2;
   final screens = [
     const ScheduleScreen(),
+    const TchatCoachScreen(),
     const TeamsScreen(),
     const MatchScreen(),
     const SettingsScreen(),

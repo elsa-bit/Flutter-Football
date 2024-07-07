@@ -3,6 +3,7 @@ import 'package:flutter_football/presentation/screens/coach/match/match_screen.d
 import 'package:flutter_football/presentation/screens/coach/schedule/playerAttendance_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/schedule/schedule_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/settings/settings_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/tchat/message_coach_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/teams/teams_screen.dart';
 import 'package:flutter_football/presentation/screens/login/login_screen.dart';
 import 'package:flutter_football/presentation/screens/onboarding/onboarding_screen.dart';
@@ -56,6 +57,8 @@ class AppRouter {
         return ResourceScreen.route();
       case MessageScreen.routeName:
         return MessageScreen.route(settings);
+      case MessageCoachScreen.routeName:
+        return MessageCoachScreen.route(settings);
       default:
         return _errorRoute();
     }

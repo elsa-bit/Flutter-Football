@@ -17,13 +17,28 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
     on<GetPlayersTeam>((event, emit) async {
       try {
         emit(state.copyWith(status: PlayersStatus.loading));
-        final players = await repository.getPlayersTeams(event.teamId);
-        emit(state.copyWith(players: players, playerSearch: players, status: PlayersStatus.success));
-      } catch (error) {
+        final players = await repository.getPlayersTeam(event.teamId);
         emit(state.copyWith(
-          error: error.toString(),
-          status: PlayersStatus.error,
-        ));
+            players: players,
+            playerSearch: players,
+            status: PlayersStatus.success));
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
+      }
+    });
+
+    on<GetPlayersTeams>((event, emit) async {
+      try {
+        emit(state.copyWith(status: PlayersStatus.loading));
+        final players = await repository.getPlayersTeams();
+        emit(state.copyWith(
+            players: players,
+            playerSearch: players,
+            status: PlayersStatus.success));
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
       }
     });
 
@@ -34,10 +49,8 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         emit(state.copyWith(
             detailsPlayer: detailsPlayer, status: PlayersStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: PlayersStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
       }
     });
 
@@ -47,7 +60,8 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         await repository.addFriend(event.idPlayer, event.idFriend);
         emit(state.copyWith(status: PlayersStatus.success));
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: PlayersStatus.error));
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
       }
     });
 
@@ -57,10 +71,8 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         final players = await repository.getFriendsPlayer(event.idPlayer);
         emit(state.copyWith(players: players, status: PlayersStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: PlayersStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
       }
     });
 
@@ -73,7 +85,9 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
           if (event.search.isEmpty) {
             searchList = state.players;
           } else {
-            searchList = state.players?.where((p) => p.isMatching(event.search)).toList();
+            searchList = state.players
+                ?.where((p) => p.isMatching(event.search))
+                .toList();
           }
 
           emit(state.copyWith(playerSearch: searchList));
@@ -83,11 +97,11 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         if (event.search.isEmpty) {
           searchList = state.players;
         } else {
-          searchList = state.players?.where((p) => p.isMatching(event.search)).toList();
+          searchList =
+              state.players?.where((p) => p.isMatching(event.search)).toList();
         }
 
         emit(state.copyWith(playerSearch: searchList));
-
       } catch (e) {
         emit(state.copyWith(error: e.toString(), status: PlayersStatus.error));
       }
@@ -99,7 +113,8 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         await repository.modifyPlayer(event.player);
         emit(state.copyWith(status: PlayersStatus.modifySuccess));
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: PlayersStatus.error));
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
       }
     });
 
@@ -109,10 +124,8 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         final coachs = await repository.getCoachPlayer();
         emit(state.copyWith(coachs: coachs, status: PlayersStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: PlayersStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
       }
     });
 
@@ -127,7 +140,8 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
           }
         }
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: PlayersStatus.error));
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
       }
     });
 
@@ -138,10 +152,8 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         emit(state.copyWith(
             detailsPlayer: detailsPlayer, status: PlayersStatus.success));
       } catch (error) {
-        emit(state.copyWith(
-          error: error.toString(),
-          status: PlayersStatus.error,
-        ));
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
       }
     });
 

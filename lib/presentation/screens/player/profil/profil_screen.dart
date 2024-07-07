@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
@@ -6,22 +7,12 @@ import 'package:flutter_football/data/data_sources/shared_preferences_data_sourc
 import 'package:flutter_football/domain/models/player_min.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
-import 'package:flutter_football/presentation/blocs/conversation/conversation_bloc.dart';
-import 'package:flutter_football/presentation/blocs/conversation/conversation_event.dart';
-import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
-import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
-import 'package:flutter_football/presentation/blocs/message/message_bloc.dart';
-import 'package:flutter_football/presentation/blocs/message/message_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_state.dart';
-import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
-import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
-import 'package:flutter_football/presentation/blocs/teams/teams_bloc.dart';
-import 'package:flutter_football/presentation/blocs/teams/teams_event.dart';
 import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
 import 'package:flutter_football/presentation/screens/player/profil/infoClub_screen.dart';
 import 'package:flutter_football/presentation/screens/player/profil/news_screen.dart';
@@ -249,17 +240,15 @@ class _ProfilScreenState extends State<ProfilScreen> {
                   ElevatedButton(
                     onPressed: () {
                       ConfirmationDialog.show(
-                        context,
-                        "Déconnexion",
-                        "Annuler",
-                        "Déconnexion",
-                        description: "Es-tu sûr de vouloir te deconnecter ?",
-                        onCancelAction: (){},
-                        onValidateAction: (){
-                          final authBloc = BlocProvider.of<AuthBloc>(context);
-                          authBloc.add(Logout());
+                          context, "Déconnexion", "Annuler", "Déconnexion",
+                          description: "Es-tu sûr de vouloir te deconnecter ?",
+                          onCancelAction: () {}, onValidateAction: () {
+                        final authBloc = BlocProvider.of<AuthBloc>(context);
+                        authBloc
+                          ..add(Logout(mode: 'player'))
+                          ..add(AuthLogout());
 
-                          /*final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
+                        /*final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
                           final playersBloc = BlocProvider.of<PlayersBloc>(context);
                           final mediaBloc = BlocProvider.of<MediaBloc>(context);
                           final fmiBloc = BlocProvider.of<FmiBloc>(context);
@@ -274,9 +263,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                           teamsBloc.add(ClearTeamsState());
                           conversationBloc.add(ClearConversationState());
                           messageBloc.add(ClearMessageState());*/
-                        },
-                        validateActionTint: Colors.red
-                      );
+                      }, validateActionTint: Colors.red);
                     },
                     child: Text(
                       "Déconnexion",
@@ -432,7 +419,15 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
       bloc.add(ModifyPlayer(player: player));
     } else {
-      _showSnackBar(context, 'Veuillez remplir un email.', Colors.orangeAccent);
+      Flushbar(
+        message: "Veuillez remplir un email.",
+        messageColor: Colors.black,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        backgroundGradient:
+            LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+        duration: Duration(seconds: 4),
+      ).show(context);
     }
   }
 

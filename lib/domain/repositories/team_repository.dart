@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
@@ -19,16 +18,16 @@ class TeamRepository {
   Future<List<Team>> getCoachTeams() async {
     try {
       final coachID = preferences.getIdCoach();
-      if(coachID == null) {
+      if (coachID == null) {
         return [];
       }
 
       final teams = await teamDataSource.getCoachTeams(coachID);
       final data = jsonDecode(teams)["teams"] as List<dynamic>;
-      final result = List<Team>.from(data.map((model)=> Team.fromJson(model)));
+      final result = List<Team>.from(data.map((model) => Team.fromJson(model)));
       preferences.saveTeamsIds(result.map((e) => e.id).toList());
       return result;
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -38,8 +37,8 @@ class TeamRepository {
     try {
       final team = await teamDataSource.getTeam(teamId);
       final data = jsonDecode(team)["teams"] as List<dynamic>;
-      return List<Team>.from(data.map((model)=> Team.fromJson(model))).first;
-    } catch(error) {
+      return List<Team>.from(data.map((model) => Team.fromJson(model))).first;
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -49,20 +48,23 @@ class TeamRepository {
     try {
       final players = await teamDataSource.getTeamPlayers(teamId);
       final data = jsonDecode(players)["players"] as List<dynamic>;
-      return List<Player>.from(data.map((model)=> Player.fromJson(model)));
-    } catch(error) {
+      return List<Player>.from(data.map((model) => Player.fromJson(model)));
+    } catch (error) {
       print(error);
       rethrow;
     }
   }
 
-  Future<List<Team>> getSpecificTeamPlayer(String idPlayer) async {
+  Future<List<Team>> getSpecificTeamPlayer() async {
+    final teamsId = preferences.getTeamsIds();
+
     try {
-      final teams = await teamDataSource.getSpecificTeamPlayer(idPlayer);
+      final teams =
+          await teamDataSource.getSpecificTeamPlayer(teamsId!.join(","));
       final data = jsonDecode(teams)["teams"] as List<dynamic>;
-      final result = List<Team>.from(data.map((model)=> Team.fromJson(model)));
+      final result = List<Team>.from(data.map((model) => Team.fromJson(model)));
       return result;
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }

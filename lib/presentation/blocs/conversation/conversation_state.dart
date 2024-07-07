@@ -1,6 +1,6 @@
 import 'package:flutter_football/domain/models/conversation.dart';
 
-enum ConversationStatus { initial, loading, success, error }
+enum ConversationStatus { initial, loading, success, addSuccess, error, addError }
 
 class ConversationState {
   final ConversationStatus status;

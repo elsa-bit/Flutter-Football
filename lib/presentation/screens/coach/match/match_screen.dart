@@ -34,40 +34,47 @@ class MatchScreen extends StatelessWidget {
       create: (context) => MatchBloc(
         repository: RepositoryProvider.of<MatchRepository>(context),
       )..add(GetMatches()),
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            body: SafeArea(
-              child: BlocBuilder<MatchBloc, MatchState>(
-                builder: (context, state) {
-                  switch (state.status) {
-                    case MatchStatus.loading:
-                      return Loader();
-                    case MatchStatus.error:
-                      return Text(state.error);
-                    case MatchStatus.success:
-                      return Column(
-                        children: [
-                          if (state.previousMatch != null &&
-                              state.previousMatch!.isNotEmpty)
-                            Expanded(child: MatchSection(title: "Matchs passés", matches: state.previousMatch!)),
-                          if (state.nextMatch != null &&
-                              state.nextMatch!.isNotEmpty)
-                            Expanded(child: MatchSection(title: "Matchs à venir", matches: state.nextMatch!)),
-                        ],
-                      );
+      child: Builder(builder: (context) {
+        return Scaffold(
+          body: SafeArea(
+            child: BlocBuilder<MatchBloc, MatchState>(
+              builder: (context, state) {
+                switch (state.status) {
+                  case MatchStatus.loading:
+                    return Center(child: Loader());
+                  case MatchStatus.error:
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(child: Text(state.error)),
+                    );
+                  case MatchStatus.success:
+                    return Column(
+                      children: [
+                        if (state.previousMatch != null &&
+                            state.previousMatch!.isNotEmpty)
+                          Expanded(
+                              child: MatchSection(
+                                  title: "Matchs passés",
+                                  matches: state.previousMatch!)),
+                        if (state.nextMatch != null &&
+                            state.nextMatch!.isNotEmpty)
+                          Expanded(
+                              child: MatchSection(
+                                  title: "Matchs à venir",
+                                  matches: state.nextMatch!)),
+                      ],
+                    );
 
-                    default:
-                      return Center(
-                        child: Text("Aucun match pour le moment"),
-                      );
-                  }
-                },
-              ),
+                  default:
+                    return Center(
+                      child: Text("Aucun match pour le moment"),
+                    );
+                }
+              },
             ),
-          );
-        }
-      ),
+          ),
+        );
+      }),
     );
   }
 }
@@ -80,14 +87,14 @@ class MatchSection extends StatelessWidget {
     Key? key,
     required this.title,
     required this.matches,
-  }): super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-            title,
+          title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18.0,
@@ -110,17 +117,13 @@ class MatchSection extends StatelessWidget {
   }
 
   void onMatchTap(BuildContext context, MatchDetails match) {
-    if(match.win != null || match.date.isEqualOrBefore(DateTime.now())) {
-      if(!match.FMICompleted) {
+    if (match.win != null || match.date.isEqualOrBefore(DateTime.now())) {
+      if (!match.FMICompleted) {
         // Create / Edit FMI
-        Navigator.push(
-            context,
-            FmiScreen.route(match)
-        );
+        Navigator.push(context, FmiScreen.route(match));
       } else {
         // TODO : Read FMI
       }
-
     }
   }
 }
