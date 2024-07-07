@@ -2,10 +2,10 @@
 class Endpoints {
   Endpoints._();
 
-  static const String localHostURL = '192.168.1.107:3000'; //192.168.1.107:3000 - 10.0.2.2:3000
+  static const String localHostURL = '10.0.2.2:3000'; //192.168.1.107:3000 - 10.0.2.2:3000
   static const String prodURL = 'api-csbretigny.vercel.app';
 
-  static const String baseURL = prodURL;
+  static const String baseURL = localHostURL;
 
   static const int receiveTimeout = 5000;
 
@@ -57,5 +57,7 @@ class Endpoints {
   static const String addCardPath = '/api/addCard';
   static const String addGoalPath = '/api/addGoal';
   static const String getActionsPath = '/api/getActions';
+  static const String getSelectionPath = '/api/getSelection';
+  static const String setFmiReportPath = '/api/setFmiReport';
 
 }

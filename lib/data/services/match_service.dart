@@ -8,4 +8,6 @@ abstract class MatchService {
   Future<Response> addCard(int idMatch, String idPlayer, String color);
   Future<Response> addReplacement(int idMatch, String idPlayerOut, String idPlayerIn, String? reason);
   Future<Response> getActions(int idMatch);
+  Future<Response> getSelection(int idMatch, String idTeam);
+  Future<Response> setFmiReport(int idMatch, String? commentTeam, String? commentOpponent);
 }

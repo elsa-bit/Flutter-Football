@@ -25,7 +25,34 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
         ));
       } catch (error) {
         emit(state.copyWith(
-          error: error.toString(),
+          error: (error is MatchError) ? error : MatchError(error.toString()),
+          status: MatchStatus.error,
+        ));
+      }
+    });
+
+    on<GetSelection>((event, emit) async {
+      try {
+        emit(state.copyWith(status: MatchStatus.loading));
+        final selection = await repository.getSelection(event.idMatch, event.idTeam);
+        emit(state.copyWith(status: MatchStatus.success, playerSelection: selection));
+      } catch (error) {
+        emit(state.copyWith(
+          error: (error is MatchError) ? error : MatchError(error.toString()),
+          status: MatchStatus.error,
+        ));
+      }
+    });
+
+    on<SetFMIReport>((event, emit) async {
+      try {
+        emit(state.copyWith(status: MatchStatus.loading));
+        final isFmiCreated = await repository.setFmiReport(event.idMatch, event.commentTeam, event.commentOpponent);
+        if(isFmiCreated) emit(state.copyWith(status: MatchStatus.refresh));
+        else emit(state.copyWith(status: MatchStatus.error, error: FMICreationError("Une erreur est survenue lors de la création de la FMI.")));
+      } catch (error) {
+        emit(state.copyWith(
+          error: (error is MatchError) ? error : MatchError(error.toString()) ,
           status: MatchStatus.error,
         ));
       }

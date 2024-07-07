@@ -10,6 +10,7 @@ class MatchDetails {
   final String idTeam;
   final bool? win;
   final String nameTeam;
+  final List<String>? playerSelection;
   final bool FMICompleted;
 
   MatchDetails({
@@ -22,6 +23,7 @@ class MatchDetails {
     required this.idTeam,
     this.win,
     required this.nameTeam,
+    required this.playerSelection,
     required this.FMICompleted,
   });
 
@@ -37,6 +39,8 @@ class MatchDetails {
       final String idTeam = json["idTeam"].toString();
       final bool? win = json["win"] as bool?;
       final String nameTeam = json["nameTeam"] as String? ?? "";
+      final selectionJson = json["selection"] as List<dynamic>?;
+      final List<String>? selection = selectionJson?.map((e) => e as String).toList();
       final bool FMICompleted = json["FMICompleted"] as bool;
 
       return MatchDetails(
@@ -49,6 +53,7 @@ class MatchDetails {
         idTeam: idTeam,
         win: win,
         nameTeam: nameTeam,
+        playerSelection: selection,
         FMICompleted: FMICompleted,
       );
     } catch (e) {
@@ -72,6 +77,7 @@ class MatchDetails {
         idTeam: this.idTeam,
         win: this.win,
         nameTeam: this.nameTeam,
+        playerSelection: this.playerSelection,
         FMICompleted: this.FMICompleted,
       );
   }

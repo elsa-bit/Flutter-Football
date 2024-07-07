@@ -47,6 +47,7 @@ import 'data/data_sources/schedule_data_source.dart';
 import 'data/data_sources/shared_preferences_data_source.dart';
 import 'networking/firebase/analytics_provider.dart';
 import 'networking/firebase/firebase_options.dart';
+import 'presentation/blocs/match/match_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -206,7 +207,12 @@ class MyApp extends StatelessWidget {
               create: (context) => MessageBloc(
                 repository: RepositoryProvider.of<MessageRepository>(context),
               ),
-            )
+            ),
+            BlocProvider(
+              create: (context) => MatchBloc(
+                repository: RepositoryProvider.of<MatchRepository>(context),
+              ),
+            ),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

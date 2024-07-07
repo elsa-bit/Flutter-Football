@@ -9,6 +9,7 @@ import 'package:flutter_football/domain/models/fmi/match_action.dart';
 import 'package:flutter_football/domain/models/fmi/replacement.dart';
 import 'package:flutter_football/domain/models/match.dart';
 import 'package:flutter_football/domain/models/match_details.dart';
+import 'package:flutter_football/presentation/blocs/match/match_state.dart';
 import 'package:flutter_football/utils/extensions/date_time_extension.dart';
 
 class MatchRepository {
@@ -49,7 +50,7 @@ class MatchRepository {
   Future<Card> addCard(int idMatch, String idPlayer, String color) async {
     try {
       final response = await matchDataSource.addCard(idMatch, idPlayer, color);
-      if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMICardCreationException
+      if(response.statusCode != 200) throw FMICardCreationException("Un problème est surevenu lors de la création d'un carton");
 
       final body = response.body;
       final data = jsonDecode(body)["card"] as Map<String, dynamic>;
@@ -63,7 +64,7 @@ class MatchRepository {
   Future<Goal> addGoal(int idMatch, String? idPlayer) async {
     try {
       final response = await matchDataSource.addGoal(idMatch, idPlayer);
-      if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMIGoalCreationException
+      if(response.statusCode != 200) throw FMIGoalCreationException("Un problème est surevenu lors de la création d'un but");
 
       final body = response.body;
       final data = jsonDecode(body)["goal"] as Map<String, dynamic>;
@@ -77,7 +78,7 @@ class MatchRepository {
   Future<Replacement> addReplacement(int idMatch, String idPlayerOut, String idPlayerIn, String? reason) async {
     try {
       final response = await matchDataSource.addReplacement(idMatch, idPlayerOut, idPlayerIn, reason);
-      if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMIReplacementCreationException
+      if(response.statusCode != 200) throw FMIReplacementCreationException("Un problème est surevenu lors de la création d'un remplacement");
 
       final body = response.body;
       final data = jsonDecode(body)["replacement"] as Map<String, dynamic>;
@@ -88,10 +89,35 @@ class MatchRepository {
     }
   }
 
+  Future<List<String>?> getSelection(int idMatch, String idTeam) async {
+    try {
+      final response = await matchDataSource.getSelection(idMatch, idTeam);
+      if(response.statusCode != 200) throw MatchSelectionException("Un problème est survenu lors de la récupérartion de la sélection du match");
+
+      final body = response.body;
+      print("--> Selection : $body");
+      final data = jsonDecode(body)["selection"] as List<dynamic>?;
+      return data?.map((e) => e as String).toList();
+    } catch (error) {
+      print(error);
+      throw MatchSelectionException("");
+    }
+  }
+
+  Future<bool> setFmiReport(int idMatch, String? commentTeam, String? commentOpponent) async {
+    try {
+      final response = await matchDataSource.setFmiReport(idMatch, commentTeam, commentOpponent);
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (error) {
+      print(error);
+      throw FMICreationError("Une erreur est survenue lors de la création de la FMI.");
+    }
+  }
+
   Future<List<MatchAction>> getActions(int idMatch, DateTime matchDateTime) async {
     try {
       final response = await matchDataSource.getActions(idMatch);
-      if(response.statusCode != 200) throw Exception(); // TODO : throw exception FMICardCreationException
+      if(response.statusCode != 200) throw FMIActionsException("Une erreur est survenue lors de la récupération des actions du match.");
 
       final body = response.body;
       final cardsData = jsonDecode(body)["cards"] as List<dynamic>;
@@ -142,7 +168,7 @@ class MatchRepository {
       return actions;
     } catch (error) {
       print(error);
-      rethrow;
+      throw FMIActionsException("Une erreur est survenue lors de la récupération des actions du match.");
     }
   }
 }

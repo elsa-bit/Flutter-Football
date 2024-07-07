@@ -6,14 +6,18 @@ import 'package:flutter_football/domain/models/match_details.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_state.dart';
+import 'package:flutter_football/presentation/blocs/match/match_bloc.dart';
+import 'package:flutter_football/presentation/blocs/match/match_event.dart';
+import 'package:flutter_football/presentation/blocs/match/match_state.dart';
+import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
+import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/cards_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/goal_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/replacement_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/tactics_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/match/report/report_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/match/selection/selection_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-// TODO : A chaque insertion Success d'une action dans la BDD, ajouter manuellement les informations et update les states
-// TODO : state pour afficher le détail d'une action dans l'historique
 
 /*
   bloclistener
@@ -36,19 +40,21 @@ import 'package:flutter_svg/flutter_svg.dart';
               }
    */
 class FmiScreen extends StatefulWidget {
-  static const String routeName = '/fmi';
+  static const String routeName = 'fmi';
   final MatchDetails match;
+  final bool readOnly;
 
-  static Route route(MatchDetails match) {
+  static Route route(MatchDetails match, {bool readOnly = false}) {
     return MaterialPageRoute(
       settings: const RouteSettings(name: routeName),
       builder: (context) => FmiScreen(
         match: match,
+        readOnly: readOnly,
       ),
     );
   }
 
-  const FmiScreen({Key? key, required this.match}) : super(key: key);
+  const FmiScreen({Key? key, required this.match, this.readOnly = false}) : super(key: key);
 
   @override
   State<FmiScreen> createState() => _FmiScreenState();
@@ -59,6 +65,7 @@ class _FmiScreenState extends State<FmiScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<FmiBloc>(context).add(InitFMI(match: widget.match));
+    //BlocProvider.of<MatchBloc>(context).add(GetSelection(widget.match.idTeam, widget.match.id));
   }
 
   @override
@@ -67,16 +74,26 @@ class _FmiScreenState extends State<FmiScreen> {
       appBar: AppBar(
         title: Text("FMI"),
       ),
-      body: SafeArea(
-        child: BlocBuilder<FmiBloc, FmiState>(
-          builder: (context, state) {
-            return Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(30.0),
-                  child: Column(
-                    children: [
-                      /*Row(
+      body: BlocListener<MatchBloc, MatchState>(
+        listener: (context, state) {
+          switch (state.status) {
+            case MatchStatus.refresh:
+              //Navigator.of(context).pop();
+              break;
+            default:
+              break;
+          }
+        },
+        child: SafeArea(
+          child: BlocBuilder<FmiBloc, FmiState>(
+            builder: (context, state) {
+              return Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Column(
+                      children: [
+                        /*Row(
                         children: [
                           Text(
                             "${state.match?.nameTeam}",
@@ -106,181 +123,217 @@ class _FmiScreenState extends State<FmiScreen> {
                           ),
                         ],
                       ),*/
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: AppColors.black.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          "${state.match?.teamGoals ?? 0} - ${state.match?.opponentGoals ?? 0}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 30,
-                            color: currentAppColors.primaryTextColor,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: AppColors.black.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            "${state.match?.teamGoals ?? 0} - ${state.match?.opponentGoals ?? 0}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 30,
+                              color: currentAppColors.primaryTextColor,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  //margin: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Spacer(),
-                          FmiAction(
-                            onTap: () => {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (BuildContext context) {
-                                  return GoalBottomSheet(
-                                    teamId: widget.match.idTeam,
-                                    matchId: widget.match.id,
-                                  );
-                                },
-                              )
-                            },
-                            color: AppColors.mediumBlue,
-                            imageAsset: "assets/football_icon.svg",
-                            title: "But",
-                          ),
-                          Spacer(),
-                          FmiAction(
-                            onTap: () => {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (BuildContext context) {
-                                  return ReplacementBottomSheet(
-                                    teamId: widget.match.idTeam,
-                                    matchId: widget.match.id,
-                                  );
-                                },
-                              )
-                            },
-                            color: AppColors.mediumBlue,
-                            imageAsset: "assets/replacement_icon.svg",
-                            title: "Remplacement",
-                          ),
-                          Spacer(),
-                          FmiAction(
-                            onTap: () => {
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CardsBottomSheet(
-                                    teamId: widget.match.idTeam,
-                                    matchId: widget.match.id,
-                                  );
-                                },
-                              )
-                            },
-                            color: AppColors.mediumBlue,
-                            imageAsset: "assets/cards_icon.svg",
-                            title: "Faute",
-                          ),
-                          Spacer(),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  TacticsScreen.route(widget.match)
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-                              width: 115.0,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    AppColors.darkBlue,
-                                    AppColors.mediumBlue,
-                                  ],
+                  Container(
+                    //margin: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Spacer(),
+                            FmiAction(
+                              onTap: () => {
+                                if (!widget.readOnly) {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      builder: (BuildContext context) {
+                                        return GoalBottomSheet(
+                                          teamId: widget.match.idTeam,
+                                          matchId: widget.match.id,
+                                        );
+                                      },
+                                    )
+                                  }
+                              },
+                              color: AppColors.mediumBlue,
+                              imageAsset: "assets/football_icon.svg",
+                              title: "But",
+                            ),
+                            Spacer(),
+                            FmiAction(
+                              onTap: () => {
+                                if (!widget.readOnly) {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      builder: (BuildContext context) {
+                                        return ReplacementBottomSheet(
+                                          teamId: widget.match.idTeam,
+                                          matchId: widget.match.id,
+                                        );
+                                      },
+                                    )
+                                  }
+                              },
+                              color: AppColors.mediumBlue,
+                              imageAsset: "assets/replacement_icon.svg",
+                              title: "Remplacement",
+                            ),
+                            Spacer(),
+                            FmiAction(
+                              onTap: () => {
+                                if (!widget.readOnly) {
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return CardsBottomSheet(
+                                          teamId: widget.match.idTeam,
+                                          matchId: widget.match.id,
+                                        );
+                                      },
+                                    )
+                                  }
+                              },
+                              color: AppColors.mediumBlue,
+                              imageAsset: "assets/cards_icon.svg",
+                              title: "Faute",
+                            ),
+                            Spacer(),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                // open PhotoScreen(widget.readOnly)
+                                //Navigator.push(context, TacticsScreen.route(widget.match));
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 10),
+                                width: 200.0,
+                                decoration: BoxDecoration(
+                                  color: AppColors.grey,
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Tactique",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    overflow: TextOverflow.ellipsis,
+                                child: Center(
+                                  child: Text(
+                                    "Ressources photo",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 20,),
-                          GestureDetector(
-                            onTap: () {
-
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    AppColors.darkGreen,
-                                    AppColors.green,
-                                  ],
+                            SizedBox(
+                              height: 15,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                if (!widget.readOnly) {
+                                  Navigator.push(
+                                      context, TacticsScreen.route(widget.match));
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 10),
+                                width: 200.0,
+                                decoration: BoxDecoration(
+                                  color: AppColors.grey,
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                color: AppColors.darkGreen,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Terminer le match",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    overflow: TextOverflow.ellipsis,
+                                child: Center(
+                                  child: Text(
+                                    "Tactique",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-
-                        ],
-                      ),
-                    ],
+                            SizedBox(
+                              height: 20,
+                            ),
+                            if (!widget.readOnly)
+                              GestureDetector(
+                                onTap: () {
+                                  //ConfirmationDialog.show(context, , cancelAction, {});
+                                  Navigator.push(context, ReportScreen.route(widget.match));
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        AppColors.darkGreen,
+                                        AppColors.green,
+                                      ],
+                                    ),
+                                    color: AppColors.darkGreen,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Valider la FMI",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Spacer(),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 200),
-                  child: Container(
-                    height: (state.actions != null && state.actions!.isNotEmpty)
-                        ? null
-                        : 0.0,
-                    child: (state.actions != null && state.actions!.isNotEmpty)
-                        ? FmiHistory(actions: state.actions!)
-                        : null,
+                  Spacer(),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 200),
+                    child: Container(
+                      height:
+                          (state.actions != null && state.actions!.isNotEmpty)
+                              ? null
+                              : 0.0,
+                      child:
+                          (state.actions != null && state.actions!.isNotEmpty)
+                              ? FmiHistory(actions: state.actions!)
+                              : null,
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
