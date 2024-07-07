@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_football/presentation/blocs/match/match_bloc.dart';
 import 'package:flutter_football/presentation/blocs/match/match_event.dart';
 import 'package:flutter_football/presentation/blocs/match/match_state.dart';
 import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
+import 'package:flutter_football/presentation/dialogs/error_dialog.dart';
 import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/cards_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/goal_bottom_sheet.dart';
@@ -17,7 +20,10 @@ import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_she
 import 'package:flutter_football/presentation/screens/coach/match/fmi/tactics_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/match/report/report_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/match/selection/selection_screen.dart';
+import 'package:flutter_football/presentation/widgets/image_picker_bottom_sheet.dart';
+import 'package:flutter_football/utils/image_utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 /*
   bloclistener
@@ -86,7 +92,7 @@ class _FmiScreenState extends State<FmiScreen> {
         },
         child: SafeArea(
           child: BlocBuilder<FmiBloc, FmiState>(
-            builder: (context, state) {
+            builder: (mainContext, state) {
               return Column(
                 children: [
                   Container(
@@ -153,7 +159,7 @@ class _FmiScreenState extends State<FmiScreen> {
                               onTap: () => {
                                 if (!widget.readOnly) {
                                     showModalBottomSheet(
-                                      context: context,
+                                      context: mainContext,
                                       isScrollControlled: true,
                                       builder: (BuildContext context) {
                                         return GoalBottomSheet(
@@ -173,7 +179,7 @@ class _FmiScreenState extends State<FmiScreen> {
                               onTap: () => {
                                 if (!widget.readOnly) {
                                     showModalBottomSheet(
-                                      context: context,
+                                      context: mainContext,
                                       isScrollControlled: true,
                                       builder: (BuildContext context) {
                                         return ReplacementBottomSheet(
@@ -194,7 +200,7 @@ class _FmiScreenState extends State<FmiScreen> {
                                 if (!widget.readOnly) {
                                     showModalBottomSheet(
                                       isScrollControlled: true,
-                                      context: context,
+                                      context: mainContext,
                                       builder: (BuildContext context) {
                                         return CardsBottomSheet(
                                           teamId: widget.match.idTeam,
@@ -219,8 +225,17 @@ class _FmiScreenState extends State<FmiScreen> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // open PhotoScreen(widget.readOnly)
-                                //Navigator.push(context, TacticsScreen.route(widget.match));
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  context: mainContext,
+                                  builder: (BuildContext context) {
+                                    return ImagePickerBottomSheet(
+                                      onImagePicked: (file) async {
+                                        await uploadImageToSupabase(file, mainContext);
+                                      },
+                                    );
+                                  },
+                                );
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
@@ -244,44 +259,13 @@ class _FmiScreenState extends State<FmiScreen> {
                               ),
                             ),
                             SizedBox(
-                              height: 15,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                if (!widget.readOnly) {
-                                  Navigator.push(
-                                      context, TacticsScreen.route(widget.match));
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 10),
-                                width: 200.0,
-                                decoration: BoxDecoration(
-                                  color: AppColors.grey,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "Tactique",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
                               height: 20,
                             ),
                             if (!widget.readOnly)
                               GestureDetector(
                                 onTap: () {
                                   //ConfirmationDialog.show(context, , cancelAction, {});
-                                  Navigator.push(context, ReportScreen.route(widget.match));
+                                  Navigator.push(mainContext, ReportScreen.route(widget.match));
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -337,6 +321,19 @@ class _FmiScreenState extends State<FmiScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> uploadImageToSupabase(File file, BuildContext context) async {
+    LoadingDialog.show(context);
+    try {
+      await uploadImage(file, matchResourcesBucketName, "${widget.match.id}/${createFileName()}");
+      LoadingDialog.hide(context);
+    } catch(e) {
+      LoadingDialog.hide(context);
+      String errorMessage = "Un erreur est survenue.\nCette image n'a pas pu être envoyé au serveur.";
+      debugPrint(e.toString());
+      ErrorDialog.show(context, errorMessage);
+    }
   }
 }
 
