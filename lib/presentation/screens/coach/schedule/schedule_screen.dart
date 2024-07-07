@@ -1,11 +1,9 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
-import 'package:flutter_football/data/data_sources/schedule_data_source.dart';
-import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/domain/models/event.dart';
 import 'package:flutter_football/domain/models/team.dart';
-import 'package:flutter_football/domain/repositories/schedule_repository.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_bloc.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_event.dart';
 import 'package:flutter_football/presentation/blocs/schedule/schedule_state.dart';
@@ -600,23 +598,56 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     var bloc = BlocProvider.of<ScheduleBloc>(context);
 
     if (_placeController.text != '') {
-      if (_selectedEventIdTeam != null) {
-        if (_selectedEventType != null) {
-          DateTime newDate = DateTime(_selectedDay!.year, _selectedDay!.month,
-              _selectedDay!.day, _selectedTime!.hour, _selectedTime!.minute);
+      if (_timeController.text != '') {
+        if (_selectedEventIdTeam != null) {
+          if (_selectedEventType != null) {
+            DateTime newDate = DateTime(_selectedDay!.year, _selectedDay!.month,
+                _selectedDay!.day, _selectedTime!.hour, _selectedTime!.minute);
 
-          if (_selectedEventType == 'match') {
-            if (_opponentController!.text != "") {
+            if (_selectedEventType == 'match') {
+              if (_opponentController!.text != "") {
+                final event = Event(
+                    null,
+                    "Match",
+                    _selectedEventType!,
+                    newDate,
+                    _selectEventNameTeam,
+                    _selectedEventIdTeam,
+                    _placeController.text,
+                    null,
+                    _opponentController?.text,
+                    null);
+                bloc.add(AddSchedule(event: event, date: newDate));
+
+                DateTime eventDate = DateTime(
+                    _selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
+                events.update(
+                  eventDate,
+                  (existingEvents) => existingEvents..add(event),
+                  ifAbsent: () => [event],
+                );
+              } else {
+                Flushbar(
+                  message: "Veuillez saisir le nom de l\'adversaire.",
+                  messageColor: Colors.black,
+                  flushbarPosition: FlushbarPosition.BOTTOM,
+                  flushbarStyle: FlushbarStyle.FLOATING,
+                  backgroundGradient: LinearGradient(
+                      colors: [Colors.orangeAccent, Colors.white]),
+                  duration: Duration(seconds: 4),
+                ).show(context);
+              }
+            } else {
               final event = Event(
                   null,
-                  "Match",
+                  "Entrainement",
                   _selectedEventType!,
                   newDate,
                   _selectEventNameTeam,
                   _selectedEventIdTeam,
                   _placeController.text,
                   null,
-                  _opponentController?.text,
+                  null,
                   null);
               bloc.add(AddSchedule(event: event, date: newDate));
 
@@ -627,47 +658,54 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 (existingEvents) => existingEvents..add(event),
                 ifAbsent: () => [event],
               );
-            } else {
-              _showSnackBar(context, 'Veuillez saisir le nom de l\'adversaire.',
-                  Colors.orangeAccent);
+
+              setState(() {
+                _selectedEvents.value = _getEventsForDay(_selectedDay!);
+              });
             }
           } else {
-            final event = Event(
-                null,
-                "Entrainement",
-                _selectedEventType!,
-                newDate,
-                _selectEventNameTeam,
-                _selectedEventIdTeam,
-                _placeController.text,
-                null,
-                null,
-                null);
-            bloc.add(AddSchedule(event: event, date: newDate));
-
-            DateTime eventDate = DateTime(
-                _selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
-            events.update(
-              eventDate,
-              (existingEvents) => existingEvents..add(event),
-              ifAbsent: () => [event],
-            );
-
-            setState(() {
-              _selectedEvents.value = _getEventsForDay(_selectedDay!);
-            });
+            Flushbar(
+              message: "Veuillez sélectionner un type d\'événement.",
+              messageColor: Colors.black,
+              flushbarPosition: FlushbarPosition.BOTTOM,
+              flushbarStyle: FlushbarStyle.FLOATING,
+              backgroundGradient:
+                  LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+              duration: Duration(seconds: 4),
+            ).show(context);
           }
         } else {
-          _showSnackBar(context, 'Veuillez sélectionner un type d\'événement.',
-              Colors.orangeAccent);
+          Flushbar(
+            message: "Veuillez sélectionner une équipe.",
+            messageColor: Colors.black,
+            flushbarPosition: FlushbarPosition.BOTTOM,
+            flushbarStyle: FlushbarStyle.FLOATING,
+            backgroundGradient:
+                LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+            duration: Duration(seconds: 4),
+          ).show(context);
         }
       } else {
-        _showSnackBar(
-            context, 'Veuillez sélectionner une équipe', Colors.orangeAccent);
+        Flushbar(
+          message: "Veuillez remplir l'horaire de l\'événement.",
+          messageColor: Colors.black,
+          flushbarPosition: FlushbarPosition.BOTTOM,
+          flushbarStyle: FlushbarStyle.FLOATING,
+          backgroundGradient:
+              LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+          duration: Duration(seconds: 4),
+        ).show(context);
       }
     } else {
-      _showSnackBar(context, 'Veuillez remplir le lieu de l\'événement.',
-          Colors.orangeAccent);
+      Flushbar(
+        message: "Veuillez remplir le lieu de l\'événement.",
+        messageColor: Colors.black,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        backgroundGradient:
+            LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+        duration: Duration(seconds: 4),
+      ).show(context);
     }
   }
 

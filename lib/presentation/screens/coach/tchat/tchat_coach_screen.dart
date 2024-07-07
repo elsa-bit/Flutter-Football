@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
@@ -210,8 +211,15 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
     if (selectedPlayers.length > 0) {
       bloc.add(AddConversation(players: selectedPlayers.join(",")));
     } else {
-      _showSnackBar(
-          context, 'Veuillez cocher au moins un joueur', Colors.orangeAccent);
+      Flushbar(
+        message: "Veuillez cocher au moins un joueur",
+        messageColor: Colors.black,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        backgroundGradient:
+            LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+        duration: Duration(seconds: 4),
+      ).show(context);
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
@@ -418,7 +419,15 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
       bloc.add(ModifyPlayer(player: player));
     } else {
-      _showSnackBar(context, 'Veuillez remplir un email.', Colors.orangeAccent);
+      Flushbar(
+        message: "Veuillez remplir un email.",
+        messageColor: Colors.black,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        backgroundGradient:
+            LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
+        duration: Duration(seconds: 4),
+      ).show(context);
     }
   }
 
