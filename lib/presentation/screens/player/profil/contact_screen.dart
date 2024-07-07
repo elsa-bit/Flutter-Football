@@ -56,12 +56,12 @@ class _ContactScreenState extends State<ContactScreen> {
                 ContactItem(
                   firstname: 'Amaury',
                   lastname: 'Dubreuil',
-                  email: 'amau@csb.foot',
+                  email: '500217@lpiff.fr',
                 ),
                 ContactItem(
-                  firstname: 'Pierre',
-                  lastname: 'Ange',
-                  email: 'piange@csb.foot',
+                  firstname: 'Anthony',
+                  lastname: 'Allanche Ferreira',
+                  email: 'a.allanche@gmail.com',
                 ),
               ],
             ),
