@@ -41,7 +41,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
   late String identifier;
   final SharedPreferencesDataSource sharedPreference =
       SharedPreferencesDataSource();
-  TextEditingController _mailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _positionController = TextEditingController();
   TextEditingController _birthdayController = TextEditingController();
@@ -296,14 +295,12 @@ class _ProfilScreenState extends State<ProfilScreen> {
                 if (state.status == PlayersStatus.modifySuccess) {
                   _showSnackBar(
                       context, 'Joueur modifié !', Colors.greenAccent);
-                  _mailController.clear();
                   _passwordController.clear();
                   _positionController.clear();
                   _birthdayController.clear();
                   Navigator.pop(context);
                 } else if (state.status == PlayersStatus.error) {
                   _showSnackBar(context, state.error, Colors.orangeAccent);
-                  _mailController.clear();
                   _passwordController.clear();
                   _positionController.clear();
                   _birthdayController.clear();
@@ -318,7 +315,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     );
                   case PlayersStatus.success:
                   default:
-                    _mailController.text = state.detailsPlayer?.email ?? '';
                     _positionController.text =
                         state.detailsPlayer?.position ?? '';
                     _birthdayController.text = DateFormat('dd-MM-yyyy').format(
@@ -335,12 +331,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                TextField(
-                                  decoration:
-                                      InputDecoration(labelText: "Email *"),
-                                  controller: _mailController,
-                                ),
-                                SizedBox(height: 16),
                                 TextField(
                                   decoration:
                                       InputDecoration(labelText: "Position"),
@@ -403,32 +393,17 @@ class _ProfilScreenState extends State<ProfilScreen> {
     var bloc = BlocProvider.of<PlayersBloc>(context);
     late PlayerMin player;
 
-    if (_mailController.text != '') {
-      if (_passwordController.text != '') {
-        player = PlayerMin(
-            email: _mailController.text,
-            position: _positionController.text,
-            password: _passwordController.text,
-            birthday: _birthdayController.text);
-      } else {
-        player = PlayerMin(
-            email: _mailController.text,
-            position: _positionController.text,
-            birthday: _birthdayController.text);
-      }
-
-      bloc.add(ModifyPlayer(player: player));
+    if (_passwordController.text != '') {
+      player = PlayerMin(
+          position: _positionController.text,
+          password: _passwordController.text,
+          birthday: _birthdayController.text);
     } else {
-      Flushbar(
-        message: "Veuillez remplir un email.",
-        messageColor: Colors.black,
-        flushbarPosition: FlushbarPosition.BOTTOM,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        backgroundGradient:
-            LinearGradient(colors: [Colors.orangeAccent, Colors.white]),
-        duration: Duration(seconds: 4),
-      ).show(context);
+      player = PlayerMin(
+          position: _positionController.text,
+          birthday: _birthdayController.text);
     }
+    bloc.add(ModifyPlayer(player: player));
   }
 
   void _showSnackBar(BuildContext context, String text, Color background) {

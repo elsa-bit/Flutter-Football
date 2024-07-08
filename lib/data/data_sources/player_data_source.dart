@@ -83,7 +83,6 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
   Future<String> modifyPlayer(PlayerMin player, String idPlayer) async {
     final body = {
       'id': idPlayer,
-      'email': player.email,
       'password': player.password,
       'position': player.position,
       'birthday': player.birthday,
