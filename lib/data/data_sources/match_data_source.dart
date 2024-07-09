@@ -124,4 +124,14 @@ class MatchDataSource extends BaseDataSource with MatchService {
     return httpPostBody(Endpoints.setFmiReportPath, queryParameters);
   }
 
+  @override
+  Future<Response> setSelection(int idMatch, String idTeam, List<String> idPlayers) {
+    final queryParameters = {
+      'idmatch': idMatch.toString(),
+      'idteam': idTeam,
+      'idplayers': idPlayers,
+    };
+    return httpPostBody(Endpoints.setSelectionPath, queryParameters);
+  }
+
 }

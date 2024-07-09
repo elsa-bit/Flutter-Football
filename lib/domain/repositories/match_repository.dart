@@ -104,6 +104,17 @@ class MatchRepository {
     }
   }
 
+  Future<void> setSelection(int idMatch, String idTeam, List<String> idPlayers) async {
+    try {
+      final response = await matchDataSource.setSelection(idMatch, idTeam, idPlayers);
+      if(response.statusCode != 200) throw Exception();
+      return;
+    } catch (error) {
+      print(error);
+      throw MatchSelectionException("");
+    }
+  }
+
   Future<bool> setFmiReport(int idMatch, String? commentTeam, String? commentOpponent) async {
     try {
       final response = await matchDataSource.setFmiReport(idMatch, commentTeam, commentOpponent);

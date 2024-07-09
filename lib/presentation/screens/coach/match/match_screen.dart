@@ -61,6 +61,16 @@ class _MatchScreenState extends State<MatchScreen> {
             case MatchStatus.refresh:
               BlocProvider.of<MatchBloc>(context).add(GetMatches());
               break;
+            case MatchStatus.redirect:
+              final redirection = state.redirection;
+              //LoadingDialog.show(context);
+              Future.delayed(Duration(seconds: 2), () {
+                BlocProvider.of<MatchBloc>(context).add(GetMatches());
+                if (redirection != null) {
+                  Navigator.push(context, FmiScreen.route(redirection));
+                }
+              });
+              break;
           }
         },
         child: Scaffold(
@@ -144,12 +154,12 @@ class MatchSection extends StatelessWidget {
     if (match.win != null || match.date.isEqualOrBefore(DateTime.now())) {
       if (!match.FMICompleted) {
         // Create / Edit FMI
-        Navigator.push(context, FmiScreen.route(match));
-        /*if (match.playerSelection == null) {
+        //Navigator.push(context, FmiScreen.route(match));
+        if (match.playerSelection == null) {
           Navigator.push(context, SelectionScreen.route(match));
         } else {
           Navigator.push(context, FmiScreen.route(match));
-        }*/
+        }
       } else {
         Navigator.push(context, FmiScreen.route(match, readOnly: true));
       }

@@ -35,6 +35,7 @@ class ReportScreen extends StatefulWidget {
 class _ReportScreenState extends State<ReportScreen> {
   final teamCommentController = TextEditingController();
   final opponentTeamCommentController = TextEditingController();
+  final _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,151 +54,247 @@ class _ReportScreenState extends State<ReportScreen> {
         appBar: AppBar(
           title: Text("Rapport général"),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.all(13.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    color: currentAppColors.primaryVariantColor1,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: currentAppColors.primaryVariantColor2,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/football_icon.svg',
-                              height: 20,
-                              width: 20,
-                              colorFilter: ColorFilter.mode(
-                                  currentAppColors.secondaryTextColor,
-                                  BlendMode.srcIn),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "CS Brétigny - ${widget.match.nameTeam}",
-                              style: TextStyle(
-                                  color: currentAppColors.primaryTextColor),
-                            ),
-                          ],
-                        ),
+        body: PageView(
+            controller: _pageController,
+            scrollDirection: Axis.horizontal,
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Stack(children: [
+                      Image.asset(
+                        "assets/images/baseStade.png",
                       ),
-                      TextField(
-                        onTapOutside: (e) =>
-                            FocusManager.instance.primaryFocus?.unfocus(),
-                        decoration: InputDecoration(
-                          hintText: "Ajouter un commentaire sur le match",
-                          hintStyle: AppTextStyle.small,
-                          filled: true,
-                          fillColor: currentAppColors.primaryVariantColor1,
-                          border: InputBorder.none,
-                        ),
-                        controller: teamCommentController,
-                        enableSuggestions: false,
-                        autocorrect: true,
-                        maxLines: 10,
-                        style: TextStyle(
-                          color: currentAppColors.primaryTextColor,
-                          fontSize: 14,
-                        ),
+                    ]),
+                    Container(
+                      //padding: const EdgeInsets.symmetric(vertical: 15),
+                      height: 70,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 20,
+                        itemBuilder: (context, index) {
+                          //final match = matches[index];
+                          return Center(child: Text("Element $index"));
+                        },
                       ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    color: currentAppColors.primaryVariantColor1,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: currentAppColors.primaryVariantColor2,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/football_icon.svg',
-                              height: 20,
-                              width: 20,
-                              colorFilter: ColorFilter.mode(
-                                  currentAppColors.secondaryTextColor,
-                                  BlendMode.srcIn),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              widget.match.opponentName,
-                              style: TextStyle(
-                                  color: currentAppColors.primaryTextColor),
-                            ),
-                          ],
-                        ),
+                    ),
+                    // Player comment
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      margin: const EdgeInsets.only(bottom: 8, left: 15, right: 15),
+                      decoration: BoxDecoration(
+                        color: currentAppColors.primaryVariantColor1,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      TextField(
-                        onTapOutside: (e) =>
-                            FocusManager.instance.primaryFocus?.unfocus(),
-                        decoration: InputDecoration(
-                          hintText:
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: currentAppColors.primaryVariantColor2,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/football_icon.svg',
+                                  height: 20,
+                                  width: 20,
+                                  colorFilter: ColorFilter.mode(
+                                      currentAppColors.secondaryTextColor,
+                                      BlendMode.srcIn),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  widget.match.opponentName,
+                                  style: TextStyle(
+                                      color:
+                                      currentAppColors.primaryTextColor),
+                                ),
+                              ],
+                            ),
+                          ),
+                          TextField(
+                            onTapOutside: (e) =>
+                                FocusManager.instance.primaryFocus?.unfocus(),
+                            decoration: InputDecoration(
+                              hintText:
                               "Ajouter un commentaire sur l'équipe adverse",
-                          hintStyle: AppTextStyle.small,
-                          filled: true,
-                          fillColor: currentAppColors.primaryVariantColor1,
-                          border: InputBorder.none,
+                              hintStyle: AppTextStyle.small,
+                              filled: true,
+                              fillColor:
+                              currentAppColors.primaryVariantColor1,
+                              border: InputBorder.none,
+                            ),
+                            controller: opponentTeamCommentController,
+                            enableSuggestions: false,
+                            autocorrect: true,
+                            maxLines: 3,
+                            style: TextStyle(
+                              color: currentAppColors.primaryTextColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Page for comments
+              SingleChildScrollView(
+                child: Container(
+                  margin: const EdgeInsets.all(13.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          color: currentAppColors.primaryVariantColor1,
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        controller: opponentTeamCommentController,
-                        enableSuggestions: false,
-                        autocorrect: true,
-                        maxLines: 5,
-                        style: TextStyle(
-                          color: currentAppColors.primaryTextColor,
-                          fontSize: 14,
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: currentAppColors.primaryVariantColor2,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/football_icon.svg',
+                                    height: 20,
+                                    width: 20,
+                                    colorFilter: ColorFilter.mode(
+                                        currentAppColors.secondaryTextColor,
+                                        BlendMode.srcIn),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "CS Brétigny - ${widget.match.nameTeam}",
+                                    style: TextStyle(
+                                        color:
+                                            currentAppColors.primaryTextColor),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            TextField(
+                              onTapOutside: (e) =>
+                                  FocusManager.instance.primaryFocus?.unfocus(),
+                              decoration: InputDecoration(
+                                hintText: "Ajouter un commentaire sur le match",
+                                hintStyle: AppTextStyle.small,
+                                filled: true,
+                                fillColor:
+                                    currentAppColors.primaryVariantColor1,
+                                border: InputBorder.none,
+                              ),
+                              controller: teamCommentController,
+                              enableSuggestions: false,
+                              autocorrect: true,
+                              maxLines: 10,
+                              style: TextStyle(
+                                color: currentAppColors.primaryTextColor,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          color: currentAppColors.primaryVariantColor1,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: currentAppColors.primaryVariantColor2,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/football_icon.svg',
+                                    height: 20,
+                                    width: 20,
+                                    colorFilter: ColorFilter.mode(
+                                        currentAppColors.secondaryTextColor,
+                                        BlendMode.srcIn),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    widget.match.opponentName,
+                                    style: TextStyle(
+                                        color:
+                                            currentAppColors.primaryTextColor),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            TextField(
+                              onTapOutside: (e) =>
+                                  FocusManager.instance.primaryFocus?.unfocus(),
+                              decoration: InputDecoration(
+                                hintText:
+                                    "Ajouter un commentaire sur l'équipe adverse",
+                                hintStyle: AppTextStyle.small,
+                                filled: true,
+                                fillColor:
+                                    currentAppColors.primaryVariantColor1,
+                                border: InputBorder.none,
+                              ),
+                              controller: opponentTeamCommentController,
+                              enableSuggestions: false,
+                              autocorrect: true,
+                              maxLines: 5,
+                              style: TextStyle(
+                                color: currentAppColors.primaryTextColor,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          foregroundColor: WidgetStateProperty.all<Color>(
+                              currentAppColors.primaryTextColor),
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                              AppColors.lightBlue),
+                        ),
+                        onPressed: () {
+                          onSavePressed(context);
+                        },
+                        child: Text("Sauvegarder"),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 40,
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    foregroundColor: WidgetStateProperty.all<Color>(
-                        currentAppColors.primaryTextColor),
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(AppColors.lightBlue),
-                  ),
-                  onPressed: () {
-                    onSavePressed(context);
-                  },
-                  child: Text("Sauvegarder"),
-                ),
-              ],
-            ),
-          ),
-        ),
+              ),
+            ]),
       ),
     );
   }

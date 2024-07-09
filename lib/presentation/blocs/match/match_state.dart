@@ -1,6 +1,6 @@
 import 'package:flutter_football/domain/models/match_details.dart';
 
-enum MatchStatus { initial, loading, success, error, refresh }
+enum MatchStatus { initial, loading, success, error, refresh, redirect }
 
 class MatchError extends Error {
   final String message;
@@ -40,6 +40,7 @@ class MatchState {
   final List<String>? playerSelection;
   final String? idTeams;
   final MatchError? error;
+  final MatchDetails? redirection;
 
   MatchState({
     this.status = MatchStatus.initial,
@@ -48,6 +49,7 @@ class MatchState {
     this.playerSelection = null,
     this.idTeams = '',
     this.error = null,
+    this.redirection = null,
   });
 
   MatchState copyWith({
@@ -57,6 +59,7 @@ class MatchState {
     final List<String>? playerSelection,
     final String? idTeams,
     MatchError? error,
+    MatchDetails? redirection,
   }) {
     return MatchState(
         status: status ?? this.status,
@@ -64,6 +67,8 @@ class MatchState {
         nextMatch: nextMatch ?? this.nextMatch,
         playerSelection: playerSelection ?? this.playerSelection,
         idTeams: idTeams ?? this.idTeams,
-        error: error ?? this.error);
+        error: error ?? this.error,
+      redirection: redirection,
+    );
   }
 }

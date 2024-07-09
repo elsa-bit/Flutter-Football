@@ -58,6 +58,7 @@ class Endpoints {
   static const String addGoalPath = '/api/addGoal';
   static const String getActionsPath = '/api/getActions';
   static const String getSelectionPath = '/api/getSelection';
+  static const String setSelectionPath = '/api/setSelection';
   static const String setFmiReportPath = '/api/setFmiReport';
 
 }

@@ -17,7 +17,7 @@ import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/cards_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/goal_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/replacement_bottom_sheet.dart';
-import 'package:flutter_football/presentation/screens/coach/match/fmi/tactics_screen.dart';
+import 'package:flutter_football/presentation/screens/coach/match/report/tactics_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/match/report/report_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/match/selection/selection_screen.dart';
 import 'package:flutter_football/presentation/widgets/image_picker_bottom_sheet.dart';

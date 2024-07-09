@@ -14,6 +14,7 @@ class Player {
   final int yellowCard;
   final int replacement;
   final int trophy;
+  final int number;
 
   Player({
     required this.id,
@@ -31,6 +32,7 @@ class Player {
     required this.yellowCard,
     required this.replacement,
     required this.trophy,
+    required this.number,
   });
 
   factory Player.fromJson(Map<String, dynamic> json) {
@@ -51,6 +53,7 @@ class Player {
       final int yellowCard = json["yellowCard"] as int? ?? 0;
       final int replacement = json["replacement"] as int? ?? 0;
       final int trophy = json["trophyAward"] as int;
+      final int number = json["number"] as int? ?? 0;
 
       return Player(
         id: id,
@@ -68,6 +71,7 @@ class Player {
         yellowCard: yellowCard,
         replacement: replacement,
         trophy: trophy,
+        number: number,
       );
     } catch (e) {
       print(e);

@@ -57,5 +57,22 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
         ));
       }
     });
+
+    on<SetSelection>((event, emit) async {
+      try {
+        emit(state.copyWith(status: MatchStatus.loading));
+        await repository.setSelection(event.match.id, event.match.idTeam, event.idPlayers);
+        emit(state.copyWith(status: MatchStatus.redirect, redirection: event.match));
+      } catch (error) {
+        emit(state.copyWith(
+          error: (error is MatchError) ? error : MatchError(error.toString()) ,
+          status: MatchStatus.error,
+        ));
+      }
+    });
+
+    on<OnRedirectionDone>((event, emit) async {
+      emit(state.copyWith(redirection: null));
+    });
   }
 }
