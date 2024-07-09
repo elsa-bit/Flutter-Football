@@ -1,12 +1,22 @@
+import 'dart:io';
+
 abstract class MediaEvent {}
 
 class GetAvatar extends MediaEvent {
   final String identifier;
-  final String? imageName;
 
   GetAvatar({
     required this.identifier,
-    required this.imageName,
+  });
+}
+
+class GetUserAvatar extends MediaEvent {
+  final String identifier;
+  final String userID;
+
+  GetUserAvatar({
+    required this.identifier,
+    required this.userID,
   });
 }
 
@@ -18,6 +28,12 @@ class GetVideosBucket extends MediaEvent {
   final String bucketName;
 
   GetVideosBucket({required this.bucketName});
+}
+
+class UpdateProfilePicture extends MediaEvent {
+  final File imageFile;
+
+  UpdateProfilePicture(this.imageFile);
 }
 
 class GetSpecificVideos extends MediaEvent {

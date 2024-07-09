@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter_football/data/data_sources/base_data_source.dart';
 import 'package:flutter_football/data/services/media_service.dart';
 import 'package:flutter_football/main.dart';
 import 'package:flutter_football/networking/endpoints.dart';
 import 'package:flutter_football/networking/exceptions_factory.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
+import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 
 class MediaDataSource extends BaseDataSource with MediaService {
   @override
@@ -48,5 +52,30 @@ class MediaDataSource extends BaseDataSource with MediaService {
       throw ExceptionsFactory()
           .handleStatusCode(response.statusCode, errorMessage: errorMessage);
     }
+  }
+
+  Future<void> updateProfilePicture(File imageFile, String filename) async {
+    var request = MultipartRequest(
+        'POST',
+        Uri.http(Endpoints.baseURL, Endpoints.updateProfilePicturePath) // TODO: update to httpS
+    );
+
+    // Add the file to the request
+    request.files.add(
+        await MultipartFile.fromPath(
+            'file',
+            imageFile.path,
+          filename: filename,
+          contentType: MediaType('image', 'jpg'),
+        )
+    );
+
+
+    // Send the request and get the response
+    var response = await request.send();
+    print(response);
+    print(response.statusCode);
+    print(response.toString());
+    return;
   }
 }

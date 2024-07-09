@@ -61,7 +61,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
     final user = BlocProvider.of<AuthBloc>(context).state.user;
     identifier = "${user?.id}${user?.getFirstname()}";
     BlocProvider.of<MediaBloc>(context)
-        .add(GetAvatar(imageName: user?.getAvatar(), identifier: identifier));
+        .add(GetAvatar(identifier: identifier));
 
     BlocProvider.of<PlayersBloc>(context)
       ..add(GetPlayerDetails())
@@ -117,6 +117,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                           Image.network(
                             avatarUrl!,
                             height: 300,
+                            width:  MediaQuery.sizeOf(context).width,
                             fit: BoxFit.cover,
                           )
                         ] else ...[

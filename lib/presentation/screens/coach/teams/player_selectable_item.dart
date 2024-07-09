@@ -35,7 +35,7 @@ class _PlayerItemState extends State<PlayerSelectableItem> {
     super.initState();
     identifier = "${widget.player.id.toString()}${widget.player.firstname}";
     BlocProvider.of<MediaBloc>(context)
-        .add(GetAvatar(imageName: widget.player.avatar, identifier: identifier));
+        .add(GetUserAvatar(identifier: identifier, userID: widget.player.id.toString()));
   }
 
   @override
