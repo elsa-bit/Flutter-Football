@@ -57,7 +57,7 @@ class MediaDataSource extends BaseDataSource with MediaService {
   Future<void> updateProfilePicture(File imageFile, String filename) async {
     var request = MultipartRequest(
         'POST',
-        Uri.http(Endpoints.baseURL, Endpoints.updateProfilePicturePath) // TODO: update to httpS
+        Uri.https(Endpoints.baseURL, Endpoints.updateProfilePicturePath)
     );
 
     // Add the file to the request
