@@ -26,6 +26,7 @@ import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
 import 'package:flutter_football/presentation/screens/player/profil/infoClub_screen.dart';
 import 'package:flutter_football/presentation/screens/player/profil/news_screen.dart';
 import 'package:flutter_football/presentation/screens/player/profil/resource_screen.dart';
+import 'package:flutter_football/presentation/widgets/image_picker_bottom_sheet.dart';
 import 'package:flutter_football/utils/extensions/user_extension.dart';
 import 'package:intl/intl.dart';
 
@@ -82,6 +83,10 @@ class _ProfilScreenState extends State<ProfilScreen> {
             break;
           case MediaStatus.error:
             avatarUrl = state.error;
+            break;
+          case MediaStatus.profileUpdated:
+            BlocProvider.of<MediaBloc>(context)
+                .add(GetAvatar(identifier: identifier));
             break;
           default:
             break;
@@ -338,12 +343,12 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     _birthdayController.text = DateFormat('dd-MM-yyyy').format(
                         DateTime.parse(state.detailsPlayer?.birthday ?? ''));
 
-                    return StatefulBuilder(builder: (context, setState) {
+                    return StatefulBuilder(builder: (mainContext, setState) {
                       return AlertDialog(
                         title: const Text("Modifier mon profil"),
                         content: SingleChildScrollView(
                           padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                              bottom: MediaQuery.of(mainContext).viewInsets.bottom),
                           child: Padding(
                             padding: EdgeInsets.all(8),
                             child: Column(
@@ -373,7 +378,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                                 GestureDetector(
                                   onTap: () async {
                                     DateTime? pickedDate = await showDatePicker(
-                                      context: context,
+                                      context: mainContext,
                                       initialDate: DateTime.parse(
                                           state.detailsPlayer!.birthday!),
                                       firstDate: DateTime(1900),
@@ -395,13 +400,44 @@ class _ProfilScreenState extends State<ProfilScreen> {
                                     ),
                                   ),
                                 ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      context: mainContext,
+                                      builder: (BuildContext context) {
+                                        return ImagePickerBottomSheet(
+                                          onImagePicked: (file) {
+                                            BlocProvider.of<MediaBloc>(mainContext).add(UpdateProfilePicture(file));
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.darkBlue,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child:Icon(Icons.image),
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ),
                         actions: [
                           ElevatedButton(
-                              onPressed: () => _onModifyPlayer(context),
+                              onPressed: () => _onModifyPlayer(mainContext),
                               child: Text("Enregistrer"))
                         ],
                       );
