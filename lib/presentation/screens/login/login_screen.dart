@@ -4,13 +4,13 @@ import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/config/app_themes.dart';
 import 'package:flutter_football/data/data_sources/login/login_data_source.dart';
 import 'package:flutter_football/domain/repositories/login_repository.dart';
-import 'package:flutter_football/main.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/login/login_bloc.dart';
 import 'package:flutter_football/presentation/blocs/login/login_event.dart';
 import 'package:flutter_football/presentation/blocs/login/login_state.dart';
 import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
+import 'package:flutter_football/presentation/screens/login/reset_password_screen.dart';
 import 'package:flutter_football/presentation/widgets/custom_text_field.dart';
 import 'package:flutter_football/utils/extensions/text_extension.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -32,24 +32,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreen extends State<LoginScreen> {
-  late final Function onLoginCallback;
-  TextStyle selectedTextStyle =
-  AppTextStyle.subtitle1.copyWith(color: currentAppColors.secondaryColor);
-  TextStyle unselectedTextStyle =
-  AppTextStyle.regular.copyWith(color: currentAppColors.secondaryTextColor);
-  List<bool> _loginSelections = [true, false];
-  List<Text> _loginWidgets = [
-    Text(
-      "Coach",
-      style: AppTextStyle.subtitle1
-          .copyWith(color: currentAppColors.secondaryColor),
-    ),
-    Text(
-      "Adhérent",
-      style: AppTextStyle.regular
-          .copyWith(color: currentAppColors.secondaryTextColor),
-    ),
-  ];
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   String? emailError = null;
@@ -71,20 +53,6 @@ class _LoginScreen extends State<LoginScreen> {
     });
   }
 
-  void updateSelectionState(int index) {
-    _loginSelections[index] = !_loginSelections[index];
-    _loginWidgets[index] = _loginWidgets[index].copyWith(
-      style: _loginSelections[index] ? selectedTextStyle : unselectedTextStyle,
-    );
-
-    final otherIndex = (index + 1) % 2;
-    if (_loginSelections[otherIndex] == true) {
-      _loginSelections[otherIndex] = false;
-      _loginWidgets[otherIndex] = _loginWidgets[otherIndex].copyWith(
-        style: unselectedTextStyle,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,22 +110,6 @@ class _LoginScreen extends State<LoginScreen> {
                           width: 70.0,
                           height: 70.0,
                         ),
-                        /*Container(
-                          margin: const EdgeInsets.only(top: 50.0),
-                          child: ToggleButtons(
-                            isSelected: _loginSelections,
-                            //textStyle: AppTextStyle.regular,
-                            selectedColor: currentAppColors.secondaryColor,
-                            onPressed: (int index) {
-                              setState(() {
-                                updateSelectionState(index);
-                              });
-                            },
-                            constraints:
-                                const BoxConstraints.expand(width: 100.0),
-                            children: _loginWidgets,
-                          ),
-                        ),*/
                         Container(
                           margin: const EdgeInsets.only(top: 50.0),
                           child: Text(
@@ -179,6 +131,7 @@ class _LoginScreen extends State<LoginScreen> {
                                   if (emailError != null) {
                                     setState(() {
                                       emailError = null;
+                                      loginError = null;
                                     });
                                   }
                                 },
@@ -199,6 +152,7 @@ class _LoginScreen extends State<LoginScreen> {
                                   if (passwordError != null) {
                                     setState(() {
                                       passwordError = null;
+                                      loginError = null;
                                     });
                                   }
                                 },
@@ -244,6 +198,24 @@ class _LoginScreen extends State<LoginScreen> {
                           child: Text(
                             "Se connecter",
                             style: AppTextStyle.subtitle1.copyWith(color: Colors.white),
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, ResetPasswordScreen.route());
+                          },
+                          child: Container(
+                            color: Colors.transparent,
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                            child: Text(
+                              "Mot de passe oublié ?",
+                              style: TextStyle(
+                                color: currentAppColors.secondaryTextColor,
+                                fontSize: 16,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ),
                         ),
                         const Spacer(),

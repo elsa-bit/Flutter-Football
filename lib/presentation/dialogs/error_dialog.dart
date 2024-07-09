@@ -24,6 +24,7 @@ class ErrorDialog {
               },
               child: Text(
                 "OK",
+                textAlign: TextAlign.center,
               ),
             ),
           ],
