@@ -3,30 +3,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/config/app_themes.dart';
 import 'package:flutter_football/domain/models/player.dart';
-import 'package:flutter_football/main.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
 import 'package:flutter_football/utils/extensions/string_extension.dart';
-import 'package:flutter_svg/svg.dart';
 
-class PlayerSelectableItem extends StatefulWidget {
+class PlayerSelectionItem extends StatefulWidget {
   final Player player;
   final VoidCallback? onTap;
-  final bool isSelected;
 
-  const PlayerSelectableItem({
+  const PlayerSelectionItem({
     Key? key,
     required this.player,
-    required this.isSelected,
     this.onTap,
   }) : super(key: key);
 
   @override
-  State<PlayerSelectableItem> createState() => _PlayerItemState();
+  State<PlayerSelectionItem> createState() => _PlayerSelectionItemState();
 }
 
-class _PlayerItemState extends State<PlayerSelectableItem> {
+class _PlayerSelectionItemState extends State<PlayerSelectionItem> {
   String? avatarUrl = null;
   late final String identifier;
 
@@ -59,60 +55,56 @@ class _PlayerItemState extends State<PlayerSelectableItem> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(
-          margin: const EdgeInsets.fromLTRB(60.0, 10.0, 60.0, 0.0),
+          //margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 15.0),
           alignment: Alignment.centerLeft,
+          width: 120,
+          height: 100,
           padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
           decoration: BoxDecoration(
             color: currentAppColors.primaryVariantColor1,
-            border: Border.all(
-              width: 2,
-                color: widget.isSelected ? currentAppColors.secondaryColor : currentAppColors.primaryVariantColor2,
-            ),
+            border: Border.all(color: currentAppColors.primaryVariantColor2),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Row(
-            children: [
-              if (avatarUrl != null) ...[
-                Image.network(
-                  avatarUrl!,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                )
-              ] else
-                ...[],
-              SizedBox(width: 10,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${widget.player.firstname} ${widget.player.lastname}",
-                    style: TextStyle(
-                      color: currentAppColors.primaryTextColor,
-                    ),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (avatarUrl != null) ...[
+                  Image.network(
+                    avatarUrl!,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  )
+                ] else
+                  ...[],
+                SizedBox(height: 10,),
+                Text(
+                  "${widget.player.firstname} ${widget.player.lastname}",
+                  style: TextStyle(
+                    color: currentAppColors.primaryTextColor,
                   ),
-                  if (widget.player.position != null && widget.player.position!.isNotEmpty) ...[
-                    Text(
-                      "${widget.player.position}".capitalize(),
-                      style: AppTextStyle.small
-                          .copyWith(color: currentAppColors.secondaryTextColor),
-                    ),
-                  ] else
-                    ...[],
-                ],
-              ),
-              Spacer(),
-
-              if(widget.isSelected)
-                SvgPicture.asset(
-                  "assets/ic_check.svg",
-                  colorFilter: ColorFilter.mode(
-                      currentAppColors.secondaryColor, BlendMode.srcIn),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
                 ),
-            ],
+                if (widget.player.position != null && widget.player.position!.isNotEmpty) ...[
+                  Text(
+                    "${widget.player.position}".capitalize(),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: AppTextStyle.small
+                        .copyWith(color: currentAppColors.secondaryTextColor),
+                  ),
+                ] else
+                  ...[],
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> getPlayerPicture() async {
   }
 }

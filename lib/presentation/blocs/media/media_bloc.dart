@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/domain/repositories/media_repository.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MediaBloc extends Bloc<MediaEvent, MediaState> {
   final MediaRepository repository;
@@ -10,19 +11,43 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
     on<GetAvatar>((event, emit) async {
       try {
         emit(state.copyWith(status: MediaStatus.loading));
-        if (event.imageName != null && event.imageName!.isNotEmpty) {
-          final url = await repository.getAvatar(event.imageName!);
-          print(url);
-          emit(state.copyWith(
-              response: MediaResponse(url: url, identifier: event.identifier),
-              status: MediaStatus.success));
-        } else {
-          final url = await repository.getDefaultAvatar();
-          print(url);
-          emit(state.copyWith(
-              response: MediaResponse(url: url, identifier: event.identifier),
-              status: MediaStatus.success));
+        String? urlAvatar = await repository.getAvatar();
+        if (urlAvatar == null) {
+          urlAvatar = await repository.getDefaultAvatar();
         }
+
+        print(urlAvatar);
+        emit(state.copyWith(
+            response: MediaResponse(url: urlAvatar, identifier: event.identifier),
+            status: MediaStatus.success));
+      } on StorageException catch(error) {
+        final urlAvatar = await repository.getDefaultAvatar();
+        print(urlAvatar);
+        emit(state.copyWith(
+            response: MediaResponse(url: urlAvatar, identifier: event.identifier),
+            status: MediaStatus.success));
+      } catch (error) {
+        emit(state.copyWith(
+            error: error.toString(),
+            status: MediaStatus.error,
+            response: null));
+      }
+    });
+
+    on<GetUserAvatar>((event, emit) async {
+      try {
+        emit(state.copyWith(status: MediaStatus.loading));
+        String urlAvatar = await repository.getUserAvatar(event.userID);
+        print(urlAvatar);
+        emit(state.copyWith(
+            response: MediaResponse(url: urlAvatar, identifier: event.identifier),
+            status: MediaStatus.success));
+      } on StorageException catch(error) {
+        final urlAvatar = await repository.getDefaultAvatar();
+        print(urlAvatar);
+        emit(state.copyWith(
+            response: MediaResponse(url: urlAvatar, identifier: event.identifier),
+            status: MediaStatus.success));
       } catch (error) {
         emit(state.copyWith(
             error: error.toString(),
@@ -72,6 +97,19 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
         final errorMessage = error.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(
             error: errorMessage, status: MediaStatus.error, response: null));
+      }
+    });
+
+    on<UpdateProfilePicture>((event, emit) async {
+      try {
+        emit(state.copyWith(status: MediaStatus.loading));
+        await repository.updateProfilePicture(event.imageFile);
+        emit(state.copyWith(status: MediaStatus.profileUpdated));
+      } catch (error) {
+        emit(state.copyWith(
+            error: error.toString(),
+            status: MediaStatus.error,
+            response: null));
       }
     });
 

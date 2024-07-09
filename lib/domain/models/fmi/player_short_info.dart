@@ -1,5 +1,5 @@
 class PlayerShortInfo {
-  final int id;
+  final String id;
   final String firstname;
   final String lastname;
   final String? position;
@@ -8,7 +8,7 @@ class PlayerShortInfo {
 
   factory PlayerShortInfo.fromJson(Map<String, dynamic> json) {
     try {
-      final int id = json["id"] as int;
+      final String id = json["id"] as String;
       final String firstname = json["firstname"] as String;
       final String lastname = json["lastname"] as String;
       final String? position = json["position"] as String?;

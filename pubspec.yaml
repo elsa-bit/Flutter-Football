@@ -55,6 +55,7 @@ dependencies:
   firebase_messaging: ^14.9.4
   another_flushbar: ^1.12.30
   lottie: ^3.0.0
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

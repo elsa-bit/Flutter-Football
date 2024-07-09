@@ -2,7 +2,7 @@
 class Endpoints {
   Endpoints._();
 
-  static const String localHostURL = '192.168.1.107:3000'; //192.168.1.107:3000 - 10.0.2.2:3000
+  static const String localHostURL = '10.0.2.2:3000'; //192.168.1.107:3000 - 10.0.2.2:3000
   static const String prodURL = 'api-csbretigny.vercel.app';
 
   static const String baseURL = prodURL;
@@ -44,6 +44,7 @@ class Endpoints {
   static const String coachPlayerPath = '/api/coachTeams';
   static const String specificVideosPlayerPath = '/api/videosPlayer';
   static const String newStatisticPlayerPath = '/api/newStatisticPlayer';
+  static const String updateProfilePicturePath = '/api/updateProfilePicture';
 
   //tchat paths
   static const String conversationPlayerPath = '/api/conversationPlayer';
@@ -61,5 +62,8 @@ class Endpoints {
   static const String addCardPath = '/api/addCard';
   static const String addGoalPath = '/api/addGoal';
   static const String getActionsPath = '/api/getActions';
+  static const String getSelectionPath = '/api/getSelection';
+  static const String setSelectionPath = '/api/setSelection';
+  static const String setFmiReportPath = '/api/setFmiReport';
 
 }

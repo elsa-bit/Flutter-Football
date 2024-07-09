@@ -1,4 +1,4 @@
-enum MediaStatus { initial, loading, success, error }
+enum MediaStatus { initial, loading, success, profileUpdated, error }
 
 class MediaState {
   final MediaStatus status;

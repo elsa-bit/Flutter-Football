@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_football/data/data_sources/media_data_source.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
@@ -14,9 +15,22 @@ class MediaRepository {
   });
 
 
-  Future<String> getAvatar(String name) async {
+  Future<String?> getAvatar() async {
     try {
-      return await mediaDataSource.getAvatar(name);
+      final String? idUser = preferencesDataSource.getIdCoach()?.toString() ?? preferencesDataSource.getIdPlayer();
+      if (idUser != null) {
+        return await mediaDataSource.getAvatar("$idUser.jpg");
+      }
+      return null;
+    } catch(error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Future<String> getUserAvatar(String idUser) async {
+    try {
+      return await mediaDataSource.getAvatar("$idUser.jpg");
     } catch(error) {
       print(error);
       rethrow;
@@ -44,6 +58,16 @@ class MediaRepository {
   Future<List<Video>> getVideosBucket(String bucketName) async {
     try {
       return await mediaDataSource.getVideosBucket(bucketName);
+    } catch(error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Future<void> updateProfilePicture(File imageFile) async {
+    try {
+      final String? userID = preferencesDataSource.getIdCoach()?.toString() ?? preferencesDataSource.getIdPlayer();
+      return await mediaDataSource.updateProfilePicture(imageFile, "$userID.jpg");
     } catch(error) {
       print(error);
       rethrow;

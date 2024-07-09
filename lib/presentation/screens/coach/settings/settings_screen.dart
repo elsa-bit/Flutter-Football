@@ -9,6 +9,7 @@ import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
 import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
+import 'package:flutter_football/presentation/widgets/image_picker_bottom_sheet.dart';
 import 'package:flutter_football/utils/extensions/user_extension.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -37,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final user = BlocProvider.of<AuthBloc>(context).state.user;
     identifier = "${user?.id}${user?.getFirstname()}";
     BlocProvider.of<MediaBloc>(context)
-        .add(GetAvatar(imageName: user?.getAvatar(), identifier: identifier));
+        .add(GetAvatar(identifier: identifier));
   }
 
   @override
@@ -46,7 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       listener: (context, state) {
         switch (state.status) {
           case MediaStatus.success:
-            if (state.response?.identifier == identifier) {
+            if(state.response?.identifier == identifier) {
               setState(() {
                 avatarUrl = state.response?.url;
               });
@@ -54,12 +55,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             break;
           case MediaStatus.error:
             break;
+          case MediaStatus.profileUpdated:
+            BlocProvider.of<MediaBloc>(context)
+                .add(GetAvatar(identifier: identifier));
+            break;
           default:
             break;
         }
       },
       child: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
+        builder: (mainContext, state) {
           return Column(
             children: [
               Container(
@@ -70,28 +75,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Image.network(
                         avatarUrl!,
                         height: 300,
+                        width:  MediaQuery.sizeOf(mainContext).width,
                         fit: BoxFit.cover,
                       )
-                    ] else ...[
-                      Container(
-                        height: 300,
-                        color: currentAppColors.secondaryTextColor,
-                      ),
-                    ],
+                    ] else
+                      ...[
+                        Container(
+                          height: 300,
+                          color: currentAppColors.secondaryTextColor,
+                        ),
+                      ],
                     Align(
                       alignment: Alignment.topRight,
                       child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 30.0),
+                        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: mainContext,
+                              builder: (BuildContext context) {
+                                return ImagePickerBottomSheet(
+                                  onImagePicked: (file) {
+                                    BlocProvider.of<MediaBloc>(mainContext).add(UpdateProfilePicture(file));
+                                  },
+                                );
+                              },
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                           ),
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
+                          child: Icon(Icons.edit, color: Colors.white,),
                         ),
                       ),
                     ),
@@ -107,7 +122,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             children: [
                               Spacer(flex: 2),
                               Text(
-                                "${state.user?.getFirstname() ?? " "} ${state.user?.getLastname() ?? ""}",
+                                "${state.user?.getFirstname() ?? " "} ${state
+                                    .user?.getLastname() ?? ""}",
                                 style: AppTextStyle.subtitle2.copyWith(
                                     color: currentAppColors.secondaryColor),
                               ),
@@ -130,7 +146,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ElevatedButton(
                 onPressed: () {
                   ConfirmationDialog.show(
-                      context, "Déconnexion", "Annuler", "Déconnexion",
+                      mainContext,
+                      "Déconnexion",
+                      "Annuler",
+                      "Déconnexion",
                       description: "Es-tu sûr de vouloir te deconnecter ?",
                       onCancelAction: () {}, onValidateAction: () {
                     final authBloc = BlocProvider.of<AuthBloc>(context);
@@ -154,7 +173,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         teamsBloc.add(ClearTeamsState());
                         conversationBloc.add(ClearConversationState());
                         messageBloc.add(ClearMessageState());*/
-                  }, validateActionTint: Colors.red);
+                      },
+                      validateActionTint: Colors.red
+                  );
                 },
                 child: Text(
                   "Déconnexion",

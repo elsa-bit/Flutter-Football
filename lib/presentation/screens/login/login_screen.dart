@@ -4,6 +4,7 @@ import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/config/app_themes.dart';
 import 'package:flutter_football/data/data_sources/login/login_data_source.dart';
 import 'package:flutter_football/domain/repositories/login_repository.dart';
+import 'package:flutter_football/main.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/login/login_bloc.dart';
@@ -230,6 +231,15 @@ class _LoginScreen extends State<LoginScreen> {
                           ),
                           onPressed: () {
                             this._login(context);
+                            /*final userData = {
+                              'firstname': 'Elsa',
+                              'lastname': 'Huy',
+                              'avatar': '',
+                              'tokenPhone': '',
+                              'role': 'player',
+                              'idPlayer': "1c46d6ed-23a9-4746-b249-a3def922ed64",
+                            };
+                            supabase.auth.signUp(password: "elsafirmin", email: "elsafirmin@hotmail.fr", data: userData);*/
                           },
                           child: Text(
                             "Se connecter",
