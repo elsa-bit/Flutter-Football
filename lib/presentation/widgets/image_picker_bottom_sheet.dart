@@ -51,7 +51,7 @@ class _ImagePickerBottomSheetState extends State<ImagePickerBottomSheet> {
                 ),
                 Spacer(),
                 Text(
-                  "Ressources photos",
+                  "Choisir une image",
                   style: TextStyle(
                     color: currentAppColors.primaryTextColor,
                     fontWeight: FontWeight.bold,

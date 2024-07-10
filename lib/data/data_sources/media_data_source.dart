@@ -42,6 +42,26 @@ class MediaDataSource extends BaseDataSource with MediaService {
     return videos;
   }
 
+  Future<List<String>> getMatchBucketImages(String matchId) async {
+    final result = await supabase.storage.from("match-resources").list(path: matchId);
+
+    if (result.isEmpty) {
+      throw Exception('No files found in the bucket');
+    }
+
+    List<String> imageUrls = [];
+    for (var file in result) {
+      try {
+        String url = await supabase.storage.from('match-resources')
+            .createSignedUrl("$matchId/${file.name}", 300);
+        imageUrls.add(url);
+      } catch (e) {
+        print("Failed to create signed url for file ${file.name}. $e");
+      }
+     }
+    return imageUrls;
+  }
+
   Future<String> getSpecificVideos(String idplayer) async {
     final queryParameters = {'idplayer': idplayer};
     final response = await httpGet(Endpoints.specificVideosPlayerPath, queryParameters);

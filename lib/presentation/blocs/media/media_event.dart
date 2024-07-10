@@ -30,6 +30,17 @@ class GetVideosBucket extends MediaEvent {
   GetVideosBucket({required this.bucketName});
 }
 
+class GetMatchBucketImages extends MediaEvent {
+  final String matchId;
+
+  GetMatchBucketImages({required this.matchId});
+}
+
+class AddImageToMatchBucket extends MediaEvent {
+  final String fileName;
+  AddImageToMatchBucket(this.fileName);
+}
+
 class UpdateProfilePicture extends MediaEvent {
   final File imageFile;
 

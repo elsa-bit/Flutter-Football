@@ -64,6 +64,15 @@ class MediaRepository {
     }
   }
 
+  Future<List<String>> getMatchBucketImages(String matchId) async {
+    try {
+      return await mediaDataSource.getMatchBucketImages(matchId);
+    } catch(error) {
+      print(error);
+      rethrow;
+    }
+  }
+
   Future<void> updateProfilePicture(File imageFile) async {
     try {
       final String? userID = preferencesDataSource.getIdCoach()?.toString() ?? preferencesDataSource.getIdPlayer();

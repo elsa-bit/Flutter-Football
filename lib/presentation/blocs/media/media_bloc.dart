@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/domain/repositories/media_repository.dart';
+import 'package:flutter_football/main.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/blocs/media/media_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -81,6 +82,31 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
           emit(state.copyWith(
               videosPhysical: videos, status: MediaStatus.success));
         }
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: MediaStatus.error));
+      }
+    });
+
+    on<GetMatchBucketImages>((event, emit) async {
+      try {
+        emit(state.copyWith(status: MediaStatus.loadingImages));
+        final images = await repository.getMatchBucketImages(event.matchId);
+        emit(state.copyWith(status: MediaStatus.success, images: images));
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(status: MediaStatus.success, images: []));
+
+      }
+    });
+
+    on<AddImageToMatchBucket>((event, emit) async {
+      try {
+        final String url = await supabase.storage.from('match-resources')
+            .createSignedUrl(event.fileName, 300);
+        List<String> gallery = state.images ?? [];
+        gallery.add(url);
+        emit(state.copyWith(status: MediaStatus.success, images: gallery));
       } catch (error) {
         final errorMessage = error.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(error: errorMessage, status: MediaStatus.error));

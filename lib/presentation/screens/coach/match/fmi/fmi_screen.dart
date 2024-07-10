@@ -10,36 +10,20 @@ import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_state.dart';
 import 'package:flutter_football/presentation/blocs/match/match_bloc.dart';
 import 'package:flutter_football/presentation/blocs/match/match_state.dart';
+import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
+import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/dialogs/error_dialog.dart';
 import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/cards_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/goal_bottom_sheet.dart';
+import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/match_gallery_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/replacement_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/report/report_screen.dart';
 import 'package:flutter_football/presentation/widgets/image_picker_bottom_sheet.dart';
 import 'package:flutter_football/utils/image_utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/*
-  bloclistener
-  switch (state.status) {
-                case FmiStatus.initial:
-                  break;
-                case FmiStatus.loading:
-                  LoadingDialog.show(context);
-                  break;
-                case FmiStatus.success:
-                  LoadingDialog.hide(context);
-                  break;
-                case FmiStatus.error:
-                  print(state.error);
-                  LoadingDialog.hide(context);
-                  // TODO : create FMIErrorHandler to handle errors like FMICardCreationException
-                  // TODO : rely on login screen
-                  //handleError(state.error.toString());
-                  break;
-              }
-   */
+
 class FmiScreen extends StatefulWidget {
   static const String routeName = 'fmi';
   final MatchDetails match;
@@ -69,7 +53,7 @@ class _FmiScreenState extends State<FmiScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<FmiBloc>(context).add(InitFMI(match: widget.match));
-    //BlocProvider.of<MatchBloc>(context).add(GetSelection(widget.match.idTeam, widget.match.id));
+    BlocProvider.of<MediaBloc>(context).add(GetMatchBucketImages(matchId: widget.match.id.toString()));
   }
 
   @override
@@ -305,41 +289,71 @@ class _FmiScreenState extends State<FmiScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      context: mainContext,
-                                      builder: (BuildContext context) {
-                                        return ImagePickerBottomSheet(
-                                          onImagePicked: (file) async {
-                                            await uploadImageToSupabase(
-                                                file, mainContext);
+                                Row(
+                                  children: [
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: mainContext,
+                                          builder: (BuildContext context) {
+                                            return MatchGalleryBottomSheet(matchId: widget.match.id.toString());
                                           },
                                         );
                                       },
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 10),
-                                    width: 200.0,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.grey,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Ressources photo",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          overflow: TextOverflow.ellipsis,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 10),
+                                        width: 200.0,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.grey,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "Ressources photo",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 18,
+                                              color: Colors.white,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                    SizedBox(width: 10,),
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (!widget.readOnly) {
+                                          showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            context: mainContext,
+                                            builder: (BuildContext context) {
+                                              return ImagePickerBottomSheet(
+                                                onImagePicked: (file) async {
+                                                  await uploadImageToSupabase(
+                                                      file, mainContext);
+                                                },
+                                              );
+                                            },
+                                          );
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 10),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.grey,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Center(
+                                          child: Icon(Icons.add, color: currentAppColors.secondaryTextColor,),
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                  ],
                                 ),
                                 SizedBox(
                                   height: 20,
@@ -458,8 +472,10 @@ class _FmiScreenState extends State<FmiScreen> {
   Future<void> uploadImageToSupabase(File file, BuildContext context) async {
     LoadingDialog.show(context);
     try {
-      await uploadImage(file, matchResourcesBucketName,
-          "${widget.match.id}/${createFileName()}");
+      final filename = "${widget.match.id}/${createFileName()}";
+      final response = await uploadImage(file, matchResourcesBucketName,
+          filename);
+      BlocProvider.of<MediaBloc>(context).add(AddImageToMatchBucket(filename));
       LoadingDialog.hide(context);
     } catch (e) {
       LoadingDialog.hide(context);
