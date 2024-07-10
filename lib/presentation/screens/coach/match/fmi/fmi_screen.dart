@@ -63,6 +63,8 @@ class FmiScreen extends StatefulWidget {
 }
 
 class _FmiScreenState extends State<FmiScreen> {
+  bool historyIsVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -89,237 +91,361 @@ class _FmiScreenState extends State<FmiScreen> {
         child: SafeArea(
           child: BlocBuilder<FmiBloc, FmiState>(
             builder: (mainContext, state) {
-              return Column(
+              return Stack(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(30.0),
-                    child: Column(
-                      children: [
-                        /*Row(
-                        children: [
-                          Text(
-                            "${state.match?.nameTeam}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 24,
-                              color: currentAppColors.primaryTextColor,
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            "VS",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 30,
-                              color: currentAppColors.primaryTextColor,
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            "${state.match?.opponentName}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 24,
-                              color: currentAppColors.primaryTextColor,
-                            ),
-                          ),
-                        ],
-                      ),*/
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: AppColors.black.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            "${state.match?.teamGoals ?? 0} - ${state.match?.opponentGoals ?? 0}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 30,
-                              color: currentAppColors.primaryTextColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    //margin: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      children: [
-                        Row(
+                  Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Column(
                           children: [
-                            Spacer(),
-                            FmiAction(
-                              onTap: () async {
-                                if (!widget.readOnly) {
-                                  await showModalBottomSheet(
-                                    context: mainContext,
-                                    isScrollControlled: true,
-                                    builder: (BuildContext context) {
-                                      return GoalBottomSheet(
-                                        teamId: widget.match.idTeam,
-                                        matchId: widget.match.id,
-                                      );
-                                    },
-                                  );
-                                  BlocProvider.of<FmiBloc>(context)
-                                      .add(Search(search: ""));
-                                }
-                              },
-                              color: AppColors.mediumBlue,
-                              imageAsset: "assets/football_icon.svg",
-                              title: "But",
-                            ),
-                            Spacer(),
-                            FmiAction(
-                              onTap: () async {
-                                if (!widget.readOnly)
-                                  {
-                                    await showModalBottomSheet(
-                                      context: mainContext,
-                                      isScrollControlled: true,
-                                      builder: (BuildContext context) {
-                                        return ReplacementBottomSheet(
-                                          teamId: widget.match.idTeam,
-                                          matchId: widget.match.id,
-                                        );
-                                      },
-                                    );
-                                    BlocProvider.of<FmiBloc>(context)
-                                        .add(Search(search: ""));
-                                  }
-                              },
-                              color: AppColors.mediumBlue,
-                              imageAsset: "assets/replacement_icon.svg",
-                              title: "Remplacement",
-                            ),
-                            Spacer(),
-                            FmiAction(
-                              onTap: () async {
-                                if (!widget.readOnly)
-                                  {
-                                    await showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      context: mainContext,
-                                      builder: (BuildContext context) {
-                                        return CardsBottomSheet(
-                                          teamId: widget.match.idTeam,
-                                          matchId: widget.match.id,
-                                        );
-                                      },
-                                    );
-                                    BlocProvider.of<FmiBloc>(context)
-                                        .add(Search(search: ""));
-                                  }
-                              },
-                              color: AppColors.mediumBlue,
-                              imageAsset: "assets/cards_icon.svg",
-                              title: "Faute",
-                            ),
-                            Spacer(),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  context: mainContext,
-                                  builder: (BuildContext context) {
-                                    return ImagePickerBottomSheet(
-                                      onImagePicked: (file) async {
-                                        await uploadImageToSupabase(
-                                            file, mainContext);
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 10),
-                                width: 200.0,
-                                decoration: BoxDecoration(
-                                  color: AppColors.grey,
-                                  borderRadius: BorderRadius.circular(8),
+                            /*Row(
+                            children: [
+                              Text(
+                                "${state.match?.nameTeam}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 24,
+                                  color: currentAppColors.primaryTextColor,
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    "Ressources photo",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
+                              ),
+                              Spacer(),
+                              Text(
+                                "VS",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 30,
+                                  color: currentAppColors.primaryTextColor,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                "${state.match?.opponentName}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 24,
+                                  color: currentAppColors.primaryTextColor,
+                                ),
+                              ),
+                            ],
+                          ),*/
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: AppColors.black.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                "${state.match?.teamGoals ?? 0} - ${state.match?.opponentGoals ?? 0}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 30,
+                                  color: currentAppColors.primaryTextColor,
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 20,
+                          ],
+                        ),
+                      ),
+                      Container(
+                        //margin: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Spacer(),
+                                FmiAction(
+                                  onTap: () async {
+                                    if (!widget.readOnly) {
+                                      await showModalBottomSheet(
+                                        context: mainContext,
+                                        isScrollControlled: true,
+                                        builder: (BuildContext context) {
+                                          return GoalBottomSheet(
+                                            teamId: widget.match.idTeam,
+                                            matchId: widget.match.id,
+                                          );
+                                        },
+                                      );
+                                      BlocProvider.of<FmiBloc>(context)
+                                          .add(Search(search: ""));
+                                    }
+                                  },
+                                  color: AppColors.mediumBlue,
+                                  imageAsset: "assets/football_icon.svg",
+                                  title: "But",
+                                ),
+                                Spacer(),
+                                FmiAction(
+                                  onTap: () async {
+                                    if (!widget.readOnly)
+                                      {
+                                        await showModalBottomSheet(
+                                          context: mainContext,
+                                          isScrollControlled: true,
+                                          builder: (BuildContext context) {
+                                            return ReplacementBottomSheet(
+                                              teamId: widget.match.idTeam,
+                                              matchId: widget.match.id,
+                                            );
+                                          },
+                                        );
+                                        BlocProvider.of<FmiBloc>(context)
+                                            .add(Search(search: ""));
+                                      }
+                                  },
+                                  color: AppColors.mediumBlue,
+                                  imageAsset: "assets/replacement_icon.svg",
+                                  title: "Remplacement",
+                                ),
+                                Spacer(),
+                                FmiAction(
+                                  onTap: () async {
+                                    if (!widget.readOnly)
+                                      {
+                                        await showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          context: mainContext,
+                                          builder: (BuildContext context) {
+                                            return CardsBottomSheet(
+                                              teamId: widget.match.idTeam,
+                                              matchId: widget.match.id,
+                                            );
+                                          },
+                                        );
+                                        BlocProvider.of<FmiBloc>(context)
+                                            .add(Search(search: ""));
+                                      }
+                                  },
+                                  color: AppColors.mediumBlue,
+                                  imageAsset: "assets/cards_icon.svg",
+                                  title: "Faute",
+                                ),
+                                Spacer(),
+                              ],
                             ),
-                            if (!widget.readOnly)
-                              GestureDetector(
-                                onTap: () {
-                                  //ConfirmationDialog.show(context, , cancelAction, {});
-                                  Navigator.push(mainContext,
-                                      ReportScreen.route(widget.match));
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        AppColors.darkGreen,
-                                        AppColors.green,
-                                      ],
+                            /*SizedBox(
+                              height: 15,
+                            ),
+                            Row(
+                              children: [
+                                Spacer(),
+                                FmiAction(
+                                  onTap: () async {
+                                    if (!widget.readOnly) {
+                                      await showModalBottomSheet(
+                                        context: mainContext,
+                                        isScrollControlled: true,
+                                        builder: (BuildContext context) {
+                                          return GoalBottomSheet(
+                                            teamId: widget.match.idTeam,
+                                            matchId: widget.match.id,
+                                          );
+                                        },
+                                      );
+                                      BlocProvider.of<FmiBloc>(context)
+                                          .add(Search(search: ""));
+                                    }
+                                  },
+                                  color: AppColors.mediumBlue,
+                                  imageAsset: "assets/football_icon.svg",
+                                  title: "But",
+                                ),
+                                Spacer(),
+                                FmiAction(
+                                  onTap: () async {
+                                    if (!widget.readOnly)
+                                    {
+                                      await showModalBottomSheet(
+                                        context: mainContext,
+                                        isScrollControlled: true,
+                                        builder: (BuildContext context) {
+                                          return ReplacementBottomSheet(
+                                            teamId: widget.match.idTeam,
+                                            matchId: widget.match.id,
+                                          );
+                                        },
+                                      );
+                                      BlocProvider.of<FmiBloc>(context)
+                                          .add(Search(search: ""));
+                                    }
+                                  },
+                                  color: AppColors.mediumBlue,
+                                  imageAsset: "assets/replacement_icon.svg",
+                                  title: "Remplacement",
+                                ),
+                                Spacer(),
+                                FmiAction(
+                                  onTap: () async {
+                                    if (!widget.readOnly)
+                                    {
+                                      await showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        context: mainContext,
+                                        builder: (BuildContext context) {
+                                          return CardsBottomSheet(
+                                            teamId: widget.match.idTeam,
+                                            matchId: widget.match.id,
+                                          );
+                                        },
+                                      );
+                                      BlocProvider.of<FmiBloc>(context)
+                                          .add(Search(search: ""));
+                                    }
+                                  },
+                                  color: AppColors.mediumBlue,
+                                  imageAsset: "assets/cards_icon.svg",
+                                  title: "Faute",
+                                ),
+                                Spacer(),
+                              ],
+                            ),*/
+                            SizedBox(height: 30,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      context: mainContext,
+                                      builder: (BuildContext context) {
+                                        return ImagePickerBottomSheet(
+                                          onImagePicked: (file) async {
+                                            await uploadImageToSupabase(
+                                                file, mainContext);
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 10),
+                                    width: 200.0,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.grey,
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    color: AppColors.darkGreen,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Valider la FMI",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                        overflow: TextOverflow.ellipsis,
+                                    child: Center(
+                                      child: Text(
+                                        "Ressources photo",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                if (!widget.readOnly)
+                                  GestureDetector(
+                                    onTap: () {
+                                      //ConfirmationDialog.show(context, , cancelAction, {});
+                                      Navigator.push(mainContext,
+                                          ReportScreen.route(widget.match));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 12),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            AppColors.darkGreen,
+                                            AppColors.green,
+                                          ],
+                                        ),
+                                        color: AppColors.darkGreen,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "Valider la FMI",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Spacer(),
-                  AnimatedSize(
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      height:
-                          (state.actions != null && state.actions!.isNotEmpty)
-                              ? null
-                              : 0.0,
-                      child:
-                          (state.actions != null && state.actions!.isNotEmpty)
-                              ? FmiHistory(actions: state.actions!)
-                              : null,
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedSize(
+                      duration: const Duration(milliseconds: 200),
+                      child: Container(
+                        color: currentAppColors.primaryColor,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  historyIsVisible = !historyIsVisible;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                                color: AppColors.grey,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Historique",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 14,
+                                        color: currentAppColors.primaryTextColor,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    // ajouter un loader si loadingHistory
+                                    if(state.status == FmiStatus.loadingHistory)
+                                      SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                          color: currentAppColors.primaryTextColor,
+                                        ),
+                                      ),
+                                    if(state.status != FmiStatus.loadingHistory)
+                                      Icon(historyIsVisible ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height:
+                              (historyIsVisible && (state.actions != null && state.actions!.isNotEmpty))
+                                  ? null
+                                  : 0.0,
+                              child:
+                              (historyIsVisible && (state.actions != null && state.actions!.isNotEmpty))
+                                  ? FmiHistory(actions: state.actions!)
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                  )
                 ],
               );
             },
@@ -417,23 +543,12 @@ class _FmiHistoryState extends State<FmiHistory> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      //padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 20,
-          ),
-          Text(
-            "Historique",
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 14,
-              color: currentAppColors.primaryTextColor,
-            ),
-          ),
-          SizedBox(
-            height: 15,
+            height: 10,
           ),
           Container(
             height: 70,
@@ -544,7 +659,7 @@ class FmiActionDetails extends StatelessWidget {
           height: 5,
         ),
         Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 14),
             child: action.getActionDetailWidget()),
       ],
     );

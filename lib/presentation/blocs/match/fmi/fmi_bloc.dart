@@ -17,6 +17,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
 
     Future<List<MatchAction>?> initFMIWithActions(MatchDetails match, Emitter<FmiState> emit) async {
       try {
+        emit(state.copyWith(status: FmiStatus.loadingHistory,));
         final actions = await repository.getActions(match.id, match.date);
         emit(state.copyWith(
           status: FmiStatus.success,
