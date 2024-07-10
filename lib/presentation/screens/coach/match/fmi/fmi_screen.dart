@@ -9,21 +9,16 @@ import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_state.dart';
 import 'package:flutter_football/presentation/blocs/match/match_bloc.dart';
-import 'package:flutter_football/presentation/blocs/match/match_event.dart';
 import 'package:flutter_football/presentation/blocs/match/match_state.dart';
-import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
 import 'package:flutter_football/presentation/dialogs/error_dialog.dart';
 import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/cards_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/goal_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/replacement_bottom_sheet.dart';
-import 'package:flutter_football/presentation/screens/coach/match/report/tactics_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/match/report/report_screen.dart';
-import 'package:flutter_football/presentation/screens/coach/match/selection/selection_screen.dart';
 import 'package:flutter_football/presentation/widgets/image_picker_bottom_sheet.dart';
 import 'package:flutter_football/utils/image_utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
 
 /*
   bloclistener
@@ -60,7 +55,8 @@ class FmiScreen extends StatefulWidget {
     );
   }
 
-  const FmiScreen({Key? key, required this.match, this.readOnly = false}) : super(key: key);
+  const FmiScreen({Key? key, required this.match, this.readOnly = false})
+      : super(key: key);
 
   @override
   State<FmiScreen> createState() => _FmiScreenState();
@@ -156,19 +152,21 @@ class _FmiScreenState extends State<FmiScreen> {
                           children: [
                             Spacer(),
                             FmiAction(
-                              onTap: () => {
+                              onTap: () async {
                                 if (!widget.readOnly) {
-                                    showModalBottomSheet(
-                                      context: mainContext,
-                                      isScrollControlled: true,
-                                      builder: (BuildContext context) {
-                                        return GoalBottomSheet(
-                                          teamId: widget.match.idTeam,
-                                          matchId: widget.match.id,
-                                        );
-                                      },
-                                    )
-                                  }
+                                  await showModalBottomSheet(
+                                    context: mainContext,
+                                    isScrollControlled: true,
+                                    builder: (BuildContext context) {
+                                      return GoalBottomSheet(
+                                        teamId: widget.match.idTeam,
+                                        matchId: widget.match.id,
+                                      );
+                                    },
+                                  );
+                                  BlocProvider.of<FmiBloc>(context)
+                                      .add(Search(search: ""));
+                                }
                               },
                               color: AppColors.mediumBlue,
                               imageAsset: "assets/football_icon.svg",
@@ -176,9 +174,10 @@ class _FmiScreenState extends State<FmiScreen> {
                             ),
                             Spacer(),
                             FmiAction(
-                              onTap: () => {
-                                if (!widget.readOnly) {
-                                    showModalBottomSheet(
+                              onTap: () async {
+                                if (!widget.readOnly)
+                                  {
+                                    await showModalBottomSheet(
                                       context: mainContext,
                                       isScrollControlled: true,
                                       builder: (BuildContext context) {
@@ -187,7 +186,9 @@ class _FmiScreenState extends State<FmiScreen> {
                                           matchId: widget.match.id,
                                         );
                                       },
-                                    )
+                                    );
+                                    BlocProvider.of<FmiBloc>(context)
+                                        .add(Search(search: ""));
                                   }
                               },
                               color: AppColors.mediumBlue,
@@ -196,9 +197,10 @@ class _FmiScreenState extends State<FmiScreen> {
                             ),
                             Spacer(),
                             FmiAction(
-                              onTap: () => {
-                                if (!widget.readOnly) {
-                                    showModalBottomSheet(
+                              onTap: () async {
+                                if (!widget.readOnly)
+                                  {
+                                    await showModalBottomSheet(
                                       isScrollControlled: true,
                                       context: mainContext,
                                       builder: (BuildContext context) {
@@ -207,7 +209,9 @@ class _FmiScreenState extends State<FmiScreen> {
                                           matchId: widget.match.id,
                                         );
                                       },
-                                    )
+                                    );
+                                    BlocProvider.of<FmiBloc>(context)
+                                        .add(Search(search: ""));
                                   }
                               },
                               color: AppColors.mediumBlue,
@@ -231,7 +235,8 @@ class _FmiScreenState extends State<FmiScreen> {
                                   builder: (BuildContext context) {
                                     return ImagePickerBottomSheet(
                                       onImagePicked: (file) async {
-                                        await uploadImageToSupabase(file, mainContext);
+                                        await uploadImageToSupabase(
+                                            file, mainContext);
                                       },
                                     );
                                   },
@@ -265,7 +270,8 @@ class _FmiScreenState extends State<FmiScreen> {
                               GestureDetector(
                                 onTap: () {
                                   //ConfirmationDialog.show(context, , cancelAction, {});
-                                  Navigator.push(mainContext, ReportScreen.route(widget.match));
+                                  Navigator.push(mainContext,
+                                      ReportScreen.route(widget.match));
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -326,11 +332,13 @@ class _FmiScreenState extends State<FmiScreen> {
   Future<void> uploadImageToSupabase(File file, BuildContext context) async {
     LoadingDialog.show(context);
     try {
-      await uploadImage(file, matchResourcesBucketName, "${widget.match.id}/${createFileName()}");
+      await uploadImage(file, matchResourcesBucketName,
+          "${widget.match.id}/${createFileName()}");
       LoadingDialog.hide(context);
-    } catch(e) {
+    } catch (e) {
       LoadingDialog.hide(context);
-      String errorMessage = "Un erreur est survenue.\nCette image n'a pas pu être envoyé au serveur.";
+      String errorMessage =
+          "Un erreur est survenue.\nCette image n'a pas pu être envoyé au serveur.";
       debugPrint(e.toString());
       ErrorDialog.show(context, errorMessage);
     }

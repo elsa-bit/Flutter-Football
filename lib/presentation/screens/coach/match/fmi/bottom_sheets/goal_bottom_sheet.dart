@@ -5,9 +5,7 @@ import 'package:flutter_football/domain/models/fmi/bottom_sheet_error.dart';
 import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
-import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
-import 'package:flutter_football/presentation/blocs/players/players_event.dart';
-import 'package:flutter_football/presentation/blocs/players/players_state.dart';
+import 'package:flutter_football/presentation/blocs/match/fmi/fmi_state.dart';
 import 'package:flutter_football/presentation/screens/coach/teams/player_selectable_item.dart';
 import 'package:flutter_football/presentation/widgets/csb_search_bar.dart';
 import 'package:flutter_svg/svg.dart';
@@ -33,13 +31,6 @@ class _GoalBottomSheetState extends State<GoalBottomSheet> {
   Player? selectedPlayer = null;
   bool opponentGoal = false;
   final searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<PlayersBloc>(context)
-        .add(GetPlayersTeam(teamId: widget.teamId));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +203,7 @@ class _GoalBottomSheetState extends State<GoalBottomSheet> {
                                 hint: "Rechercher par nom et/ou prénom",
                                 controller: searchController,
                                 onChanged: (v) {
-                                  BlocProvider.of<PlayersBloc>(context).add(Search(search: v));
+                                  BlocProvider.of<FmiBloc>(context).add(Search(search: v));
                                 },
                               ),
                             ),
@@ -221,18 +212,16 @@ class _GoalBottomSheetState extends State<GoalBottomSheet> {
                             ),
                             SizedBox(
                               height: 260,
-                              child: BlocBuilder<PlayersBloc, PlayersState>(
+                              child: BlocBuilder<FmiBloc, FmiState>(
                                 builder: (context, state) {
                                   switch (state.status) {
-                                    case PlayersStatus.loading:
+                                    case FmiStatus.loadingPlayer:
                                       return Text("Chargement des joueurs...");
-                                    case PlayersStatus.error:
-                                      return Text(state.error);
-                                    case PlayersStatus.success:
-                                      if (state.playerSearch!.isEmpty) {
+                                    default:
+                                      if (state.playerSearch == null || state.playerSearch!.isEmpty) {
                                         return const Center(
                                           child: Text(
-                                              "Aucun joueur dans cette équipe."),
+                                              "Aucun joueur trouvé"),
                                         );
                                       }
                                       return ListView.builder(
@@ -247,11 +236,6 @@ class _GoalBottomSheetState extends State<GoalBottomSheet> {
                                             onTap: () => onPlayerTap(player),
                                           );
                                         },
-                                      );
-                                    default:
-                                      return const Center(
-                                        child: Text(
-                                            "Aucun joueur dans cette équipe."),
                                       );
                                   }
                                 },

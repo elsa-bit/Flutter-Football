@@ -190,6 +190,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => FmiBloc(
                 repository: RepositoryProvider.of<MatchRepository>(context),
+                playerRepository: RepositoryProvider.of<PlayerRepository>(context),
               ),
             ),
             BlocProvider(
