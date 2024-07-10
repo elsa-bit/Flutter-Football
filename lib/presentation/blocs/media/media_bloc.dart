@@ -103,7 +103,7 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
     on<AddImageToMatchBucket>((event, emit) async {
       try {
         final String url = await supabase.storage.from('match-resources')
-            .createSignedUrl(event.fileName, 300);
+            .createSignedUrl(event.fileName, 7200); // 7200 secondes = 2 hours
         List<String> gallery = state.images ?? [];
         gallery.add(url);
         emit(state.copyWith(status: MediaStatus.success, images: gallery));

@@ -14,6 +14,7 @@ import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
 import 'package:flutter_football/presentation/dialogs/error_dialog.dart';
 import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
+import 'package:flutter_football/presentation/dialogs/lottie_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/cards_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/goal_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/match_gallery_bottom_sheet.dart';
@@ -22,7 +23,6 @@ import 'package:flutter_football/presentation/screens/coach/match/report/report_
 import 'package:flutter_football/presentation/widgets/image_picker_bottom_sheet.dart';
 import 'package:flutter_football/utils/image_utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 
 class FmiScreen extends StatefulWidget {
   static const String routeName = 'fmi';
@@ -53,7 +53,8 @@ class _FmiScreenState extends State<FmiScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<FmiBloc>(context).add(InitFMI(match: widget.match));
-    BlocProvider.of<MediaBloc>(context).add(GetMatchBucketImages(matchId: widget.match.id.toString()));
+    BlocProvider.of<MediaBloc>(context)
+        .add(GetMatchBucketImages(matchId: widget.match.id.toString()));
   }
 
   @override
@@ -62,16 +63,52 @@ class _FmiScreenState extends State<FmiScreen> {
       appBar: AppBar(
         title: Text("FMI"),
       ),
-      body: BlocListener<MatchBloc, MatchState>(
-        listener: (context, state) {
-          switch (state.status) {
-            case MatchStatus.refresh:
-              //Navigator.of(context).pop();
-              break;
-            default:
-              break;
-          }
-        },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<MatchBloc, MatchState>(
+            listener: (context, state) {
+              switch (state.status) {
+                case MatchStatus.refresh:
+                  //Navigator.of(context).pop();
+                  break;
+                default:
+                  break;
+              }
+            },
+          ),
+          BlocListener<FmiBloc, FmiState>(
+            listener: (context, state) {
+              switch (state.status) {
+                case FmiStatus.successCard:
+                  _showSuccessSnackBar(context, "Carton ajouté à l'historique");
+                  BlocProvider.of<FmiBloc>(context).add(ResetSuccessFMIState());
+                  break;
+                case FmiStatus.successReplacement:
+                  _showSuccessSnackBar(context, "Remplacement ajouté à l'historique");
+                  BlocProvider.of<FmiBloc>(context).add(ResetSuccessFMIState());
+                  break;
+                case FmiStatus.successGoal:
+                  _showSuccessSnackBar(context, "But ajouté à l'historique");
+                  BlocProvider.of<FmiBloc>(context).add(ResetSuccessFMIState());
+                  break;
+                case FmiStatus.errorCard:
+                  _showErrorSnackBar(context, "Le carton n'a pas pu être ajouté");
+                  BlocProvider.of<FmiBloc>(context).add(ResetErrorFMIState());
+                  break;
+                case FmiStatus.errorReplacement:
+                  _showErrorSnackBar(context, "Le remplacement n'a pas pu être ajouté");
+                  BlocProvider.of<FmiBloc>(context).add(ResetErrorFMIState());
+                  break;
+                case FmiStatus.errorGoal:
+                  _showErrorSnackBar(context, "Le but n'a pas pu être ajouté");
+                  BlocProvider.of<FmiBloc>(context).add(ResetErrorFMIState());
+                  break;
+                default:
+                  break;
+              }
+            },
+          ),
+        ],
         child: SafeArea(
           child: BlocBuilder<FmiBloc, FmiState>(
             builder: (mainContext, state) {
@@ -163,21 +200,20 @@ class _FmiScreenState extends State<FmiScreen> {
                                 Spacer(),
                                 FmiAction(
                                   onTap: () async {
-                                    if (!widget.readOnly)
-                                      {
-                                        await showModalBottomSheet(
-                                          context: mainContext,
-                                          isScrollControlled: true,
-                                          builder: (BuildContext context) {
-                                            return ReplacementBottomSheet(
-                                              teamId: widget.match.idTeam,
-                                              matchId: widget.match.id,
-                                            );
-                                          },
-                                        );
-                                        BlocProvider.of<FmiBloc>(context)
-                                            .add(Search(search: ""));
-                                      }
+                                    if (!widget.readOnly) {
+                                      await showModalBottomSheet(
+                                        context: mainContext,
+                                        isScrollControlled: true,
+                                        builder: (BuildContext context) {
+                                          return ReplacementBottomSheet(
+                                            teamId: widget.match.idTeam,
+                                            matchId: widget.match.id,
+                                          );
+                                        },
+                                      );
+                                      BlocProvider.of<FmiBloc>(context)
+                                          .add(Search(search: ""));
+                                    }
                                   },
                                   color: AppColors.mediumBlue,
                                   imageAsset: "assets/replacement_icon.svg",
@@ -186,21 +222,20 @@ class _FmiScreenState extends State<FmiScreen> {
                                 Spacer(),
                                 FmiAction(
                                   onTap: () async {
-                                    if (!widget.readOnly)
-                                      {
-                                        await showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          context: mainContext,
-                                          builder: (BuildContext context) {
-                                            return CardsBottomSheet(
-                                              teamId: widget.match.idTeam,
-                                              matchId: widget.match.id,
-                                            );
-                                          },
-                                        );
-                                        BlocProvider.of<FmiBloc>(context)
-                                            .add(Search(search: ""));
-                                      }
+                                    if (!widget.readOnly) {
+                                      await showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        context: mainContext,
+                                        builder: (BuildContext context) {
+                                          return CardsBottomSheet(
+                                            teamId: widget.match.idTeam,
+                                            matchId: widget.match.id,
+                                          );
+                                        },
+                                      );
+                                      BlocProvider.of<FmiBloc>(context)
+                                          .add(Search(search: ""));
+                                    }
                                   },
                                   color: AppColors.mediumBlue,
                                   imageAsset: "assets/cards_icon.svg",
@@ -285,7 +320,9 @@ class _FmiScreenState extends State<FmiScreen> {
                                 Spacer(),
                               ],
                             ),*/
-                            SizedBox(height: 30,),
+                            SizedBox(
+                              height: 30,
+                            ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -297,7 +334,9 @@ class _FmiScreenState extends State<FmiScreen> {
                                         showModalBottomSheet(
                                           context: mainContext,
                                           builder: (BuildContext context) {
-                                            return MatchGalleryBottomSheet(matchId: widget.match.id.toString());
+                                            return MatchGalleryBottomSheet(
+                                                matchId:
+                                                    widget.match.id.toString());
                                           },
                                         );
                                       },
@@ -307,7 +346,8 @@ class _FmiScreenState extends State<FmiScreen> {
                                         width: 200.0,
                                         decoration: BoxDecoration(
                                           color: AppColors.grey,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Center(
                                           child: Text(
@@ -322,7 +362,9 @@ class _FmiScreenState extends State<FmiScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 10,),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     GestureDetector(
                                       onTap: () {
                                         if (!widget.readOnly) {
@@ -331,8 +373,8 @@ class _FmiScreenState extends State<FmiScreen> {
                                             context: mainContext,
                                             builder: (BuildContext context) {
                                               return ImagePickerBottomSheet(
-                                                onImagePicked: (file) async {
-                                                  await uploadImageToSupabase(
+                                                onImagePicked: (file) {
+                                                  uploadImageToSupabase(
                                                       file, mainContext);
                                                 },
                                               );
@@ -345,10 +387,15 @@ class _FmiScreenState extends State<FmiScreen> {
                                             horizontal: 12, vertical: 10),
                                         decoration: BoxDecoration(
                                           color: AppColors.grey,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         child: Center(
-                                          child: Icon(Icons.add, color: currentAppColors.secondaryTextColor,),
+                                          child: Icon(
+                                            Icons.add,
+                                            color: currentAppColors
+                                                .secondaryTextColor,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -416,7 +463,8 @@ class _FmiScreenState extends State<FmiScreen> {
                                 });
                               },
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 15),
                                 color: AppColors.grey,
                                 child: Row(
                                   children: [
@@ -425,33 +473,41 @@ class _FmiScreenState extends State<FmiScreen> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 14,
-                                        color: currentAppColors.primaryTextColor,
+                                        color:
+                                            currentAppColors.primaryTextColor,
                                       ),
                                     ),
                                     Spacer(),
                                     // ajouter un loader si loadingHistory
-                                    if(state.status == FmiStatus.loadingHistory)
+                                    if (state.status ==
+                                        FmiStatus.loadingHistory)
                                       SizedBox(
                                         width: 20,
                                         height: 20,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 3,
-                                          color: currentAppColors.primaryTextColor,
+                                          color:
+                                              currentAppColors.primaryTextColor,
                                         ),
                                       ),
-                                    if(state.status != FmiStatus.loadingHistory)
-                                      Icon(historyIsVisible ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded),
+                                    if (state.status !=
+                                        FmiStatus.loadingHistory)
+                                      Icon(historyIsVisible
+                                          ? Icons.keyboard_arrow_down_rounded
+                                          : Icons.keyboard_arrow_up_rounded),
                                   ],
                                 ),
                               ),
                             ),
                             Container(
-                              height:
-                              (historyIsVisible && (state.actions != null && state.actions!.isNotEmpty))
+                              height: (historyIsVisible &&
+                                      (state.actions != null &&
+                                          state.actions!.isNotEmpty))
                                   ? null
                                   : 0.0,
-                              child:
-                              (historyIsVisible && (state.actions != null && state.actions!.isNotEmpty))
+                              child: (historyIsVisible &&
+                                      (state.actions != null &&
+                                          state.actions!.isNotEmpty))
                                   ? FmiHistory(actions: state.actions!)
                                   : null,
                             ),
@@ -469,21 +525,70 @@ class _FmiScreenState extends State<FmiScreen> {
     );
   }
 
-  Future<void> uploadImageToSupabase(File file, BuildContext context) async {
-    LoadingDialog.show(context);
+  Future<void> uploadImageToSupabase(
+      File file, BuildContext mainContext) async {
+    LoadingDialog.show(mainContext);
     try {
       final filename = "${widget.match.id}/${createFileName()}";
-      final response = await uploadImage(file, matchResourcesBucketName,
-          filename);
-      BlocProvider.of<MediaBloc>(context).add(AddImageToMatchBucket(filename));
-      LoadingDialog.hide(context);
+      final response =
+          await uploadImage(file, matchResourcesBucketName, filename);
+      BlocProvider.of<MediaBloc>(mainContext)
+          .add(AddImageToMatchBucket(filename));
+      LoadingDialog.hide(mainContext);
+      _showSuccessSnackBar(mainContext, "Image ajoutée aux ressources");
     } catch (e) {
-      LoadingDialog.hide(context);
+      LoadingDialog.hide(mainContext);
       String errorMessage =
-          "Un erreur est survenue.\nCette image n'a pas pu être envoyé au serveur.";
+          "Un erreur est survenue. Cette image n'a pas pu être envoyé au serveur.";
       debugPrint(e.toString());
-      ErrorDialog.show(context, errorMessage);
+      _showErrorSnackBar(mainContext, errorMessage);
     }
+  }
+
+  void _showSuccessSnackBar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+        backgroundColor: AppColors.green,
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              Icons.error_outline,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+        backgroundColor: AppColors.orange,
+      ),
+    );
   }
 }
 

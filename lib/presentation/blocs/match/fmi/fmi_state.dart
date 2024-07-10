@@ -2,7 +2,19 @@ import 'package:flutter_football/domain/models/fmi/match_action.dart';
 import 'package:flutter_football/domain/models/match_details.dart';
 import 'package:flutter_football/domain/models/player.dart';
 
-enum FmiStatus { initial, loading, loadingHistory, loadingPlayer, success, error }
+enum FmiStatus {
+  initial,
+  loading,
+  loadingHistory,
+  loadingPlayer,
+  success,
+  successCard,
+  successReplacement,
+  successGoal,
+  errorCard,
+  errorReplacement,
+  errorGoal,
+  error }
 
 class FmiState {
   final FmiStatus status;

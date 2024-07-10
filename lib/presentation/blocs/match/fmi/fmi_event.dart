@@ -55,3 +55,11 @@ class AddCard extends FmiEvent {
 class ClearFMIState extends FmiEvent {
   ClearFMIState();
 }
+
+class ResetSuccessFMIState extends FmiEvent {
+  ResetSuccessFMIState();
+}
+
+class ResetErrorFMIState extends FmiEvent {
+  ResetErrorFMIState();
+}

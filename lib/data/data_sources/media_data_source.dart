@@ -53,7 +53,7 @@ class MediaDataSource extends BaseDataSource with MediaService {
     for (var file in result) {
       try {
         String url = await supabase.storage.from('match-resources')
-            .createSignedUrl("$matchId/${file.name}", 300);
+            .createSignedUrl("$matchId/${file.name}", 7200); // 7200 secondes = 2 hours
         imageUrls.add(url);
       } catch (e) {
         print("Failed to create signed url for file ${file.name}. $e");

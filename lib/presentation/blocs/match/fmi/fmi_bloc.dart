@@ -91,7 +91,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
 
     on<AddCard>((event, emit) async {
       try {
-        emit(state.copyWith(status: FmiStatus.loading));
+        //emit(state.copyWith(status: FmiStatus.loading));
         final bool alreadyHaveYellowCard = (event.color == "red") ? true : (state.actions?.where((action) {
           return (action is CardAction && action.card.player.id == event.idPlayer);
         }).isNotEmpty ?? false);
@@ -112,9 +112,9 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
         if (card.color == "red") {
           List<Player>? newList = state.playersInGame;
           newList?.removeWhere((player) => player.id == card.player.id);
-          emit(state.copyWith(action: cardAction, playersInGame: newList));
+          emit(state.copyWith(status: FmiStatus.successCard, action: cardAction, playersInGame: newList));
         } else {
-          emit(state.copyWith(action: cardAction));
+          emit(state.copyWith(status: FmiStatus.successCard, action: cardAction));
         }
       } catch (error) {
         // TODO : replace error field with custom error Type
@@ -122,14 +122,14 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
 
         emit(state.copyWith(
           error: error.toString(),
-          status: FmiStatus.error,
+          status: FmiStatus.errorCard,
         ));
       }
     });
 
     on<AddGoal>((event, emit) async {
       try {
-        emit(state.copyWith(status: FmiStatus.loading));
+        //emit(state.copyWith(status: FmiStatus.loading));
         final goal = await repository.addGoal(event.idMatch, event.idPlayer);
         final goalAction = GoalAction(
           id: "goal-${goal.id}",
@@ -140,6 +140,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
           goal: goal,
         );
         emit(state.copyWith(
+          status: FmiStatus.successGoal,
           action: goalAction,
           match: state.match?.copyWith(
             teamGoals: !goal.fromOpponent ? ((state.match?.teamGoals ?? 0) + 1) : null,
@@ -149,14 +150,14 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
-          status: FmiStatus.error,
+          status: FmiStatus.errorGoal,
         ));
       }
     });
 
     on<AddReplacement>((event, emit) async {
       try {
-        emit(state.copyWith(status: FmiStatus.loading));
+        //emit(state.copyWith(status: FmiStatus.loading));
         final replacement = await repository.addReplacement(
             event.idMatch, event.idPlayerOut, event.idPlayerIn, event.reason);
         final replacementAction = ReplacementAction(
@@ -182,11 +183,11 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
           final playerRemoved = newPlayersInReplacement!.removeAt(indexIn);
           newPlayersInGame?.add(playerRemoved);
         }
-        emit(state.copyWith(action: replacementAction, playersInGame: newPlayersInGame, playerSearch: newPlayersInGame, playersInReplacement: newPlayersInReplacement));
+        emit(state.copyWith(status: FmiStatus.successReplacement, action: replacementAction, playersInGame: newPlayersInGame, playerSearch: newPlayersInGame, playersInReplacement: newPlayersInReplacement));
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
-          status: FmiStatus.error,
+          status: FmiStatus.errorReplacement,
         ));
       }
     });
@@ -215,6 +216,14 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
 
     on<ClearFMIState>((event, emit) async {
      emit(FmiState());
+    });
+
+    on<ResetSuccessFMIState>((event, emit) async {
+      emit(state.copyWith(status: FmiStatus.success));
+    });
+
+    on<ResetErrorFMIState>((event, emit) async {
+      emit(state.copyWith(status: FmiStatus.error));
     });
 
 
