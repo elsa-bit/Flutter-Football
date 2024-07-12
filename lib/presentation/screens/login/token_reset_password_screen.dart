@@ -40,7 +40,6 @@ class _TokenResetPasswordScreenState extends State<TokenResetPasswordScreen> {
           appBar: AppBar(),
           body: SingleChildScrollView(
             child: Container(
-              height: MediaQuery.sizeOf(context).height,
               padding:
               const EdgeInsets.symmetric(vertical: 40.0, horizontal: 60.0),
               child: Center(
@@ -131,7 +130,6 @@ class _TokenResetPasswordScreenState extends State<TokenResetPasswordScreen> {
                         AppTextStyle.subtitle1.copyWith(color: Colors.white),
                       ),
                     ),
-                    const Spacer(),
                   ],
                 ),
               ),
@@ -160,7 +158,7 @@ class _TokenResetPasswordScreenState extends State<TokenResetPasswordScreen> {
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on AuthException catch(e) {
       bool redirectToLogin = false;
-      String errorMessage = "Une erreur est survenue...\nVérifier que tout le champs soient remplis";
+      String errorMessage = "Une erreur est survenue...\nVérifier que tous les champs soient remplis";
       if (e.statusCode == '403') {
         errorMessage = "Votre Token est arrivé à expiration ou ne correspond pas à votre email.";
       } else if (e.statusCode == '422') {

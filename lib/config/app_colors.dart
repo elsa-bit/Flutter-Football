@@ -35,10 +35,10 @@ class LightThemeAppColors extends AppColors {
   Color primaryTextColor = const Color(0xff000000);
 
   @override
-  Color primaryVariantColor1 = const Color(0xffEBEBEB);
+  Color primaryVariantColor1 = const Color(0xffDEDEDE);
 
   @override
-  Color primaryVariantColor2 = const Color(0xffDEDEDE);
+  Color primaryVariantColor2 = const Color(0xffcfcfcf);
 
   @override
   Color primaryVariantColor3 = const Color(0xffFBFBFB);

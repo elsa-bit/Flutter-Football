@@ -6,7 +6,7 @@ class Match {
   final String opponentName;
   final String place;
   final String idTeam;
-  final bool? win;
+  final String? win;
   final String nameTeam;
   final int? idFMI;
 
@@ -29,7 +29,7 @@ class Match {
       final String opponentName = json["opponentName"] as String;
       final String place = json["place"] as String;
       final String idTeam = json["idTeam"].toString();
-      final bool? win = json["win"] as bool?;
+      final String? win = json["win"] as String?;
       final String nameTeam = json["nameTeam"] as String? ?? "";
       final int? idFMI = json["idFMI"] as int?;
 

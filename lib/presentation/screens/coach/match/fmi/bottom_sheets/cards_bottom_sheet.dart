@@ -201,10 +201,8 @@ class _CardsBottomSheetState extends State<CardsBottomSheet> {
                         case FmiStatus.loadingPlayer:
                           return Text("Chargement des joueurs...");
                         default:
-                          if (state.playerSearch!.isEmpty) {
-                            return const Center(
-                              child: Text("Aucun joueur trouvé"),
-                            );
+                          if (state.playerSearch == null || state.playerSearch!.isEmpty) {
+                            return const Text("Aucun joueur trouvé");
                           }
                           return ListView.builder(
                             shrinkWrap: true,
