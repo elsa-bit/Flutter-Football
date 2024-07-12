@@ -24,6 +24,14 @@ class GetClubRule extends MediaEvent {
   GetClubRule();
 }
 
+class GetCoachRule extends MediaEvent {
+  GetCoachRule();
+}
+
+class GetDocumentClub extends MediaEvent {
+  GetDocumentClub();
+}
+
 class GetVideosBucket extends MediaEvent {
   final String bucketName;
 

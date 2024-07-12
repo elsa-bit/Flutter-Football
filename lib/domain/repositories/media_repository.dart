@@ -55,6 +55,24 @@ class MediaRepository {
     }
   }
 
+  Future<String> getCoachRule() async {
+    try {
+      return await mediaDataSource.getCoachRule();
+    } catch(error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Future<String> getDocumentClub() async {
+    try {
+      return await mediaDataSource.getDocumentClub();
+    } catch(error) {
+      print(error);
+      rethrow;
+    }
+  }
+
   Future<List<Video>> getVideosBucket(String bucketName) async {
     try {
       return await mediaDataSource.getVideosBucket(bucketName);

@@ -70,6 +70,32 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
       }
     });
 
+    on<GetCoachRule>((event, emit) async {
+      try {
+        emit(state.copyWith(status: MediaStatus.loading));
+        final url = await repository.getCoachRule();
+        emit(state.copyWith(
+            response: MediaResponse(url: url), status: MediaStatus.success));
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(
+            error: errorMessage, status: MediaStatus.error, response: null));
+      }
+    });
+
+    on<GetDocumentClub>((event, emit) async {
+      try {
+        emit(state.copyWith(status: MediaStatus.loading));
+        final url = await repository.getDocumentClub();
+        emit(state.copyWith(
+            response: MediaResponse(url: url), status: MediaStatus.success));
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(
+            error: errorMessage, status: MediaStatus.error, response: null));
+      }
+    });
+
     on<GetVideosBucket>((event, emit) async {
       try {
         emit(state.copyWith(status: MediaStatus.loading));
