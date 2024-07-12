@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/domain/models/fmi/match_action.dart';
@@ -40,10 +42,12 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
 
         List<Player> inMatch = players;
         List<Player> forReplacement = players;
+        List<Player> playedMatch = List.empty(growable: true);
 
         if(match.playerSelection != null && match.playerSelection!.isNotEmpty) {
           inMatch = players.where((p) => match.playerSelection!.contains(p.id)).toList();
           forReplacement = players.where((p) => !match.playerSelection!.contains(p.id)).toList();
+          playedMatch.addAll(inMatch);
         }
 
         if(matchActions != null && matchActions.isNotEmpty) {
@@ -60,6 +64,9 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
               if (indexIn != -1) {
                 final playerRemoved = forReplacement.removeAt(indexIn);
                 inMatch.add(playerRemoved);
+                if (playedMatch.where((p) => p.id == playerRemoved.id).isEmpty) {
+                  playedMatch.add(playerRemoved);
+                }
               }
             } else if (action is CardAction && action.card.color == "red") {
               inMatch.removeWhere((player) => player.id == action.card.player.id);
@@ -68,6 +75,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
         }
         emit(state.copyWith(
             playersInGame: inMatch,
+            playersPlayedMatch: playedMatch,
             playerSearch: inMatch,
             playersInReplacement: forReplacement,
             status: FmiStatus.success));
@@ -117,9 +125,6 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
           emit(state.copyWith(status: FmiStatus.successCard, action: cardAction));
         }
       } catch (error) {
-        // TODO : replace error field with custom error Type
-        // TODO : catch error if card can't be created FMICardCreationException
-
         emit(state.copyWith(
           error: error.toString(),
           status: FmiStatus.errorCard,
@@ -171,7 +176,9 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
 
         // update players state
         List<Player>? newPlayersInGame = state.playersInGame;
+        List<Player>? playersPlayedMatch = (state.playersPlayedMatch != null) ? List.from(state.playersPlayedMatch!) : null;
         List<Player>? newPlayersInReplacement = state.playersInReplacement;
+
         final indexOut = newPlayersInGame?.indexWhere((player) => player.id == replacement.playerOut.id) ?? -1;
         if (indexOut != -1) {
           final playerRemoved = newPlayersInGame!.removeAt(indexOut);
@@ -182,8 +189,11 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
         if (indexIn != -1) {
           final playerRemoved = newPlayersInReplacement!.removeAt(indexIn);
           newPlayersInGame?.add(playerRemoved);
+          if (playersPlayedMatch?.where((p) => p.id == playerRemoved.id).isEmpty == true) {
+            playersPlayedMatch?.add(playerRemoved);
+          }
         }
-        emit(state.copyWith(status: FmiStatus.successReplacement, action: replacementAction, playersInGame: newPlayersInGame, playerSearch: newPlayersInGame, playersInReplacement: newPlayersInReplacement));
+        emit(state.copyWith(status: FmiStatus.successReplacement, action: replacementAction, playersInGame: newPlayersInGame, playerSearch: newPlayersInGame, playersInReplacement: newPlayersInReplacement, playersPlayedMatch: playersPlayedMatch));
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),

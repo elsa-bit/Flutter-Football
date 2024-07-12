@@ -1,4 +1,5 @@
 import 'package:flutter_football/domain/models/match.dart';
+import 'package:flutter_football/domain/models/player_comment.dart';
 import 'package:http/http.dart';
 
 abstract class MatchService {
@@ -10,5 +11,5 @@ abstract class MatchService {
   Future<Response> getActions(int idMatch);
   Future<Response> getSelection(int idMatch, String idTeam);
   Future<Response> setSelection(int idMatch, String idTeam, List<String> idPlayers);
-  Future<Response> setFmiReport(int idMatch, String? commentTeam, String? commentOpponent);
+  Future<Response> setFmiReport(int idMatch, String? commentTeam, String? commentOpponent, List<PlayerComment>? playerComments);
 }

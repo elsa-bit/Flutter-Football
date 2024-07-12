@@ -50,7 +50,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     on<SetFMIReport>((event, emit) async {
       try {
         emit(state.copyWith(status: MatchStatus.loading));
-        final isFmiCreated = await repository.setFmiReport(event.idMatch, event.commentTeam, event.commentOpponent);
+        final isFmiCreated = await repository.setFmiReport(event.idMatch, event.commentTeam, event.commentOpponent, event.playerComments);
         if(isFmiCreated) emit(state.copyWith(status: MatchStatus.refresh));
         else emit(state.copyWith(status: MatchStatus.error, error: FMICreationError("Une erreur est survenue lors de la création de la FMI.")));
       } catch (error) {

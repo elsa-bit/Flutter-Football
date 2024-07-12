@@ -23,6 +23,7 @@ class FmiState {
   final List<MatchAction>? actions;
   final List<Player>? playersInGame;
   final List<Player>? playersInReplacement;
+  final List<Player>? playersPlayedMatch;
   final List<Player>? playerSearch;
 
   FmiState({
@@ -32,6 +33,7 @@ class FmiState {
     this.actions = null,
     this.playersInGame = null,
     this.playersInReplacement = null,
+    this.playersPlayedMatch = null,
     this.playerSearch = null,
   });
 
@@ -42,6 +44,7 @@ class FmiState {
     List<MatchAction>? actions,
     MatchAction? action,
     List<Player>? playersInGame,
+    List<Player>? playersPlayedMatch,
     List<Player>? playersInReplacement,
     List<Player>? playerSearch,
   }) {
@@ -53,6 +56,7 @@ class FmiState {
       playersInGame: playersInGame ?? this.playersInGame,
       playersInReplacement: playersInReplacement ?? this.playersInReplacement,
       playerSearch: playerSearch ?? this.playerSearch,
+      playersPlayedMatch: playersPlayedMatch ?? this.playersPlayedMatch,
     );
   }
 }

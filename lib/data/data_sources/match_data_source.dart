@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_football/data/data_sources/base_data_source.dart';
 import 'package:flutter_football/data/services/match_service.dart';
+import 'package:flutter_football/domain/models/player_comment.dart';
 import 'package:flutter_football/networking/endpoints.dart';
 import 'package:flutter_football/networking/exceptions_factory.dart';
 import 'package:flutter_football/domain/models/match.dart';
@@ -115,12 +116,14 @@ class MatchDataSource extends BaseDataSource with MatchService {
   }
 
   @override
-  Future<Response> setFmiReport(int idMatch, String? commentTeam, String? commentOpponent) {
+  Future<Response> setFmiReport(int idMatch, String? commentTeam, String? commentOpponent, List<PlayerComment>? playerComments) {
     final queryParameters = {
       'idmatch': idMatch.toString(),
       'commentTeam': commentTeam,
       'commentOpponent': commentOpponent,
+      'playerComment': playerComments,
     };
+    print(queryParameters);
     return httpPostBody(Endpoints.setFmiReportPath, queryParameters);
   }
 
