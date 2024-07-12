@@ -39,8 +39,12 @@ class _ResourceScreenState extends State<ResourceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mes ressources"),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+        title: Text("Mes ressources", style: TextStyle(color: AppColors.white)),
         backgroundColor: currentAppColors.secondaryColor,
+      centerTitle: true,
       ),
       body: BlocBuilder<MediaBloc, MediaState>(
         builder: (context, state) {

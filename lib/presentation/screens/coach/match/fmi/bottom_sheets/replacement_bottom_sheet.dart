@@ -49,6 +49,7 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
                       topRight: Radius.circular(10)),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
                       onPressed: () => {Navigator.pop(context)},
@@ -61,7 +62,6 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
                         ),
                       ),
                     ),
-                    Spacer(),
                     Text(
                       "Remplacement",
                       style: TextStyle(
@@ -70,7 +70,6 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
                         fontSize: 16,
                       ),
                     ),
-                    Spacer(),
                     TextButton(
                       onPressed: () => {onValidateTap(context)},
                       child: Text(

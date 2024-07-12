@@ -36,8 +36,8 @@ class _MatchGalleryBottomSheetState extends State<MatchGalleryBottomSheet> {
                 topLeft: Radius.circular(10), topRight: Radius.circular(10)),
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Spacer(),
               Text(
                 "Ressources photo",
                 style: TextStyle(
@@ -46,7 +46,6 @@ class _MatchGalleryBottomSheetState extends State<MatchGalleryBottomSheet> {
                   fontSize: 16,
                 ),
               ),
-              Spacer(),
             ],
           ),
         ),

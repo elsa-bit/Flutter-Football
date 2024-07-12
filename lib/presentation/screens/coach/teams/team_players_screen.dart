@@ -30,18 +30,22 @@ class TeamPlayersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) =>
-          PlayerRepository(
-              playerDataSource: PlayerDataSource(),
-              preferencesDataSource: SharedPreferencesDataSource(),
-          ),
+      create: (context) => PlayerRepository(
+        playerDataSource: PlayerDataSource(),
+        preferencesDataSource: SharedPreferencesDataSource(),
+      ),
       child: BlocProvider(
         create: (context) => PlayersBloc(
           repository: RepositoryProvider.of<PlayerRepository>(context),
         )..add(GetPlayersTeam(teamId: "${team.id}")),
         child: Scaffold(
           appBar: AppBar(
-            title: Text(team.name),
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            ),
+            title: Center(
+                child:
+                    Text(team.name, style: TextStyle(color: AppColors.white))),
             backgroundColor: currentAppColors.secondaryColor,
           ),
           body: BlocBuilder<PlayersBloc, PlayersState>(

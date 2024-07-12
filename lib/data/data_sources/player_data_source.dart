@@ -60,6 +60,7 @@ class PlayerDataSource extends BaseDataSource with PlayerService {
     if (response.statusCode == 200) {
       return response.body;
     } else {
+      debugPrint("ERRORRRRRR");
       final errorMessage = response.body;
       throw ExceptionsFactory()
           .handleStatusCode(response.statusCode, errorMessage: errorMessage);

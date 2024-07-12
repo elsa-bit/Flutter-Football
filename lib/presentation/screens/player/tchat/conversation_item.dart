@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/domain/models/conversation.dart';
 import 'package:intl/intl.dart';
 
@@ -17,7 +18,22 @@ class ConversationItem extends StatelessWidget {
     final DateFormat formatter = DateFormat('dd-MM-yyyy HH:mm');
 
     return ListTile(
-      leading: const Icon(Icons.chat),
+      leading: conversation.avatarUrl != null
+          ? Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(50)),
+              ),
+              child: ClipOval(
+                child: Image.network(
+                  "https://img.freepik.com/psd-gratuit/illustration-3d-personne-lunettes-soleil_23-2149436188.jpg",
+                  height: 40,
+                  width: 40,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
+          : Icon(Icons.groups_outlined,
+              size: 40, fill: 0.1, color: currentAppColors.secondaryColor),
       title: Text(
         conversation.players.length == 1
             ? conversation.coachName ?? "Nouvelle conversation"

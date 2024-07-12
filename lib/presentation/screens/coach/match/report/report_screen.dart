@@ -98,7 +98,15 @@ class _ReportScreenState extends State<ReportScreen> {
       child: Scaffold(
         //resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text("Rapport général"),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          title: Text(
+            "Rapport général",
+            style: TextStyle(color: AppColors.white),
+          ),
+          backgroundColor: currentAppColors.secondaryColor,
+          centerTitle: true,
         ),
         body: Column(
           children: [
@@ -112,47 +120,51 @@ class _ReportScreenState extends State<ReportScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Stack(
-                          children: [
-                            Align(
-                              child: Image.asset(
-                                "assets/images/baseStade.png",
-                                height: 400,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Stack(
+                            children: [
+                              Align(
+                                child: Image.asset(
+                                  "assets/images/baseStade.png",
+                                  height: 400,
+                                ),
+                                alignment: Alignment.center,
                               ),
-                              alignment: Alignment.center,
-                            ),
-                            Align(
-                              child: BlocBuilder<FmiBloc, FmiState>(
-                                builder: (context, state) {
-                                  print(state.playersPlayedMatch?.length ??
-                                      "no playersPlayedMatch");
-                                  return Container(
-                                    width: 200,
-                                    child: Wrap(
-                                      alignment: WrapAlignment.center,
-                                      children: List.generate(
-                                          state.playersPlayedMatch?.length ?? 0,
-                                          (index) {
-                                        final player =
-                                            state.playersPlayedMatch![index];
-                                        return PlayerIcon(
-                                          player: player,
-                                          isSelected:
-                                              _playerSelected.value?.id == player.id,
-                                          onTap: () {
-                                            setState(() {
-                                              _playerSelected.value = player;
-                                            });
-                                          },
-                                        );
-                                      }),
-                                    ),
-                                  );
-                                },
+                              Align(
+                                child: BlocBuilder<FmiBloc, FmiState>(
+                                  builder: (context, state) {
+                                    print(state.playersPlayedMatch?.length ??
+                                        "no playersPlayedMatch");
+                                    return Container(
+                                      width: 200,
+                                      child: Wrap(
+                                        alignment: WrapAlignment.center,
+                                        children: List.generate(
+                                            state.playersPlayedMatch?.length ??
+                                                0, (index) {
+                                          final player =
+                                              state.playersPlayedMatch![index];
+                                          return PlayerIcon(
+                                            player: player,
+                                            isSelected:
+                                                _playerSelected.value?.id ==
+                                                    player.id,
+                                            onTap: () {
+                                              setState(() {
+                                                _playerSelected.value = player;
+                                              });
+                                            },
+                                          );
+                                        }),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
-                          alignment: Alignment.center,
+                            ],
+                            alignment: Alignment.center,
+                          ),
                         ),
                         /*Container(
                           //padding: const EdgeInsets.symmetric(vertical: 15),
@@ -172,8 +184,11 @@ class _ReportScreenState extends State<ReportScreen> {
                             valueListenable: _playerSelected,
                             builder: (context, p, _) {
                               final commentController = TextEditingController();
-                              final i = playerComments.indexWhere((e) => e.idPlayer == p!.id);
-                              if(i > -1) commentController.text = playerComments[i].comment;
+                              final i = playerComments
+                                  .indexWhere((e) => e.idPlayer == p!.id);
+                              if (i > -1)
+                                commentController.text =
+                                    playerComments[i].comment;
 
                               return Container(
                                 padding: const EdgeInsets.only(bottom: 8),
@@ -209,8 +224,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                           ),
                                           Text(
                                             (p!.number == 0)
-                                                ? "${p!.fullName()}"
-                                                : "${p!.number} ${p!.fullName()}",
+                                                ? "${p.fullName()}"
+                                                : "${p.number} ${p.fullName()}",
                                             style: TextStyle(
                                                 color: currentAppColors
                                                     .primaryTextColor),
@@ -243,12 +258,11 @@ class _ReportScreenState extends State<ReportScreen> {
                                       onChanged: (s) {
                                         if (p == null) return;
                                         final commentIndex =
-                                            playerComments.indexWhere((c) =>
-                                                c.idPlayer ==
-                                                p!.id);
+                                            playerComments.indexWhere(
+                                                (c) => c.idPlayer == p.id);
                                         if (commentIndex == -1) {
-                                          playerComments.add(PlayerComment(
-                                              p!.id, s));
+                                          playerComments
+                                              .add(PlayerComment(p.id, s));
                                         } else {
                                           // comment already created
                                           if (s.isEmpty) {
@@ -413,9 +427,9 @@ class _ReportScreenState extends State<ReportScreen> {
               ),
             ),
             Container(
-              color: currentAppColors.primaryVariantColor2,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if ((_currentPage > 0))
                     ElevatedButton.icon(
@@ -423,20 +437,21 @@ class _ReportScreenState extends State<ReportScreen> {
                         foregroundColor: WidgetStateProperty.all<Color>(
                             currentAppColors.primaryTextColor),
                         backgroundColor:
-                            WidgetStateProperty.all<Color>(AppColors.grey),
+                            WidgetStateProperty.all<Color>(currentAppColors.greyColor),
                       ),
                       onPressed: _previousPage,
                       icon: Icon(
                         Icons.keyboard_arrow_left_rounded,
-                        color: currentAppColors.secondaryTextColor,
+                        color: AppColors.white,
                       ),
                       label: Text(
                         "Précédent",
                         style: TextStyle(
-                            color: currentAppColors.secondaryTextColor),
+                            color: AppColors.white),
                       ),
-                    ),
-                  Spacer(),
+                    )
+                  else
+                    Spacer(),
                   ElevatedButton.icon(
                     style: ButtonStyle(
                       foregroundColor: WidgetStateProperty.all<Color>(
@@ -448,15 +463,20 @@ class _ReportScreenState extends State<ReportScreen> {
                       if (_currentPage == 0) {
                         _nextPage();
                       } else {
-                        //Save FMI
                         onSavePressed(context);
                       }
                     },
                     icon: (_currentPage == 0)
-                        ? Icon(Icons.keyboard_arrow_right_rounded)
+                        ? Icon(
+                            Icons.keyboard_arrow_right_rounded,
+                            color: AppColors.white,
+                          )
                         : null,
                     iconAlignment: IconAlignment.end,
-                    label: Text((_currentPage == 0) ? "Suivant" : "Valider"),
+                    label: Text(
+                      (_currentPage == 0) ? "Suivant" : "Valider",
+                      style: TextStyle(color: AppColors.white),
+                    ),
                   ),
                 ],
               ),

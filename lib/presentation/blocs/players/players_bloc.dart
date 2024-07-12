@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_football/data/data_sources/shared_preferences_data_source.dart';
 import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/repositories/player_repository.dart';
@@ -82,7 +83,8 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         emit(state.copyWith(status: PlayersStatus.success));
       } catch (e) {
         final errorMessage = e.toString().replaceFirst('Exception: ', '');
-        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
+        debugPrint("ICIIIIIIIIIII");
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.addFriendError));
       }
     });
 

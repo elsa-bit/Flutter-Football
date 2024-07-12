@@ -37,8 +37,9 @@ class TeamsScreen extends StatelessWidget {
         ..add(GetTeams()),
         child: Scaffold(
           appBar: AppBar(
-            title: Center(child: Text("Mes équipes")),
+            title: Center(child: Text("Mes équipes", style: TextStyle(color: AppColors.white))),
             backgroundColor: currentAppColors.secondaryColor,
+            centerTitle: true,
           ),
           body: BlocBuilder<TeamsBloc, TeamState>(
             builder: (context, state) {

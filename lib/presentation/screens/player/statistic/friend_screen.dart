@@ -51,8 +51,12 @@ class _FriendScreenState extends State<FriendScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Ajouter un ami"),
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text("Ajouter un ami", style: TextStyle(color: AppColors.white)),
         backgroundColor: currentAppColors.secondaryColor,
+        centerTitle: true,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -66,10 +70,9 @@ class _FriendScreenState extends State<FriendScreen> {
                     _showSnackBar(context, 'Ami ajouté', Colors.greenAccent);
                     _controller.play();
                     _scanQRcode = "";
-                  } else if (state.status == PlayersStatus.error) {
+                  } else if (state.status == PlayersStatus.addFriendError) {
                     _showSnackBar(context, state.error, Colors.orangeAccent);
                     _scanQRcode = "";
-                    Navigator.pop(context);
                   }
                 },
                 builder: (context, state) {

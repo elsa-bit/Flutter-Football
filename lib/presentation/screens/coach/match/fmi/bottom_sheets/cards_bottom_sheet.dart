@@ -66,6 +66,7 @@ class _CardsBottomSheetState extends State<CardsBottomSheet> {
                         topRight: Radius.circular(10)),
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
                         onPressed: () => {Navigator.pop(context)},
@@ -78,7 +79,6 @@ class _CardsBottomSheetState extends State<CardsBottomSheet> {
                           ),
                         ),
                       ),
-                      Spacer(),
                       Text(
                         "Signaler une faute",
                         style: TextStyle(
@@ -87,7 +87,6 @@ class _CardsBottomSheetState extends State<CardsBottomSheet> {
                           fontSize: 16,
                         ),
                       ),
-                      Spacer(),
                       TextButton(
                         onPressed: () => {onValidateTap(context)},
                         child: Text(

@@ -29,6 +29,7 @@ class TeamItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               team.name,
@@ -36,7 +37,6 @@ class TeamItem extends StatelessWidget {
                 color: currentAppColors.primaryTextColor,
               ),
             ),
-            Spacer(),
             SvgPicture.asset(
               "assets/arrow.svg",
               colorFilter: ColorFilter.mode(currentAppColors.secondaryTextColor, BlendMode.srcIn),

@@ -46,7 +46,11 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Mes conversations")),
+        title: Center(
+            child: Text(
+              "Conversations",
+              style: TextStyle(color: AppColors.white),
+            )),
         backgroundColor: currentAppColors.secondaryColor,
       ),
       floatingActionButton: FloatingActionButton(

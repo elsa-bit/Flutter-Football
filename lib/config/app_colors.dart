@@ -10,7 +10,7 @@ abstract class AppColors {
   abstract Color secondaryColor;
   abstract Color primaryTextColor;
   abstract Color secondaryTextColor;
-
+  abstract Color greyColor;
   // Static colors
   static const Color white = Color(0xffffffff);
   static const Color black = Color(0xFF000000);
@@ -48,6 +48,10 @@ class LightThemeAppColors extends AppColors {
 
   @override
   Color secondaryTextColor = const Color(0xff737373);
+
+  @override
+  Color greyColor = const Color(0xff818181);
+
 }
 
 class DarkThemeAppColors extends AppColors {
@@ -71,4 +75,7 @@ class DarkThemeAppColors extends AppColors {
 
   @override
   Color secondaryTextColor = const Color(0xff949496);
+
+  @override
+  Color greyColor = const Color(0xff4c4c4c);
 }

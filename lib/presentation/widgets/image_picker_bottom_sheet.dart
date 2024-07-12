@@ -30,13 +30,15 @@ class _ImagePickerBottomSheetState extends State<ImagePickerBottomSheet> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
             decoration: BoxDecoration(
               color: currentAppColors.primaryVariantColor1,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
                   onPressed: () => {Navigator.pop(context)},
@@ -49,7 +51,6 @@ class _ImagePickerBottomSheetState extends State<ImagePickerBottomSheet> {
                     ),
                   ),
                 ),
-                Spacer(),
                 Text(
                   "Choisir une image",
                   style: TextStyle(
@@ -58,16 +59,15 @@ class _ImagePickerBottomSheetState extends State<ImagePickerBottomSheet> {
                     fontSize: 16,
                   ),
                 ),
-                Spacer(),
                 TextButton(
                   onPressed: () {
-                    if(_selectedImage != null) {
+                    if (_selectedImage != null) {
                       widget.onImagePicked?.call(_selectedImage!);
                       Navigator.pop(context);
                     }
                   },
                   child: Text(
-                    (_selectedImage != null) ? "Ajouter" : "        ",
+                    (_selectedImage != null) ? "Ajouter" : "",
                     style: TextStyle(
                       color: currentAppColors.secondaryColor,
                       fontWeight: FontWeight.bold,
@@ -78,23 +78,15 @@ class _ImagePickerBottomSheetState extends State<ImagePickerBottomSheet> {
               ],
             ),
           ),
-
-          // TODO : if resources != null && resources.isnotempty()
-          /*Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            color: AppColors.backGrey,
-            child: Row(),
-          ),*/
-
           Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Spacer(),
                 CircleAvatar(
                   radius: 40,
-                  backgroundColor: AppColors.mediumBlue,
+                  backgroundColor: currentAppColors.secondaryColor,
                   child: IconButton(
                     padding: const EdgeInsets.all(20),
                     onPressed: () async {
@@ -110,15 +102,13 @@ class _ImagePickerBottomSheetState extends State<ImagePickerBottomSheet> {
                     icon: Icon(
                       Icons.camera_alt_outlined,
                       size: 35,
+                      color: AppColors.white,
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 40,
-                ),
                 CircleAvatar(
                   radius: 40,
-                  backgroundColor: AppColors.mediumBlue,
+                  backgroundColor: currentAppColors.secondaryColor,
                   child: IconButton(
                     padding: const EdgeInsets.all(20),
                     onPressed: () async {
@@ -134,14 +124,13 @@ class _ImagePickerBottomSheetState extends State<ImagePickerBottomSheet> {
                     icon: Icon(
                       Icons.image_outlined,
                       size: 35,
+                      color: AppColors.white,
                     ),
                   ),
                 ),
-                Spacer(),
               ],
             ),
           ),
-
           if (_selectedImage != null)
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,9 +160,12 @@ class _ImagePickerBottomSheetState extends State<ImagePickerBottomSheet> {
                         child: Container(
                           alignment: Alignment.topRight,
                           child: CircleAvatar(
-                            backgroundColor: AppColors.grey,
+                            backgroundColor: currentAppColors.greyColor,
                             radius: 20,
-                            child: Icon(Icons.delete_forever),
+                            child: Icon(
+                              Icons.delete_forever,
+                              color: AppColors.white,
+                            ),
                           ),
                         ),
                       ),

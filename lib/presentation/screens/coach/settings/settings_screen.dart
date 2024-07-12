@@ -119,21 +119,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           width: 250,
                           alignment: Alignment.center,
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Spacer(flex: 2),
                               Text(
                                 "${state.user?.getFirstname() ?? " "} ${state
                                     .user?.getLastname() ?? ""}",
                                 style: AppTextStyle.subtitle2.copyWith(
                                     color: currentAppColors.secondaryColor),
                               ),
-                              Spacer(),
                               Text(
                                 state.user?.getRole() ?? "",
                                 style: AppTextStyle.regular.copyWith(
                                     color: currentAppColors.secondaryColor),
                               ),
-                              Spacer(flex: 2),
                             ],
                           ),
                         ),

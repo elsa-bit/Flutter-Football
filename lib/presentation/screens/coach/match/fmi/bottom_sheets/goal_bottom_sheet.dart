@@ -51,6 +51,7 @@ class _GoalBottomSheetState extends State<GoalBottomSheet> {
                       topRight: Radius.circular(10)),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
                       onPressed: () => {Navigator.pop(context)},
@@ -63,7 +64,6 @@ class _GoalBottomSheetState extends State<GoalBottomSheet> {
                         ),
                       ),
                     ),
-                    Spacer(),
                     Text(
                       "Ajouter un but",
                       style: TextStyle(
@@ -72,7 +72,6 @@ class _GoalBottomSheetState extends State<GoalBottomSheet> {
                         fontSize: 16,
                       ),
                     ),
-                    Spacer(),
                     TextButton(
                       onPressed: () => {onValidateTap(context)},
                       child: Text(

@@ -38,7 +38,11 @@ class _StatisticScreenState extends State<StatisticScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Mes stats")),
+        title: Center(
+            child: Text(
+          "Statistiques",
+          style: TextStyle(color: AppColors.white),
+        )),
         backgroundColor: currentAppColors.secondaryColor,
       ),
       body: BlocBuilder<PlayersBloc, PlayersState>(
