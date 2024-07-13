@@ -60,21 +60,13 @@ class _PlayerItemState extends State<PlayerItem> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(
-          margin: const EdgeInsets.fromLTRB(60.0, 10.0, 60.0, 15.0),
+          margin: const EdgeInsets.fromLTRB(60.0, 10.0, 60.0, 0.0),
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
           decoration: BoxDecoration(
             color: currentAppColors.primaryVariantColor1,
             border: Border.all(color: currentAppColors.primaryVariantColor2),
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: Offset(0, 3),
-              ),
-            ],
           ),
           child: Row(
             children: [
@@ -95,7 +87,6 @@ class _PlayerItemState extends State<PlayerItem> {
                     "${widget.player.firstname} ${widget.player.lastname}",
                     style: TextStyle(
                       color: currentAppColors.primaryTextColor,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   if (widget.player.position != null && widget.player.position!.isNotEmpty) ...[
