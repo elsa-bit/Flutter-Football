@@ -14,19 +14,26 @@ class TeamItem extends StatelessWidget {
     this.onTap,
   }) : super(key: key);
 
-  // ListTile to add onTap gesture
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.fromLTRB(70.0, 10.0, 70.0, 0.0),
+        margin: const EdgeInsets.fromLTRB(70.0, 10.0, 70.0, 15.0),
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.fromLTRB(26.0, 15.0, 15.0, 18.0),
         decoration: BoxDecoration(
           color: currentAppColors.primaryVariantColor1,
           border: Border.all(color: currentAppColors.primaryVariantColor2),
           borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,6 +42,7 @@ class TeamItem extends StatelessWidget {
               team.name,
               style: TextStyle(
                 color: currentAppColors.primaryTextColor,
+                fontWeight: FontWeight.bold,
               ),
             ),
             SvgPicture.asset(

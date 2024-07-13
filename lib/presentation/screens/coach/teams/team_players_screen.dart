@@ -43,9 +43,7 @@ class TeamPlayersScreen extends StatelessWidget {
             iconTheme: IconThemeData(
               color: Colors.white,
             ),
-            title: Center(
-                child:
-                    Text(team.name, style: TextStyle(color: AppColors.white))),
+            title: Text(team.name, style: TextStyle(color: AppColors.white)),
             backgroundColor: currentAppColors.secondaryColor,
           ),
           body: BlocBuilder<PlayersBloc, PlayersState>(
@@ -67,15 +65,18 @@ class TeamPlayersScreen extends StatelessWidget {
                       child: Text("Aucun joueur dans cette équipe."),
                     );
                   }
-                  return ListView.builder(
-                    itemCount: state.players?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final player = state.players![index];
-                      return PlayerItem(
-                        player: player,
-                        onTap: () => _onPlayerTap(context, player),
-                      );
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: ListView.builder(
+                      itemCount: state.players?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final player = state.players![index];
+                        return PlayerItem(
+                          player: player,
+                          onTap: () => _onPlayerTap(context, player),
+                        );
+                      },
+                    ),
                   );
                 default:
                   return const Center(

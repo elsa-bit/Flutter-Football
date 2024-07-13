@@ -60,15 +60,18 @@ class TeamsScreen extends StatelessWidget {
                       child: Text("Aucune équipe ne vous a été attribuée."),
                     );
                   }
-                  return ListView.builder(
-                    itemCount: state.teams!.length,
-                    itemBuilder: (context, index) {
-                      final team = state.teams![index];
-                      return TeamItem(
-                          team: team,
-                        onTap: () => _onTeamTap(context, team),
-                      );
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: ListView.builder(
+                      itemCount: state.teams!.length,
+                      itemBuilder: (context, index) {
+                        final team = state.teams![index];
+                        return TeamItem(
+                            team: team,
+                          onTap: () => _onTeamTap(context, team),
+                        );
+                      },
+                    ),
                   );
                 default:
                   return const Center(
