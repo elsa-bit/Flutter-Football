@@ -21,7 +21,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         icon: Icon(Icons.calendar_month), label: 'Programme'),
     BottomNavigationBarItem(icon: Icon(Icons.forum), label: 'Tchat'),
     BottomNavigationBarItem(icon: Icon(Icons.sports_soccer), label: 'Équipes'),
-    BottomNavigationBarItem(icon: Icon(Icons.sports_football), label: 'Match'),
+    BottomNavigationBarItem(icon: Icon(Icons.stadium_outlined), label: 'Match'),
     BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Paramètres'),
   ];
 
