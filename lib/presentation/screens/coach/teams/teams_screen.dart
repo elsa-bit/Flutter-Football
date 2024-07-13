@@ -27,17 +27,18 @@ class TeamsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepositoryProvider(
       create: (context) => TeamRepository(
-          teamDataSource: TeamDataSource(),
-          preferences: SharedPreferencesDataSource(),
+        teamDataSource: TeamDataSource(),
+        preferences: SharedPreferencesDataSource(),
       ),
       child: BlocProvider(
         create: (context) => TeamsBloc(
           repository: RepositoryProvider.of<TeamRepository>(context),
-        )
-        ..add(GetTeams()),
+        )..add(GetTeams()),
         child: Scaffold(
           appBar: AppBar(
-            title: Center(child: Text("Mes équipes", style: TextStyle(color: AppColors.white))),
+            title: Center(
+                child: Text("Mes équipes",
+                    style: TextStyle(color: AppColors.white))),
             backgroundColor: currentAppColors.secondaryColor,
             centerTitle: true,
           ),
@@ -60,15 +61,18 @@ class TeamsScreen extends StatelessWidget {
                       child: Text("Aucune équipe ne vous a été attribuée."),
                     );
                   }
-                  return ListView.builder(
-                    itemCount: state.teams!.length,
-                    itemBuilder: (context, index) {
-                      final team = state.teams![index];
-                      return TeamItem(
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: ListView.builder(
+                      itemCount: state.teams!.length,
+                      itemBuilder: (context, index) {
+                        final team = state.teams![index];
+                        return TeamItem(
                           team: team,
-                        onTap: () => _onTeamTap(context, team),
-                      );
-                    },
+                          onTap: () => _onTeamTap(context, team),
+                        );
+                      },
+                    ),
                   );
                 default:
                   return const Center(
@@ -94,9 +98,6 @@ class TeamsScreen extends StatelessWidget {
   }
 
   void _onTeamTap(BuildContext context, Team team) async {
-    Navigator.push(
-      context,
-      TeamPlayersScreen.route(team)
-    );
+    Navigator.push(context, TeamPlayersScreen.route(team));
   }
 }
