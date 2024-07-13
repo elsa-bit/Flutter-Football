@@ -25,7 +25,7 @@ class MatchItem extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               width: 80.0,
               decoration: BoxDecoration(
-                color: (match.win != null) ? ((match.win!) ? AppColors.green.withOpacity(0.4) : AppColors.red.withOpacity(0.4)) : AppColors.black.withOpacity(0.1),
+                color: match.getMatchStateColor(),
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
               ),
               child: Column(
@@ -55,9 +55,11 @@ class MatchItem extends StatelessWidget {
                   Text(
                     match.nameTeam,
                     style: TextStyle(
-                      color: Colors.grey,
+                      color: currentAppColors.primaryTextColor.withOpacity(0.6),
                       fontSize: 12.0,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   )
                 ],

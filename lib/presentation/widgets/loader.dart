@@ -9,9 +9,9 @@ class Loader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: double.infinity,
-      color: AppColors.black.withOpacity(0.80),
+      color: AppColors.black.withOpacity(0.2),
       child: const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: Colors.white,),
       ),
     );
   }

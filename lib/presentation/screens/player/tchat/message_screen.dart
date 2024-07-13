@@ -54,8 +54,12 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tchat"),
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text("Tchat", style: TextStyle(color: AppColors.white),),
         backgroundColor: currentAppColors.secondaryColor,
+        centerTitle: true,
       ),
       body: SafeArea(
         child: Column(

@@ -9,6 +9,7 @@ import 'package:flutter_football/domain/models/fmi/match_action.dart';
 import 'package:flutter_football/domain/models/fmi/replacement.dart';
 import 'package:flutter_football/domain/models/match.dart';
 import 'package:flutter_football/domain/models/match_details.dart';
+import 'package:flutter_football/domain/models/player_comment.dart';
 import 'package:flutter_football/presentation/blocs/match/match_state.dart';
 import 'package:flutter_football/utils/extensions/date_time_extension.dart';
 
@@ -115,9 +116,9 @@ class MatchRepository {
     }
   }
 
-  Future<bool> setFmiReport(int idMatch, String? commentTeam, String? commentOpponent) async {
+  Future<bool> setFmiReport(int idMatch, String? commentTeam, String? commentOpponent, List<PlayerComment>? playerComments) async {
     try {
-      final response = await matchDataSource.setFmiReport(idMatch, commentTeam, commentOpponent);
+      final response = await matchDataSource.setFmiReport(idMatch, commentTeam, commentOpponent, playerComments);
       return response.statusCode == 200 || response.statusCode == 201;
     } catch (error) {
       print(error);

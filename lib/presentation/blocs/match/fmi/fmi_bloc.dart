@@ -1,43 +1,111 @@
+import 'dart:ffi';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/domain/models/fmi/match_action.dart';
+import 'package:flutter_football/domain/models/match_details.dart';
+import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/domain/repositories/match_repository.dart';
+import 'package:flutter_football/domain/repositories/player_repository.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_state.dart';
 import 'package:flutter_football/utils/extensions/date_time_extension.dart';
 
 class FmiBloc extends Bloc<FmiEvent, FmiState> {
   final MatchRepository repository;
+  final PlayerRepository playerRepository;
 
-  FmiBloc({required this.repository}) : super(FmiState()) {
-    on<InitFMI>((event, emit) async {
+  FmiBloc({required this.repository, required this.playerRepository}) : super(FmiState()) {
+
+    Future<List<MatchAction>?> initFMIWithActions(MatchDetails match, Emitter<FmiState> emit) async {
       try {
-        emit(FmiState());
-        // Init state with match data
-        emit(state.copyWith(
-          status: FmiStatus.success,
-          match: event.match,
-        ));
-
-        final actions = await repository.getActions(event.match.id, event.match.date);
+        emit(state.copyWith(status: FmiStatus.loadingHistory,));
+        final actions = await repository.getActions(match.id, match.date);
         emit(state.copyWith(
           status: FmiStatus.success,
           actions: actions,
         ));
-
+        return actions;
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
           status: FmiStatus.error,
         ));
+        return null;
       }
+    }
+
+    Future<void> setPlayers(MatchDetails match, List<MatchAction>? matchActions, Emitter<FmiState> emit) async {
+      try {
+        emit(state.copyWith(status: FmiStatus.loadingPlayer));
+        final players = await playerRepository.getPlayersTeam(match.idTeam);
+
+        List<Player> inMatch = players;
+        List<Player> forReplacement = players;
+        List<Player> playedMatch = List.empty(growable: true);
+
+        if(match.playerSelection != null && match.playerSelection!.isNotEmpty) {
+          inMatch = players.where((p) => match.playerSelection!.contains(p.id)).toList();
+          forReplacement = players.where((p) => !match.playerSelection!.contains(p.id)).toList();
+          playedMatch.addAll(inMatch);
+        }
+
+        if(matchActions != null && matchActions.isNotEmpty) {
+          // update players list based on the actions
+          for (final action in matchActions) {
+            if(action is ReplacementAction) {
+              final indexOut = inMatch.indexWhere((player) => player.id == action.replacement.playerOut.id);
+              if (indexOut != -1) {
+                final playerRemoved = inMatch.removeAt(indexOut);
+                forReplacement.add(playerRemoved);
+              }
+
+              final indexIn = forReplacement.indexWhere((player) => player.id == action.replacement.playerIn.id);
+              if (indexIn != -1) {
+                final playerRemoved = forReplacement.removeAt(indexIn);
+                inMatch.add(playerRemoved);
+                if (playedMatch.where((p) => p.id == playerRemoved.id).isEmpty) {
+                  playedMatch.add(playerRemoved);
+                }
+              }
+            } else if (action is CardAction && action.card.color == "red") {
+              inMatch.removeWhere((player) => player.id == action.card.player.id);
+            }
+          }
+        }
+        emit(state.copyWith(
+            playersInGame: inMatch,
+            playersPlayedMatch: playedMatch,
+            playerSearch: inMatch,
+            playersInReplacement: forReplacement,
+            status: FmiStatus.success));
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: FmiStatus.error));
+      }
+    }
+
+
+    on<InitFMI>((event, emit) async {
+      emit(FmiState());
+      emit(state.copyWith(
+        status: FmiStatus.success,
+        match: event.match,
+      ));
+
+      final actions = await initFMIWithActions(event.match, emit);
+      await setPlayers(event.match, actions, emit);
     });
 
     on<AddCard>((event, emit) async {
       try {
-        emit(state.copyWith(status: FmiStatus.loading));
+        //emit(state.copyWith(status: FmiStatus.loading));
+        final bool alreadyHaveYellowCard = (event.color == "red") ? true : (state.actions?.where((action) {
+          return (action is CardAction && action.card.player.id == event.idPlayer);
+        }).isNotEmpty ?? false);
+
         final card = await repository.addCard(
-            event.idMatch, event.idPlayer, event.color);
+            event.idMatch, event.idPlayer, alreadyHaveYellowCard ? "red" : event.color);
         final cardAction = CardAction(
           id: "card-${card.id}",
           createdAt: card.createdAt,
@@ -47,21 +115,26 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
               : "assets/red_card.svg",
           card: card,
         );
-        emit(state.copyWith(action: cardAction));
-      } catch (error) {
-        // TODO : replace error field with custom error Type
-        // TODO : catch error if card can't be created FMICardCreationException
 
+        // Update list of players in match
+        if (card.color == "red") {
+          List<Player>? newList = state.playersInGame;
+          newList?.removeWhere((player) => player.id == card.player.id);
+          emit(state.copyWith(status: FmiStatus.successCard, action: cardAction, playersInGame: newList));
+        } else {
+          emit(state.copyWith(status: FmiStatus.successCard, action: cardAction));
+        }
+      } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
-          status: FmiStatus.error,
+          status: FmiStatus.errorCard,
         ));
       }
     });
 
     on<AddGoal>((event, emit) async {
       try {
-        emit(state.copyWith(status: FmiStatus.loading));
+        //emit(state.copyWith(status: FmiStatus.loading));
         final goal = await repository.addGoal(event.idMatch, event.idPlayer);
         final goalAction = GoalAction(
           id: "goal-${goal.id}",
@@ -72,6 +145,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
           goal: goal,
         );
         emit(state.copyWith(
+          status: FmiStatus.successGoal,
           action: goalAction,
           match: state.match?.copyWith(
             teamGoals: !goal.fromOpponent ? ((state.match?.teamGoals ?? 0) + 1) : null,
@@ -81,14 +155,14 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
-          status: FmiStatus.error,
+          status: FmiStatus.errorGoal,
         ));
       }
     });
 
     on<AddReplacement>((event, emit) async {
       try {
-        emit(state.copyWith(status: FmiStatus.loading));
+        //emit(state.copyWith(status: FmiStatus.loading));
         final replacement = await repository.addReplacement(
             event.idMatch, event.idPlayerOut, event.idPlayerIn, event.reason);
         final replacementAction = ReplacementAction(
@@ -99,18 +173,71 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
           replacement: replacement,
           assetTint: AppColors.mediumBlue,
         );
-        emit(state.copyWith(action: replacementAction));
+
+        // update players state
+        List<Player>? newPlayersInGame = state.playersInGame;
+        List<Player>? playersPlayedMatch = (state.playersPlayedMatch != null) ? List.from(state.playersPlayedMatch!) : null;
+        List<Player>? newPlayersInReplacement = state.playersInReplacement;
+
+        final indexOut = newPlayersInGame?.indexWhere((player) => player.id == replacement.playerOut.id) ?? -1;
+        if (indexOut != -1) {
+          final playerRemoved = newPlayersInGame!.removeAt(indexOut);
+          newPlayersInReplacement?.add(playerRemoved);
+        }
+
+        final indexIn = newPlayersInReplacement?.indexWhere((player) => player.id == replacement.playerIn.id) ?? -1;
+        if (indexIn != -1) {
+          final playerRemoved = newPlayersInReplacement!.removeAt(indexIn);
+          newPlayersInGame?.add(playerRemoved);
+          if (playersPlayedMatch?.where((p) => p.id == playerRemoved.id).isEmpty == true) {
+            playersPlayedMatch?.add(playerRemoved);
+          }
+        }
+        emit(state.copyWith(status: FmiStatus.successReplacement, action: replacementAction, playersInGame: newPlayersInGame, playerSearch: newPlayersInGame, playersInReplacement: newPlayersInReplacement, playersPlayedMatch: playersPlayedMatch));
       } catch (error) {
         emit(state.copyWith(
           error: error.toString(),
-          status: FmiStatus.error,
+          status: FmiStatus.errorReplacement,
         ));
+      }
+    });
+
+    on<Search>((event, emit) async {
+      try {
+        emit(state.copyWith(playerSearch: []));
+
+        await Future.delayed(const Duration(milliseconds: 300), () {
+          final searchList;
+          if (event.search.isEmpty) {
+            searchList = state.playersInGame;
+          } else {
+            searchList = state.playersInGame
+                ?.where((p) => p.isMatching(event.search))
+                .toList();
+          }
+
+          emit(state.copyWith(playerSearch: searchList));
+        });
+      } catch (e) {
+        emit(state.copyWith(playerSearch: state.playersInGame));
+        //emit(state.copyWith(error: e.toString(), status: FmiStatus.error));
       }
     });
 
     on<ClearFMIState>((event, emit) async {
      emit(FmiState());
     });
+
+    on<ResetSuccessFMIState>((event, emit) async {
+      emit(state.copyWith(status: FmiStatus.success));
+    });
+
+    on<ResetErrorFMIState>((event, emit) async {
+      emit(state.copyWith(status: FmiStatus.error));
+    });
+
+
+
   }
 
 

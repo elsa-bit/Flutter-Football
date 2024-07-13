@@ -7,6 +7,14 @@ class InitFMI extends FmiEvent {
   InitFMI({required this.match});
 }
 
+class Search extends FmiEvent {
+  final String search;
+
+  Search({
+    required this.search,
+  });
+}
+
 class AddReplacement extends FmiEvent {
   final int idMatch;
   final String idPlayerOut;
@@ -46,4 +54,12 @@ class AddCard extends FmiEvent {
 
 class ClearFMIState extends FmiEvent {
   ClearFMIState();
+}
+
+class ResetSuccessFMIState extends FmiEvent {
+  ResetSuccessFMIState();
+}
+
+class ResetErrorFMIState extends FmiEvent {
+  ResetErrorFMIState();
 }

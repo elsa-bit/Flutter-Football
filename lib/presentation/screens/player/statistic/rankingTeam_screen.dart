@@ -86,125 +86,128 @@ class _RankingTeamScreenState extends State<RankingTeamScreen> {
                   );
                 }
                   return Expanded(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20, top: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DropdownButton<String>(
-                                value: _selectedTeam,
-                                hint: Text('Equipe'),
-                                items: teamState.teams!.map((team) {
-                                  return DropdownMenuItem<String>(
-                                    value: team.id.toString(),
-                                    child: Text(team.name),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    _selectedTeam = newValue;
-                                    if (_selectedTeam != null) {
-                                      BlocProvider.of<PlayersBloc>(context).add(
-                                          GetPlayersTeam(
-                                              teamId: _selectedTeam!));
-                                    }
-                                  });
-                                },
-                              ),
-                              Container(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Trier par ",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    SizedBox(width: 5),
-                                    DropdownButton<String>(
-                                      value: _selectedCriteria,
-                                      items: <String>[
-                                        'buts',
-                                        'carton rouge',
-                                        'carton jaune',
-                                        'trophée',
-                                      ].map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          _selectedCriteria = newValue!;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        BlocBuilder<PlayersBloc, PlayersState>(
-                          builder: (context, playerState) {
-                            if (_selectedTeam == null) {
-                              return Center(
-                                child: Text(
-                                    "Sélectionnez une équipe pour afficher les joueurs"),
-                              );
-                            }
-
-                            switch (playerState.status) {
-                              case PlayersStatus.loading:
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              case PlayersStatus.error:
-                                return Center(
-                                  child: Text(playerState.error),
-                                );
-                              case PlayersStatus.success:
-                              default:
-                                var listPlayer = playerState.players;
-                                if (listPlayer == null || listPlayer.isEmpty) {
-                                  return const Center(
-                                    child: Text("Aucun joueur reconnu !"),
-                                  );
-                                }
-
-                                if (_selectedCriteria == 'buts') {
-                                  listPlayer
-                                      .sort((a, b) => b.goal.compareTo(a.goal));
-                                } else if (_selectedCriteria ==
-                                    'carton rouge') {
-                                  listPlayer.sort(
-                                      (a, b) => b.redCard.compareTo(a.redCard));
-                                } else if (_selectedCriteria ==
-                                    'carton jaune') {
-                                  listPlayer.sort((a, b) =>
-                                      b.yellowCard.compareTo(a.yellowCard));
-                                } else if (_selectedCriteria == 'trophée') {
-                                  listPlayer.sort(
-                                      (a, b) => b.trophy.compareTo(a.trophy));
-                                }
-
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: listPlayer.length,
-                                  itemBuilder: (context, index) {
-                                    final player = listPlayer[index];
-                                    return RankingItem(
-                                      player: player,
-                                      idPlayer: widget.idPlayer,
-                                      index: index,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20, top: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                DropdownButton<String>(
+                                  value: _selectedTeam,
+                                  hint: Text('Equipe'),
+                                  items: teamState.teams!.map((team) {
+                                    return DropdownMenuItem<String>(
+                                      value: team.id.toString(),
+                                      child: Text(team.name),
                                     );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _selectedTeam = newValue;
+                                      if (_selectedTeam != null) {
+                                        BlocProvider.of<PlayersBloc>(context).add(
+                                            GetPlayersTeam(
+                                                teamId: _selectedTeam!));
+                                      }
+                                    });
                                   },
+                                ),
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Trier par ",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(width: 5),
+                                      DropdownButton<String>(
+                                        value: _selectedCriteria,
+                                        items: <String>[
+                                          'buts',
+                                          'carton rouge',
+                                          'carton jaune',
+                                          'trophée',
+                                        ].map((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            _selectedCriteria = newValue!;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          BlocBuilder<PlayersBloc, PlayersState>(
+                            builder: (context, playerState) {
+                              if (_selectedTeam == null) {
+                                return Center(
+                                  child: Text(
+                                      "Sélectionnez une équipe pour afficher les joueurs"),
                                 );
-                            }
-                          },
-                        ),
-                      ],
+                              }
+
+                              switch (playerState.status) {
+                                case PlayersStatus.loading:
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                case PlayersStatus.error:
+                                  return Center(
+                                    child: Text(playerState.error),
+                                  );
+                                case PlayersStatus.success:
+                                default:
+                                  var listPlayer = playerState.players;
+                                  if (listPlayer == null || listPlayer.isEmpty) {
+                                    return const Center(
+                                      child: Text("Aucun joueur reconnu !"),
+                                    );
+                                  }
+
+                                  if (_selectedCriteria == 'buts') {
+                                    listPlayer
+                                        .sort((a, b) => b.goal.compareTo(a.goal));
+                                  } else if (_selectedCriteria ==
+                                      'carton rouge') {
+                                    listPlayer.sort(
+                                        (a, b) => b.redCard.compareTo(a.redCard));
+                                  } else if (_selectedCriteria ==
+                                      'carton jaune') {
+                                    listPlayer.sort((a, b) =>
+                                        b.yellowCard.compareTo(a.yellowCard));
+                                  } else if (_selectedCriteria == 'trophée') {
+                                    listPlayer.sort(
+                                        (a, b) => b.trophy.compareTo(a.trophy));
+                                  }
+
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: listPlayer.length,
+                                    itemBuilder: (context, index) {
+                                      final player = listPlayer[index];
+                                      return RankingItem(
+                                        player: player,
+                                        idPlayer: widget.idPlayer,
+                                        index: index,
+                                      );
+                                    },
+                                  );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   );
               }

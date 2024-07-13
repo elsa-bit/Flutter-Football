@@ -12,7 +12,7 @@ import 'package:http_parser/http_parser.dart';
 class MediaDataSource extends BaseDataSource with MediaService {
   @override
   Future<String> getAvatar(String name) async {
-    return await supabase.storage.from('avatars').createSignedUrl(name, 160);
+    return await supabase.storage.from('avatars').createSignedUrl(name, 300);
   }
 
   @override
@@ -23,7 +23,15 @@ class MediaDataSource extends BaseDataSource with MediaService {
   }
 
   Future<String> getClubRule() async {
-    return await supabase.storage.from('rule').getPublicUrl('club_rule.pdf');
+    return await supabase.storage.from('rule').createSignedUrl('club_rule.pdf', 240);
+  }
+
+  Future<String> getCoachRule() async {
+    return await supabase.storage.from('rule').createSignedUrl('coach_rule.pdf', 160);
+  }
+
+  Future<String> getDocumentClub() async {
+    return await supabase.storage.from('rule').createSignedUrl('doc_club.pdf', 160);
   }
 
   Future<List<Video>> getVideosBucket(String bucketName) async {
@@ -40,6 +48,26 @@ class MediaDataSource extends BaseDataSource with MediaService {
       videos.add(Video(url: url, name: file.name));
     }
     return videos;
+  }
+
+  Future<List<String>> getMatchBucketImages(String matchId) async {
+    final result = await supabase.storage.from("match-resources").list(path: matchId);
+
+    if (result.isEmpty) {
+      throw Exception('No files found in the bucket');
+    }
+
+    List<String> imageUrls = [];
+    for (var file in result) {
+      try {
+        String url = await supabase.storage.from('match-resources')
+            .createSignedUrl("$matchId/${file.name}", 7200); // 7200 secondes = 2 hours
+        imageUrls.add(url);
+      } catch (e) {
+        print("Failed to create signed url for file ${file.name}. $e");
+      }
+     }
+    return imageUrls;
   }
 
   Future<String> getSpecificVideos(String idplayer) async {

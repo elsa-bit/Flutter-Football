@@ -24,10 +24,29 @@ class GetClubRule extends MediaEvent {
   GetClubRule();
 }
 
+class GetCoachRule extends MediaEvent {
+  GetCoachRule();
+}
+
+class GetDocumentClub extends MediaEvent {
+  GetDocumentClub();
+}
+
 class GetVideosBucket extends MediaEvent {
   final String bucketName;
 
   GetVideosBucket({required this.bucketName});
+}
+
+class GetMatchBucketImages extends MediaEvent {
+  final String matchId;
+
+  GetMatchBucketImages({required this.matchId});
+}
+
+class AddImageToMatchBucket extends MediaEvent {
+  final String fileName;
+  AddImageToMatchBucket(this.fileName);
 }
 
 class UpdateProfilePicture extends MediaEvent {

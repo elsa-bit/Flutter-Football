@@ -1,4 +1,4 @@
-enum MediaStatus { initial, loading, success, profileUpdated, error }
+enum MediaStatus { initial, loading, loadingImages, success, profileUpdated, error }
 
 class MediaState {
   final MediaStatus status;
@@ -6,6 +6,7 @@ class MediaState {
   final List<Video>? videosGeneral;
   final List<Video>? videosPhysical;
   final List<Video>? videosSpecific;
+  final List<String>? images;
   final String? error;
 
   MediaState({
@@ -14,6 +15,7 @@ class MediaState {
     this.videosGeneral = const [],
     this.videosPhysical = const [],
     this.videosSpecific = const [],
+    this.images = const [],
     this.error = '',
   });
 
@@ -23,6 +25,7 @@ class MediaState {
     List<Video>? videosGeneral,
     List<Video>? videosPhysical,
     List<Video>? videosSpecific,
+    List<String>? images,
     String? error,
   }) {
     return MediaState(
@@ -32,6 +35,7 @@ class MediaState {
       videosPhysical: videosPhysical ?? this.videosPhysical,
       videosSpecific: videosSpecific ?? this.videosSpecific,
       error: error ?? this.error,
+      images: images ?? this.images,
     );
   }
 }

@@ -37,8 +37,9 @@ class TeamsScreen extends StatelessWidget {
         ..add(GetTeams()),
         child: Scaffold(
           appBar: AppBar(
-            title: Center(child: Text("Mes équipes")),
+            title: Center(child: Text("Mes équipes", style: TextStyle(color: AppColors.white))),
             backgroundColor: currentAppColors.secondaryColor,
+            centerTitle: true,
           ),
           body: BlocBuilder<TeamsBloc, TeamState>(
             builder: (context, state) {
@@ -59,15 +60,18 @@ class TeamsScreen extends StatelessWidget {
                       child: Text("Aucune équipe ne vous a été attribuée."),
                     );
                   }
-                  return ListView.builder(
-                    itemCount: state.teams!.length,
-                    itemBuilder: (context, index) {
-                      final team = state.teams![index];
-                      return TeamItem(
-                          team: team,
-                        onTap: () => _onTeamTap(context, team),
-                      );
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: ListView.builder(
+                      itemCount: state.teams!.length,
+                      itemBuilder: (context, index) {
+                        final team = state.teams![index];
+                        return TeamItem(
+                            team: team,
+                          onTap: () => _onTeamTap(context, team),
+                        );
+                      },
+                    ),
                   );
                 default:
                   return const Center(

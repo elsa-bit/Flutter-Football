@@ -1,5 +1,6 @@
 
 import 'package:flutter_football/domain/models/match_details.dart';
+import 'package:flutter_football/domain/models/player_comment.dart';
 
 abstract class MatchEvent {}
 
@@ -18,8 +19,9 @@ class SetFMIReport extends MatchEvent {
   final int idMatch;
   final String? commentTeam;
   final String? commentOpponent;
+  final List<PlayerComment>? playerComments;
 
-  SetFMIReport(this.idMatch, this.commentTeam, this.commentOpponent);
+  SetFMIReport(this.idMatch, this.commentTeam, this.commentOpponent, this.playerComments);
 }
 
 class SetSelection extends MatchEvent {

@@ -8,6 +8,7 @@ class Conversation {
   final int coach;
   final String? coachName;
   final String? playersName;
+  final String? avatarUrl;
 
   Conversation(
       {required this.id,
@@ -15,7 +16,8 @@ class Conversation {
       required this.players,
       required this.coach,
       this.coachName,
-      this.playersName});
+      this.playersName,
+      this.avatarUrl});
 
   factory Conversation.fromJson(Map<String, dynamic> json) {
     try {
@@ -26,14 +28,17 @@ class Conversation {
       final int coach = json["coach"] as int;
       final String? coachName = json["coachName"] as String?;
       final String? playersName = json["playersName"] as String?;
+      final String? avatarUrl = json["avatar"] as String?;
 
       return Conversation(
-          id: id,
-          date: date,
-          players: players,
-          coach: coach,
-          coachName: coachName,
-          playersName: playersName);
+        id: id,
+        date: date,
+        players: players,
+        coach: coach,
+        coachName: coachName,
+        playersName: playersName,
+        avatarUrl: avatarUrl,
+      );
     } catch (e) {
       print(e);
       throw const FormatException('Failed to convert Conversation data.');

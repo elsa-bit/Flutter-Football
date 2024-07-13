@@ -6,9 +6,7 @@ import 'package:flutter_football/domain/models/fmi/bottom_sheet_error.dart';
 import 'package:flutter_football/domain/models/player.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_bloc.dart';
 import 'package:flutter_football/presentation/blocs/match/fmi/fmi_event.dart';
-import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
-import 'package:flutter_football/presentation/blocs/players/players_event.dart';
-import 'package:flutter_football/presentation/blocs/players/players_state.dart';
+import 'package:flutter_football/presentation/blocs/match/fmi/fmi_state.dart';
 import 'package:flutter_football/presentation/screens/coach/teams/player_selectable_horizontal_item.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -32,14 +30,6 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
   Player? selectedPlayerIn = null;
   final commentController = TextEditingController();
 
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<PlayersBloc>(context)
-        .add(GetPlayersTeam(teamId: widget.teamId));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
@@ -59,6 +49,7 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
                       topRight: Radius.circular(10)),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
                       onPressed: () => {Navigator.pop(context)},
@@ -71,7 +62,6 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
                         ),
                       ),
                     ),
-                    Spacer(),
                     Text(
                       "Remplacement",
                       style: TextStyle(
@@ -80,7 +70,6 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
                         fontSize: 16,
                       ),
                     ),
-                    Spacer(),
                     TextButton(
                       onPressed: () => {onValidateTap(context)},
                       child: Text(
@@ -160,24 +149,22 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
               ),
               SizedBox(
                 height: 80,
-                child: BlocBuilder<PlayersBloc, PlayersState>(
+                child: BlocBuilder<FmiBloc, FmiState>(
                   builder: (context, state) {
                     switch (state.status) {
-                      case PlayersStatus.loading:
+                      case FmiStatus.loadingPlayer:
                         return Text("Chargement des joueurs...");
-                      case PlayersStatus.error:
-                        return Text(state.error);
-                      case PlayersStatus.success:
-                        if (state.players!.isEmpty) {
+                     default:
+                        if (state.playersInGame == null || state.playersInGame!.isEmpty) {
                           return const Center(
-                            child: Text("Aucun joueur dans cette équipe."),
+                            child: Text("Aucun joueur sur le terrain."),
                           );
                         }
                         return ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: state.players?.length ?? 0,
+                          itemCount: state.playersInGame?.length ?? 0,
                           itemBuilder: (context, index) {
-                            final player = state.players![index];
+                            final player = state.playersInGame![index];
                             return PlayerSelectableHorizontalItem(
                               player: player,
                               isSelected:
@@ -185,10 +172,6 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
                               onTap: () => onPlayerOutTap(player),
                             );
                           },
-                        );
-                      default:
-                        return const Center(
-                          child: Text("Aucun joueur dans cette équipe."),
                         );
                     }
                   },
@@ -210,24 +193,22 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
               ),
               SizedBox(
                 height: 80,
-                child: BlocBuilder<PlayersBloc, PlayersState>(
+                child: BlocBuilder<FmiBloc, FmiState>(
                   builder: (context, state) {
                     switch (state.status) {
-                      case PlayersStatus.loading:
+                      case FmiStatus.loadingPlayer:
                         return Text("Chargement des joueurs...");
-                      case PlayersStatus.error:
-                        return Text(state.error);
-                      case PlayersStatus.success:
-                        if (state.players!.isEmpty) {
+                      default:
+                        if (state.playersInReplacement == null || state.playersInReplacement!.isEmpty) {
                           return const Center(
-                            child: Text("Aucun joueur dans cette équipe."),
+                            child: Text("Aucun joueur disponible pour un remplacement."),
                           );
                         }
                         return ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: state.players?.length ?? 0,
+                          itemCount: state.playersInReplacement?.length ?? 0,
                           itemBuilder: (context, index) {
-                            final player = state.players![index];
+                            final player = state.playersInReplacement![index];
                             return PlayerSelectableHorizontalItem(
                               player: player,
                               isSelected:
@@ -235,10 +216,6 @@ class _ReplacementBottomSheetState extends State<ReplacementBottomSheet> {
                               onTap: () => onPlayerInTap(player),
                             );
                           },
-                        );
-                      default:
-                        return const Center(
-                          child: Text("Aucun joueur dans cette équipe."),
                         );
                     }
                   },

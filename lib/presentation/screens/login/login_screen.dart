@@ -185,16 +185,7 @@ class _LoginScreen extends State<LoginScreen> {
                           ),
                           onPressed: () {
                             this._login(context);
-                            /*final userData = {
-                              'firstname': 'Elsa',
-                              'lastname': 'Huy',
-                              'avatar': '',
-                              'tokenPhone': '',
-                              'role': 'player',
-                              'idPlayer': "1c46d6ed-23a9-4746-b249-a3def922ed64",
-                            };
-                            supabase.auth.signUp(password: "elsafirmin", email: "elsafirmin@hotmail.fr", data: userData);*/
-                          },
+                            },
                           child: Text(
                             "Se connecter",
                             style: AppTextStyle.subtitle1.copyWith(color: Colors.white),

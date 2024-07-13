@@ -138,8 +138,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     horizontal: 12, vertical: 10),
                 width: 200.0,
                 decoration: BoxDecoration(
-                  color: validationEnabled ? AppColors.mediumBlue : AppColors
-                      .grey,
+                  color: validationEnabled ? AppColors.mediumBlue : currentAppColors.primaryVariantColor2,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
@@ -148,8 +147,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 18,
-                      color: validationEnabled ? AppColors.white : AppColors
-                          .lightGrey,
+                      color: validationEnabled ? AppColors.white : currentAppColors.secondaryTextColor,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -159,39 +157,47 @@ class _SelectionScreenState extends State<SelectionScreen> {
             SizedBox(
               height: 20,
             ),
-            Divider(thickness: 4,),
-            SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: Text(
-                "Faites la sélection des joueurs titulaires pour ce match.",
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
             Expanded(
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  shrinkWrap: true,
-                  childAspectRatio: 0.7,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                  children: List.generate(allPlayers?.length ?? 0, (index) {
-                    final player = allPlayers![index];
-                    return PlayerSelectionItem(
-                      player: player,
-                      onTap: () => onPlayerTap(player),
-                    );
-                  }),
+                color: currentAppColors.primaryVariantColor1,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: Text(
+                        "Faites la sélection des joueurs titulaires pour ce match.",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: GridView.count(
+                          crossAxisCount: 3,
+                          shrinkWrap: true,
+                          childAspectRatio: 0.7,
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
+                          children: List.generate(allPlayers?.length ?? 0, (index) {
+                            final player = allPlayers![index];
+                            return PlayerSelectionItem(
+                              player: player,
+                              onTap: () => onPlayerTap(player),
+                            );
+                          }),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

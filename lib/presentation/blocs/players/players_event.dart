@@ -17,6 +17,14 @@ class GetPlayerDetails extends PlayersEvent {
   GetPlayerDetails();
 }
 
+class Search extends PlayersEvent {
+  final String search;
+
+  Search({
+    required this.search,
+  });
+}
+
 class GetFriendsPlayer extends PlayersEvent {
   final String idPlayer;
 
@@ -47,14 +55,6 @@ class GetCoachPlayer extends PlayersEvent {
 
 class SubscribeToPlayer extends PlayersEvent {
   SubscribeToPlayer();
-}
-
-class Search extends PlayersEvent {
-  final String search;
-
-  Search({
-    required this.search,
-  });
 }
 
 class GetNewTrophy extends PlayersEvent {

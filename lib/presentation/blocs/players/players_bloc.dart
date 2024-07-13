@@ -54,28 +54,6 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
       }
     });
 
-    on<AddFriend>((event, emit) async {
-      emit(state.copyWith(status: PlayersStatus.loading));
-      try {
-        await repository.addFriend(event.idPlayer, event.idFriend);
-        emit(state.copyWith(status: PlayersStatus.success));
-      } catch (e) {
-        final errorMessage = e.toString().replaceFirst('Exception: ', '');
-        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
-      }
-    });
-
-    on<GetFriendsPlayer>((event, emit) async {
-      try {
-        emit(state.copyWith(status: PlayersStatus.loading));
-        final players = await repository.getFriendsPlayer(event.idPlayer);
-        emit(state.copyWith(players: players, status: PlayersStatus.success));
-      } catch (error) {
-        final errorMessage = error.toString().replaceFirst('Exception: ', '');
-        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
-      }
-    });
-
     on<Search>((event, emit) async {
       try {
         emit(state.copyWith(playerSearch: []));
@@ -92,18 +70,32 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
 
           emit(state.copyWith(playerSearch: searchList));
         });
-
-        final searchList;
-        if (event.search.isEmpty) {
-          searchList = state.players;
-        } else {
-          searchList =
-              state.players?.where((p) => p.isMatching(event.search)).toList();
-        }
-
-        emit(state.copyWith(playerSearch: searchList));
       } catch (e) {
-        emit(state.copyWith(error: e.toString(), status: PlayersStatus.error));
+        emit(state.copyWith(playerSearch: state.players));
+        //emit(state.copyWith(error: e.toString(), status: FmiStatus.error));
+      }
+    });
+
+    on<AddFriend>((event, emit) async {
+      emit(state.copyWith(status: PlayersStatus.loading));
+      try {
+        await repository.addFriend(event.idPlayer, event.idFriend);
+        emit(state.copyWith(status: PlayersStatus.success));
+      } catch (e) {
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        debugPrint("ICIIIIIIIIIII");
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.addFriendError));
+      }
+    });
+
+    on<GetFriendsPlayer>((event, emit) async {
+      try {
+        emit(state.copyWith(status: PlayersStatus.loading));
+        final players = await repository.getFriendsPlayer(event.idPlayer);
+        emit(state.copyWith(players: players, status: PlayersStatus.success));
+      } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
+        emit(state.copyWith(error: errorMessage, status: PlayersStatus.error));
       }
     });
 

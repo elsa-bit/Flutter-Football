@@ -40,30 +40,32 @@ class _RankingScreenState extends State<RankingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-          ),
-          SizedBox(
-            width: 500.0,
-            child: CupertinoSegmentedControl(
-              children: pickerRanking,
-              onValueChanged: (int val) {
-                setState(() {
-                  sharedValue = val;
-                });
-              },
-              groupValue: sharedValue,
-              selectedColor: Colors.blue,
-              borderColor: Colors.blue,
-              pressedColor: Colors.blue.withOpacity(0.3),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16.0, right: 16.0, left: 16.0),
             ),
-          ),
-          Expanded(
-            child: _getSelectedScreen(sharedValue),
-          ),
-        ],
+            SizedBox(
+              width: 500.0,
+              child: CupertinoSegmentedControl(
+                children: pickerRanking,
+                onValueChanged: (int val) {
+                  setState(() {
+                    sharedValue = val;
+                  });
+                },
+                groupValue: sharedValue,
+                selectedColor: Colors.blue,
+                borderColor: Colors.blue,
+                pressedColor: Colors.blue.withOpacity(0.3),
+              ),
+            ),
+            Expanded(
+              child: _getSelectedScreen(sharedValue),
+            ),
+          ],
+        ),
       ),
     );
   }

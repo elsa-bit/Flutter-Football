@@ -81,6 +81,16 @@ class Player {
 
   bool isMatching(String searchValue) {
     final search = searchValue.toLowerCase();
-    return this.firstname.toLowerCase().contains(search) || this.lastname.toLowerCase().contains(search) || "${this.firstname.toLowerCase()} ${this.lastname.toLowerCase()}".contains(search) || "${this.lastname.toLowerCase()} ${this.firstname.toLowerCase()}".contains(search);
+    return this.number.toString().contains(searchValue) || this.firstname.toLowerCase().contains(search) || this.lastname.toLowerCase().contains(search) || "${this.firstname.toLowerCase()} ${this.lastname.toLowerCase()}".contains(search) || "${this.lastname.toLowerCase()} ${this.firstname.toLowerCase()}".contains(search);
+  }
+
+  String initials() {
+    final f = (firstname.isEmpty) ? "" : firstname[0];
+    final l = (lastname.isEmpty) ? "" : lastname[0];
+    return "$f$l";
+  }
+
+  String fullName() {
+    return "$firstname $lastname";
   }
 }

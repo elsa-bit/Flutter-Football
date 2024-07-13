@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_football/config/app_colors.dart';
@@ -51,8 +50,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
     super.initState();
     final user = BlocProvider.of<AuthBloc>(context).state.user;
     identifier = "${user?.id}${user?.getFirstname()}";
-    BlocProvider.of<MediaBloc>(context)
-        .add(GetAvatar(identifier: identifier));
+    BlocProvider.of<MediaBloc>(context).add(GetAvatar(identifier: identifier));
 
     BlocProvider.of<PlayersBloc>(context)
       ..add(GetPlayerDetails())
@@ -112,7 +110,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                           Image.network(
                             avatarUrl!,
                             height: 300,
-                            width:  MediaQuery.sizeOf(context).width,
+                            width: MediaQuery.sizeOf(context).width,
                             fit: BoxFit.cover,
                           )
                         ] else ...[
@@ -331,7 +329,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
                         title: const Text("Modifier mon profil"),
                         content: SingleChildScrollView(
                           padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(mainContext).viewInsets.bottom),
+                              bottom:
+                                  MediaQuery.of(mainContext).viewInsets.bottom),
                           child: Padding(
                             padding: EdgeInsets.all(8),
                             child: Column(
@@ -388,7 +387,10 @@ class _ProfilScreenState extends State<ProfilScreen> {
                                       builder: (BuildContext context) {
                                         return ImagePickerBottomSheet(
                                           onImagePicked: (file) {
-                                            BlocProvider.of<MediaBloc>(mainContext).add(UpdateProfilePicture(file));
+                                            BlocProvider.of<MediaBloc>(
+                                                    mainContext)
+                                                .add(
+                                                    UpdateProfilePicture(file));
                                           },
                                         );
                                       },
@@ -397,12 +399,18 @@ class _ProfilScreenState extends State<ProfilScreen> {
                                   child: Row(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0, vertical: 8.0),
                                         decoration: BoxDecoration(
-                                          color: AppColors.darkBlue,
-                                          borderRadius: BorderRadius.circular(8),
+                                          color:
+                                              currentAppColors.secondaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
-                                        child:Icon(Icons.image),
+                                        child: Icon(
+                                          Icons.image,
+                                          color: AppColors.white,
+                                        ),
                                       ),
                                       Spacer(),
                                     ],
@@ -414,6 +422,10 @@ class _ProfilScreenState extends State<ProfilScreen> {
                         ),
                         actions: [
                           ElevatedButton(
+                              style: ButtonStyle(
+                                  foregroundColor:
+                                      WidgetStateProperty.all<Color>(
+                                          AppColors.lightBlue)),
                               onPressed: () => _onModifyPlayer(mainContext),
                               child: Text("Enregistrer"))
                         ],
