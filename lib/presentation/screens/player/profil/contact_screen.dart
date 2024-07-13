@@ -60,7 +60,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 ),
                 ContactItem(
                   firstname: 'Anthony',
-                  lastname: 'Allanche',
+                  lastname: 'Allanche Ferreira',
                   email: 'a.allanche@gmail.com',
                 ),
               ],
