@@ -263,7 +263,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 (c) => c.idPlayer == p.id);
                                         if (commentIndex == -1) {
                                           playerComments
-                                              .add(PlayerComment(p.id, s));
+                                              .add(PlayerComment(p.id, p.fullName(), s));
                                         } else {
                                           // comment already created
                                           if (s.isEmpty) {

@@ -106,7 +106,7 @@ class MatchDetails {
       return "Défaite";
     }
     if (win == "nul") {
-      return "Egualité";
+      return "Égalité";
     }
     return null;
   }

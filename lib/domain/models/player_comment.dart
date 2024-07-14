@@ -1,13 +1,14 @@
 
 class PlayerComment {
   final String idPlayer;
+  final String namePlayer;
   String comment;
 
-  PlayerComment(this.idPlayer, this.comment);
+  PlayerComment(this.idPlayer, this.namePlayer, this.comment);
 
   Map<String, dynamic> toJson(){
     return {
-      "idPlayer": this.idPlayer,
+      "namePlayer": this.namePlayer,
       "comment": this.comment,
     };
   }
