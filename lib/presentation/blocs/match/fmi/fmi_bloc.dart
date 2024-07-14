@@ -21,9 +21,18 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
       try {
         emit(state.copyWith(status: FmiStatus.loadingHistory,));
         final actions = await repository.getActions(match.id, match.date);
+
+        final goals = actions.where((action) => action is GoalAction);
+        final int teamGoals = goals.where((g) => !(g as GoalAction).goal.fromOpponent).length;
+        final int opponentGoals = goals.where((g) => (g as GoalAction).goal.fromOpponent).length;
+
         emit(state.copyWith(
           status: FmiStatus.success,
           actions: actions,
+          match: state.match?.copyWith(
+            teamGoals: teamGoals,
+            opponentGoals: opponentGoals,
+          ),
         ));
         return actions;
       } catch (error) {
@@ -148,7 +157,7 @@ class FmiBloc extends Bloc<FmiEvent, FmiState> {
           status: FmiStatus.successGoal,
           action: goalAction,
           match: state.match?.copyWith(
-            teamGoals: !goal.fromOpponent ? ((state.match?.teamGoals ?? 0) + 1) : null,
+            teamGoals: (!goal.fromOpponent) ? ((state.match?.teamGoals ?? 0) + 1) : null,
             opponentGoals: goal.fromOpponent ? ((state.match?.opponentGoals ?? 0) + 1) : null,
           ),
         ));

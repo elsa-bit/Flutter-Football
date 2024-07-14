@@ -12,9 +12,7 @@ import 'package:flutter_football/presentation/blocs/match/match_bloc.dart';
 import 'package:flutter_football/presentation/blocs/match/match_state.dart';
 import 'package:flutter_football/presentation/blocs/media/media_bloc.dart';
 import 'package:flutter_football/presentation/blocs/media/media_event.dart';
-import 'package:flutter_football/presentation/dialogs/error_dialog.dart';
 import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
-import 'package:flutter_football/presentation/dialogs/lottie_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/cards_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/goal_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/match_gallery_bottom_sheet.dart';
@@ -167,14 +165,19 @@ class _FmiScreenState extends State<FmiScreen> {
                                 color: AppColors.black.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Text(
-                                "${state.match?.teamGoals ?? 0} - ${state.match?.opponentGoals ?? 0}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 30,
-                                  color: currentAppColors.primaryTextColor,
-                                ),
-                              ),
+                              child: (state.status == FmiStatus.loadingHistory)
+                                  ? CircularProgressIndicator(
+                                      color: currentAppColors.primaryTextColor,
+                                    )
+                                  : Text(
+                                      "${state.match?.teamGoals ?? 0} - ${state.match?.opponentGoals ?? 0}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 30,
+                                        color:
+                                            currentAppColors.primaryTextColor,
+                                      ),
+                                    ),
                             ),
                           ],
                         ),
@@ -404,17 +407,20 @@ class _FmiScreenState extends State<FmiScreen> {
                                 decoration: BoxDecoration(
                                   color: currentAppColors.primaryVariantColor1,
                                   borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10)),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Historique",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
-                                        color: currentAppColors.primaryTextColor,
+                                        color:
+                                            currentAppColors.primaryTextColor,
                                       ),
                                     ),
                                     if (state.status ==
@@ -434,7 +440,8 @@ class _FmiScreenState extends State<FmiScreen> {
                                         historyIsVisible
                                             ? Icons.keyboard_arrow_down_rounded
                                             : Icons.keyboard_arrow_up_rounded,
-                                        color: currentAppColors.primaryTextColor,
+                                        color:
+                                            currentAppColors.primaryTextColor,
                                       ),
                                   ],
                                 ),
