@@ -46,8 +46,9 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   void initState() {
     super.initState();
+    final bloc = context.read<FmiBloc>();
     _pageController = PageController(initialPage: _currentPage);
-    _playerSelected = ValueNotifier(null);
+    _playerSelected = ValueNotifier(bloc.state.playersPlayedMatch?.first);
   }
 
   @override
@@ -262,7 +263,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 (c) => c.idPlayer == p.id);
                                         if (commentIndex == -1) {
                                           playerComments
-                                              .add(PlayerComment(p.id, s));
+                                              .add(PlayerComment(p.id, p.fullName(), s));
                                         } else {
                                           // comment already created
                                           if (s.isEmpty) {

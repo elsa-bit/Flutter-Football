@@ -11,6 +11,7 @@ import 'package:flutter_football/presentation/blocs/players/players_event.dart';
 import 'package:flutter_football/presentation/blocs/players/players_state.dart';
 import 'package:flutter_football/presentation/screens/coach/tchat/conversation_item_coach.dart';
 import 'package:flutter_football/presentation/screens/coach/tchat/message_coach_screen.dart';
+import 'package:flutter_football/presentation/widgets/csb_search_bar.dart';
 
 class TchatCoachScreen extends StatefulWidget {
   static const String routeName = '/coach/tchat';
@@ -31,6 +32,7 @@ class TchatCoachScreen extends StatefulWidget {
 class _TchatCoachScreenState extends State<TchatCoachScreen> {
   final List<Map<String, String>> _playersTeam = [];
   List<String> selectedPlayers = [];
+  bool playerListLoading = false;
 
   @override
   void initState() {
@@ -59,8 +61,15 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
       ),
       body: BlocListener<PlayersBloc, PlayersState>(
         listener: (context, state) {
+          setState(() {
+            if (state.status == PlayersStatus.loading) {
+              playerListLoading = true;
+            } else {
+              playerListLoading = false;
+            }
+          });
           if (state.status == PlayersStatus.success) {
-            _updatePlayersTeam(state.players!);
+            _updatePlayersTeam(state.playerSearch!);
           } else if (state.status == PlayersStatus.error) {
             _showSnackBar(context, state.error, Colors.orangeAccent, Icons.error);
           }
@@ -120,6 +129,7 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
+          final searchController = TextEditingController();
           return BlocProvider.value(
             value: BlocProvider.of<ConversationBloc>(context),
             child: BlocConsumer<ConversationBloc, ConversationState>(
@@ -153,22 +163,36 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
                             padding: EdgeInsets.all(8),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: _playersTeam.map((player) {
-                                return CheckboxListTile(
-                                  activeColor: currentAppColors.secondaryColor,
-                                  title: Text(player['name']!),
-                                  value: selectedPlayers.contains(player['id']),
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      if (value == true) {
-                                        selectedPlayers.add(player['id']!);
-                                      } else {
-                                        selectedPlayers.remove(player['id']!);
-                                      }
-                                    });
-                                  },
-                                );
-                              }).toList(),
+                              children: [
+                                Container(
+                                  child: CsbSearchBar(
+                                    hint: "Rechercher par nom et/ou prénom",
+                                    controller: searchController,
+                                    onChanged: (v) {
+                                      BlocProvider.of<PlayersBloc>(context).add(Search(search: v));
+                                    },
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: (playerListLoading) ? [SizedBox(height: 30,), Text("Récupération des joueurs...", textAlign: TextAlign.center,)] : (_playersTeam.isEmpty) ? [SizedBox(height: 30,), Text("Aucun joueur trouvé")] : _playersTeam.map((player) {
+                                    return CheckboxListTile(
+                                      activeColor: currentAppColors.secondaryColor,
+                                      title: Text(player['name']!),
+                                      value: selectedPlayers.contains(player['id']),
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          if (value == true) {
+                                            selectedPlayers.add(player['id']!);
+                                          } else {
+                                            selectedPlayers.remove(player['id']!);
+                                          }
+                                        });
+                                      },
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -188,6 +212,8 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
             ),
           );
         });
+
+    BlocProvider.of<PlayersBloc>(context).add(Search(search: ""));
   }
 
   void _showSnackBar(
@@ -213,13 +239,15 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
   }
 
   void _updatePlayersTeam(List<Player> players) {
-    _playersTeam.clear();
-    for (var player in players) {
-      _playersTeam.add({
-        'id': player.id,
-        'name': "${player.firstname} ${player.lastname}",
-      });
-    }
+    setState(() {
+      _playersTeam.clear();
+      for (var player in players) {
+        _playersTeam.add({
+          'id': player.id,
+          'name': "${player.firstname} ${player.lastname}",
+        });
+      }
+    });
   }
 
   void _onAddConversation(BuildContext context) async {

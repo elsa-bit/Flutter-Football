@@ -3,8 +3,11 @@ import 'package:flutter_football/domain/models/fmi/card.dart';
 import 'package:flutter_football/domain/models/fmi/goal.dart';
 import 'package:flutter_football/domain/models/fmi/replacement.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/actions/card_action_detail.dart';
+import 'package:flutter_football/presentation/screens/coach/match/fmi/actions/card_action_history.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/actions/goal_action_detail.dart';
+import 'package:flutter_football/presentation/screens/coach/match/fmi/actions/goal_action_history.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/actions/replacement_action_detail.dart';
+import 'package:flutter_football/presentation/screens/coach/match/fmi/actions/replacement_action_history.dart';
 
 abstract class MatchAction {
   final String id;
@@ -22,6 +25,8 @@ abstract class MatchAction {
   });
 
   Widget? getActionDetailWidget();
+
+  Widget? getActionHistoryWidget();
 }
 
 class CardAction extends MatchAction {
@@ -39,6 +44,11 @@ class CardAction extends MatchAction {
   @override
   Widget? getActionDetailWidget() {
     return CardActionDetail(action: this);
+  }
+
+  @override
+  Widget? getActionHistoryWidget() {
+    return CardActionHistory(action: this);
   }
 }
 
@@ -58,6 +68,10 @@ class GoalAction extends MatchAction {
   Widget? getActionDetailWidget() {
     return GoalActionDetail(action: this);
   }
+  @override
+  Widget? getActionHistoryWidget() {
+    return GoalActionHistory(action: this);
+  }
 }
 
 class ReplacementAction extends MatchAction {
@@ -75,5 +89,9 @@ class ReplacementAction extends MatchAction {
   @override
   Widget? getActionDetailWidget() {
     return ReplacementActionDetail(action: this);
+  }
+  @override
+  Widget? getActionHistoryWidget() {
+    return ReplacementActionHistory(action: this);
   }
 }

@@ -97,4 +97,17 @@ class MatchDetails {
     }
     return AppColors.black.withOpacity(0.1);
   }
+
+  String? getMatchState() {
+    if (win == "win") {
+      return "Victoire";
+    }
+    if (win == "lose") {
+      return "Défaite";
+    }
+    if (win == "nul") {
+      return "Égalité";
+    }
+    return null;
+  }
 }
