@@ -6,6 +6,7 @@ import 'package:flutter_football/presentation/blocs/match/match_event.dart';
 import 'package:flutter_football/presentation/blocs/match/match_state.dart';
 import 'package:flutter_football/presentation/dialogs/error_dialog.dart';
 import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
+import 'package:flutter_football/presentation/screens/coach/match/fmi/fmi_consult_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/match/fmi/fmi_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/match/match_item.dart';
 import 'package:flutter_football/presentation/screens/coach/match/selection/selection_screen.dart';
@@ -156,7 +157,7 @@ class MatchSection extends StatelessWidget {
           Navigator.push(context, FmiScreen.route(match));
         }
       } else {
-        Navigator.push(context, FmiScreen.route(match, readOnly: true));
+        Navigator.push(context, FmiConsultScreen.route(match));
       }
 
     }
