@@ -98,11 +98,11 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                 Container(
                   padding: const EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
-                    color: Colors.white, //Colors.white,
+                    color: currentAppColors.primaryColor, //Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: currentAppColors.greyColor.withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 7,
                         offset: Offset(0, 3),
