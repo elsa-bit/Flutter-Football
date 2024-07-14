@@ -5,6 +5,7 @@ enum LoginStatus {
   initial,
   loading,
   success,
+  signUpSuccess,
   error
 }
 
