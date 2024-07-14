@@ -78,7 +78,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           if (state.status == TeamStatus.success) {
             _updateEventTeam(state.teams!);
           } else if (state.status == TeamStatus.error) {
-            _showSnackBar(context, state.error, Colors.orangeAccent);
+            _showSnackBar(
+                context, state.error, Colors.orangeAccent, Icons.error);
           }
         },
         child: BlocBuilder<ScheduleBloc, ScheduleState>(
@@ -446,10 +447,23 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     return events[specialDay] ?? [];
   }
 
-  void _showSnackBar(BuildContext context, String text, Color background) {
+  void _showSnackBar(
+      BuildContext context, String text, Color background, IconData icon) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(text),
+        content: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
+            SizedBox(width: 20),
+            Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
         backgroundColor: background,
       ),
     );
@@ -469,13 +483,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             child: BlocConsumer<ScheduleBloc, ScheduleState>(
               listener: (context, state) {
                 if (state.status == ScheduleStatus.addSuccess) {
-                  _showSnackBar(
-                      context, 'Evenement ajouté', Colors.greenAccent);
+                  _showSnackBar(context, 'Evenement ajouté', Colors.greenAccent,
+                      Icons.check_circle);
                   _placeController.text = "";
                   _opponentController?.text = "";
                   Navigator.pop(context);
                 } else if (state.status == ScheduleStatus.error) {
-                  _showSnackBar(context, state.error, Colors.orangeAccent);
+                  _showSnackBar(
+                      context, state.error, Colors.orangeAccent, Icons.error);
                   _placeController.text = "";
                   _opponentController?.text = "";
                   Navigator.pop(context);

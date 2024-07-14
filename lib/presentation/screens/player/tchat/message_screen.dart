@@ -57,7 +57,10 @@ class _MessageScreenState extends State<MessageScreen> {
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
-        title: Text("Tchat", style: TextStyle(color: AppColors.white),),
+        title: Text(
+          "Tchat",
+          style: TextStyle(color: AppColors.white),
+        ),
         backgroundColor: currentAppColors.secondaryColor,
         centerTitle: true,
       ),
@@ -106,40 +109,57 @@ class _MessageScreenState extends State<MessageScreen> {
             BlocConsumer<MessageBloc, MessageState>(
               listener: (context, state) {
                 if (state.status == MessageStatus.addSuccess) {
-                  _showSnackBar(context, 'Message ajouté', Colors.green);
+                  _showSnackBar(context, 'Message ajouté', Colors.green,
+                      Icons.check_circle);
                   _messageController.text = "";
                 } else if (state.status == MessageStatus.error) {
                   _showSnackBar(
-                      context, state.error, Colors.yellowAccent);
+                      context, state.error, Colors.yellowAccent, Icons.error);
                 }
               },
               builder: (context, state) {
                 switch (state.status) {
                   case MessageStatus.loading:
                   default:
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _messageController,
-                              decoration: InputDecoration(
-                                labelText: 'Votre message',
-                              ),
-                            ),
-                          ),
-                          /*
-                          IconButton(
-                            icon: Icon(Icons.attach_file),
-                            onPressed: () => _selectImage(),
-                          ),
-                           */
-                          IconButton(
-                            icon: Icon(Icons.send),
-                            onPressed: () => {_onAddMessage(context)},
+                    return Container(
+                      margin: const EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: AppColors.backGrey,
+                        borderRadius: BorderRadius.circular(50),
+                        boxShadow: [
+                          BoxShadow(
+                            color: currentAppColors.primaryTextColor
+                                .withOpacity(0.4),
+                            spreadRadius: 2,
+                            blurRadius: 7,
+                            offset: Offset(0, 3),
                           ),
                         ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _messageController,
+                                decoration: InputDecoration(
+                                  labelText: 'Votre message',
+                                  labelStyle: TextStyle(color: AppColors.white),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.send),
+                                    onPressed: () => {_onAddMessage(context)},
+                                  ),
+                                  suffixIconColor: AppColors.white,
+                                  border: InputBorder.none,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 20.0),
+                                ),
+                                style: TextStyle(color: AppColors.white),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                 }
@@ -162,14 +182,28 @@ class _MessageScreenState extends State<MessageScreen> {
       );
       bloc.add(AddMessage(message: message));
     } else {
-      _showSnackBar(context, "Ecrivez un message", Colors.redAccent);
+      _showSnackBar(
+          context, "Ecrivez un message", Colors.redAccent, Icons.cancel);
     }
   }
 
-  void _showSnackBar(BuildContext context, String text, Color background) {
+  void _showSnackBar(
+      BuildContext context, String text, Color background, IconData icon) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(text),
+        content: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
+            SizedBox(width: 20),
+            Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
         backgroundColor: background,
       ),
     );

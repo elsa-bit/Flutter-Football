@@ -25,7 +25,6 @@ class CSBCard {
 class CardsBottomSheet extends StatefulWidget {
   final String teamId;
   final int matchId;
-  //final Function(int idMatch, int idPlayer, String color) onSubmit;
 
   CardsBottomSheet({
     Key? key,

@@ -297,14 +297,15 @@ class _ProfilScreenState extends State<ProfilScreen> {
             child: BlocConsumer<PlayersBloc, PlayersState>(
               listener: (context, state) {
                 if (state.status == PlayersStatus.modifySuccess) {
-                  _showSnackBar(
-                      context, 'Joueur modifié !', Colors.greenAccent);
+                  _showSnackBar(context, 'Joueur modifié !', Colors.greenAccent,
+                      Icons.check_circle);
                   _passwordController.clear();
                   _positionController.clear();
                   _birthdayController.clear();
                   Navigator.pop(context);
                 } else if (state.status == PlayersStatus.error) {
-                  _showSnackBar(context, state.error, Colors.orangeAccent);
+                  _showSnackBar(
+                      context, state.error, Colors.orangeAccent, Icons.error);
                   _passwordController.clear();
                   _positionController.clear();
                   _birthdayController.clear();
@@ -455,10 +456,23 @@ class _ProfilScreenState extends State<ProfilScreen> {
     bloc.add(ModifyPlayer(player: player));
   }
 
-  void _showSnackBar(BuildContext context, String text, Color background) {
+  void _showSnackBar(
+      BuildContext context, String text, Color background, IconData icon) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(text),
+        content: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
+            SizedBox(width: 20),
+            Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
         backgroundColor: background,
       ),
     );

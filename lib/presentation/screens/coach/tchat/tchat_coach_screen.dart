@@ -62,7 +62,7 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
           if (state.status == PlayersStatus.success) {
             _updatePlayersTeam(state.players!);
           } else if (state.status == PlayersStatus.error) {
-            _showSnackBar(context, state.error, Colors.orangeAccent);
+            _showSnackBar(context, state.error, Colors.orangeAccent, Icons.error);
           }
         },
         child: Padding(
@@ -126,10 +126,10 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
               listener: (context, state) {
                 if (state.status == ConversationStatus.addSuccess) {
                   _showSnackBar(
-                      context, 'Conversation ajoutée', Colors.greenAccent);
+                      context, 'Conversation ajoutée', Colors.greenAccent, Icons.check_circle);
                   Navigator.pop(context);
                 } else if (state.status == ConversationStatus.addError) {
-                  _showSnackBar(context, state.error, Colors.orangeAccent);
+                  _showSnackBar(context, state.error, Colors.orangeAccent, Icons.error);
                   Navigator.pop(context);
                 }
               },
@@ -190,10 +190,23 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
         });
   }
 
-  void _showSnackBar(BuildContext context, String text, Color background) {
+  void _showSnackBar(
+      BuildContext context, String text, Color background, IconData icon) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(text),
+        content: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
+            SizedBox(width: 20),
+            Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
         backgroundColor: background,
       ),
     );

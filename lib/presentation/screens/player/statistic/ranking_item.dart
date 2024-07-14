@@ -28,7 +28,7 @@ class RankingItem extends StatelessWidget {
         ),
         child: Text(
           (index + 1).toString() + ".",
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: currentAppColors.primaryTextBlackColor),
         ),
       ),
       title: Text(

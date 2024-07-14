@@ -29,28 +29,28 @@ class MessageItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (message.message.isNotEmpty)
-                Text(
-                  message.message,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                if (message.sender != null && !isCurrentUser)
+                  Text(
+                    message.sender!,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                    ),
                   ),
-                ),
               const SizedBox(height: 4),
-              if (message.sender != null && !isCurrentUser)
-                Text(
-                  "${message.sender} - ${formatter.format(message.date!)}",
-                  style: const TextStyle(
-                    color: Colors.white70,
-                  ),
-                )
-              else
-                Text(
-                  "${formatter.format(message.date!)}",
-                  style: const TextStyle(
-                    color: Colors.white70,
-                  ),
+              Text(
+                message.message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "${formatter.format(message.date!)}",
+                style: const TextStyle(
+                  color: Colors.white70,
+                ),
+              ),
             ],
           ),
         ),

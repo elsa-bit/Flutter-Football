@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/presentation/screens/player/statistic/rankingFriend_screen.dart';
 import 'package:flutter_football/presentation/screens/player/statistic/rankingTeam_screen.dart';
 
@@ -7,11 +8,9 @@ class RankingScreen extends StatefulWidget {
   static const String routeName = '/player/ranking';
   final String idPlayer;
 
-  const RankingScreen({Key? key, required this.idPlayer})
-      : super(key: key);
+  const RankingScreen({Key? key, required this.idPlayer}) : super(key: key);
 
-  static void navigateTo(
-      BuildContext context, String idPlayer) {
+  static void navigateTo(BuildContext context, String idPlayer) {
     Navigator.of(context).pushNamed(
       routeName,
       arguments: {'idPlayer': idPlayer},
@@ -56,9 +55,10 @@ class _RankingScreenState extends State<RankingScreen> {
                   });
                 },
                 groupValue: sharedValue,
-                selectedColor: Colors.blue,
-                borderColor: Colors.blue,
-                pressedColor: Colors.blue.withOpacity(0.3),
+                selectedColor: Colors.grey,
+                unselectedColor: Colors.white,
+                borderColor: Colors.grey,
+                pressedColor: Colors.black.withOpacity(0.3),
               ),
             ),
             Expanded(

@@ -67,11 +67,13 @@ class _FriendScreenState extends State<FriendScreen> {
               BlocConsumer<PlayersBloc, PlayersState>(
                 listener: (context, state) {
                   if (state.status == PlayersStatus.success) {
-                    _showSnackBar(context, 'Ami ajouté', Colors.greenAccent);
+                    _showSnackBar(context, 'Ami ajouté', Colors.greenAccent,
+                        Icons.check_circle);
                     _controller.play();
                     _scanQRcode = "";
                   } else if (state.status == PlayersStatus.addFriendError) {
-                    _showSnackBar(context, state.error, Colors.orangeAccent);
+                    _showSnackBar(
+                        context, state.error, Colors.orangeAccent, Icons.error);
                     _scanQRcode = "";
                   }
                 },
@@ -155,11 +157,11 @@ class _FriendScreenState extends State<FriendScreen> {
     }
 
     if (widget.idPlayer != idFriend) {
-      BlocProvider.of<PlayersBloc>(context).add(
-          AddFriend(idPlayer: widget.idPlayer, idFriend: idFriend));
+      BlocProvider.of<PlayersBloc>(context)
+          .add(AddFriend(idPlayer: widget.idPlayer, idFriend: idFriend));
     } else {
       _showSnackBar(context, "Tu ne peux pas t'ajouter toi-même en ami !",
-          Colors.orangeAccent);
+          Colors.orangeAccent, Icons.error);
     }
 
     if (!mounted) return;
@@ -168,10 +170,23 @@ class _FriendScreenState extends State<FriendScreen> {
     });
   }
 
-  void _showSnackBar(BuildContext context, String text, Color background) {
+  void _showSnackBar(
+      BuildContext context, String text, Color background, IconData icon) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(text),
+        content: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
+            SizedBox(width: 20),
+            Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
         backgroundColor: background,
       ),
     );

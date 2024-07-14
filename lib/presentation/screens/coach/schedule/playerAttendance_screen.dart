@@ -153,7 +153,19 @@ class _PlayerAttendanceScreenState extends State<PlayerAttendanceScreen> {
   void _showSnackBar(BuildContext context, String text, Color background) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(text),
+        content: Row(
+          children: [
+            Icon(
+              Icons.error,
+              color: Colors.white,
+            ),
+            SizedBox(width: 20),
+            Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
         backgroundColor: background,
       ),
     );
