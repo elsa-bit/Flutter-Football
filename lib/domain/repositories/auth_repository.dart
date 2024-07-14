@@ -20,9 +20,9 @@ class AuthRepository {
     try {
       final user = await supabase.auth.getUser(accessToken);
       if (user.user == null) return false;
-      saveUser(user.user!);
+      await saveUser(user.user!);
     } on AuthException catch (e) {
-      return refreshToken();
+      return await refreshToken();
     } catch (e) {
       rethrow;
     }
@@ -38,13 +38,13 @@ class AuthRepository {
     }
 
     final authResponse = await supabase.auth.refreshSession(refreshToken);
-    authenticateUser(authResponse);
+    await authenticateUser(authResponse);
     return true;
   }
 
   Future<void> authenticateUser(AuthResponse auth) async {
     print("Authenticating user...");
-    if (auth.user != null) saveUser(auth.user!);
+    if (auth.user != null) await saveUser(auth.user!);
 
     final accessToken = auth.session?.accessToken;
     final refreshToken = auth.session?.refreshToken;
@@ -95,7 +95,7 @@ class AuthRepository {
 
   // private functions
 
-  void saveUser(User user) async {
+  Future<void> saveUser(User user) async {
     this.user = user;
     int? idCoach = null;
     String? idPlayer = null;
