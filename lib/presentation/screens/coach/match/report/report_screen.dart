@@ -46,8 +46,9 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   void initState() {
     super.initState();
+    final bloc = context.read<FmiBloc>();
     _pageController = PageController(initialPage: _currentPage);
-    _playerSelected = ValueNotifier(null);
+    _playerSelected = ValueNotifier(bloc.state.playersPlayedMatch?.first);
   }
 
   @override
