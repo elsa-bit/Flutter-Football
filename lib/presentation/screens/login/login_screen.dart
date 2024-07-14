@@ -4,15 +4,16 @@ import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/config/app_themes.dart';
 import 'package:flutter_football/data/data_sources/login/login_data_source.dart';
 import 'package:flutter_football/domain/repositories/login_repository.dart';
+import 'package:flutter_football/main.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_football/presentation/blocs/auth/auth_event.dart';
 import 'package:flutter_football/presentation/blocs/login/login_bloc.dart';
 import 'package:flutter_football/presentation/blocs/login/login_event.dart';
 import 'package:flutter_football/presentation/blocs/login/login_state.dart';
 import 'package:flutter_football/presentation/dialogs/loading_dialog.dart';
+import 'package:flutter_football/presentation/screens/login/first_login_screen.dart';
 import 'package:flutter_football/presentation/screens/login/reset_password_screen.dart';
 import 'package:flutter_football/presentation/widgets/custom_text_field.dart';
-import 'package:flutter_football/utils/extensions/text_extension.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -78,9 +79,6 @@ class _LoginScreen extends State<LoginScreen> {
                 if (state.authResponse != null) {
                   BlocProvider.of<AuthBloc>(context)
                       .add(AuthenticateUser(auth: state.authResponse!));
-                } else if (state.token != null) {
-                  BlocProvider.of<AuthBloc>(context)
-                      .add(AuthenticateUserWithToken(token: state.token!));
                 }
 
                 LoadingDialog.hide(context);
@@ -90,6 +88,12 @@ class _LoginScreen extends State<LoginScreen> {
                 print(state.error);
                 LoadingDialog.hide(context);
                 if(state.error != null) handleError(state.error!);
+                break;
+              case LoginStatus.signUpSuccess:
+                LoadingDialog.hide(context);
+                if (state.authResponse != null) {
+                  Navigator.push(context, FirstLoginScreen.route(state.authResponse!));
+                }
                 break;
             }
           },
@@ -185,6 +189,18 @@ class _LoginScreen extends State<LoginScreen> {
                           ),
                           onPressed: () {
                             this._login(context);
+                            /*await supabase.auth.signUp(
+                              password: passwordController.text,
+                              email: emailController.text,
+                              data: {
+                                'firstname': 'firstname',
+                                'lastname': 'lastname',
+                                'avatar': '',
+                                'tokenPhone': '',
+                                'role': 'coach',
+                                'idCoach': 30
+                              },
+                            );*/
                             },
                           child: Text(
                             "Se connecter",

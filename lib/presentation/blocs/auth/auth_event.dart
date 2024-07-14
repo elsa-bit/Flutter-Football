@@ -12,12 +12,6 @@ class AuthenticateUser extends AuthEvent {
   AuthenticateUser({required this.auth});
 }
 
-class AuthenticateUserWithToken extends AuthEvent {
-  final String token;
-
-  AuthenticateUserWithToken({required this.token});
-}
-
 class AuthLogout extends AuthEvent {
   AuthLogout();
 }
