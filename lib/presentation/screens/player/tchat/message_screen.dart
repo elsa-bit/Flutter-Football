@@ -126,15 +126,6 @@ class _MessageScreenState extends State<MessageScreen> {
                       decoration: BoxDecoration(
                         color: AppColors.backGrey,
                         borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(
-                            color: currentAppColors.primaryTextColor
-                                .withOpacity(0.4),
-                            spreadRadius: 2,
-                            blurRadius: 7,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
