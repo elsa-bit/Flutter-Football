@@ -19,6 +19,7 @@ import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_she
 import 'package:flutter_football/presentation/screens/coach/match/fmi/bottom_sheets/replacement_bottom_sheet.dart';
 import 'package:flutter_football/presentation/screens/coach/match/report/report_screen.dart';
 import 'package:flutter_football/presentation/widgets/image_picker_bottom_sheet.dart';
+import 'package:flutter_football/utils/extensions/date_time_extension.dart';
 import 'package:flutter_football/utils/image_utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -190,7 +191,9 @@ class _FmiScreenState extends State<FmiScreen> {
                               children: [
                                 FmiAction(
                                   onTap: () async {
-                                    if (!widget.readOnly) {
+                                    if (DateTime.now().isAfter(widget.match.date.add(Duration(minutes: 135)))) {
+                                      _showMatchEndedSnackBar(context);
+                                    } else if (!widget.readOnly) {
                                       await showModalBottomSheet(
                                         context: mainContext,
                                         isScrollControlled: true,
@@ -211,7 +214,9 @@ class _FmiScreenState extends State<FmiScreen> {
                                 ),
                                 FmiAction(
                                   onTap: () async {
-                                    if (!widget.readOnly) {
+                                    if (DateTime.now().isAfter(widget.match.date.add(Duration(minutes: 135)))) {
+                                      _showMatchEndedSnackBar(context);
+                                    } else if (!widget.readOnly) {
                                       await showModalBottomSheet(
                                         context: mainContext,
                                         isScrollControlled: true,
@@ -240,7 +245,9 @@ class _FmiScreenState extends State<FmiScreen> {
                               children: [
                                 FmiAction(
                                   onTap: () async {
-                                    if (!widget.readOnly) {
+                                    if (DateTime.now().isAfter(widget.match.date.add(Duration(minutes: 135)))) {
+                                      _showMatchEndedSnackBar(context);
+                                    } else if (!widget.readOnly) {
                                       await showModalBottomSheet(
                                         isScrollControlled: true,
                                         context: mainContext,
@@ -535,6 +542,30 @@ class _FmiScreenState extends State<FmiScreen> {
           ],
         ),
         backgroundColor: AppColors.orange,
+      ),
+    );
+  }
+
+  void _showMatchEndedSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              Icons.access_alarms,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+              "Ce match est terminé",
+              style: TextStyle(color: Colors.white),
+              maxLines: 2,
+            ),
+          ],
+        ),
+        backgroundColor: currentAppColors.greyColor,
       ),
     );
   }
