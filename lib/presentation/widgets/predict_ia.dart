@@ -7,7 +7,7 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 Future<String> predict(String imagePath) async {
   // Load TFLite model
   final interpreter =
-      await Interpreter.fromAsset('assets/ia/model_obscene_real.tflite');
+      await Interpreter.fromAsset('assets/ia/model_obscene_real2.tflite');
 
   // Load and process the image
   img.Image image = img.decodeImage(File(imagePath).readAsBytesSync())!;
