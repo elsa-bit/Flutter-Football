@@ -227,9 +227,13 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
               color: Colors.white,
             ),
             SizedBox(width: 20),
-            Text(
-              text,
-              style: TextStyle(color: Colors.white),
+            Flexible(
+              child: Text(
+                text,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),

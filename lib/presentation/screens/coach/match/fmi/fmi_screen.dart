@@ -511,9 +511,13 @@ class _FmiScreenState extends State<FmiScreen> {
             SizedBox(
               width: 20,
             ),
-            Text(
-              text,
-              style: TextStyle(color: Colors.white),
+            Flexible(
+              child: Text(
+                text,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -534,9 +538,13 @@ class _FmiScreenState extends State<FmiScreen> {
             SizedBox(
               width: 20,
             ),
-            Text(
-              text,
-              style: TextStyle(color: Colors.white),
+            Flexible(
+              child: Text(
+                text,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -557,10 +565,13 @@ class _FmiScreenState extends State<FmiScreen> {
             SizedBox(
               width: 20,
             ),
-            Text(
-              "Ce match est terminé",
-              style: TextStyle(color: Colors.white),
-              maxLines: 2,
+            Flexible(
+              child: Text(
+                "Ce match est terminé",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),

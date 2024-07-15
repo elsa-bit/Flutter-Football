@@ -26,15 +26,18 @@ class ContactItem extends StatelessWidget {
         ),
         SizedBox(height: 8),
         Text(
-          firstname + " " +  lastname,
+          firstname + " " + lastname,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         SizedBox(height: 4),
         Text(
           email,
+          maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: Colors.grey[600],

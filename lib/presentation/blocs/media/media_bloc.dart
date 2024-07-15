@@ -19,13 +19,15 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
 
         print(urlAvatar);
         emit(state.copyWith(
-            response: MediaResponse(url: urlAvatar, identifier: event.identifier),
+            response:
+                MediaResponse(url: urlAvatar, identifier: event.identifier),
             status: MediaStatus.success));
-      } on StorageException catch(error) {
+      } on StorageException catch (error) {
         final urlAvatar = await repository.getDefaultAvatar();
         print(urlAvatar);
         emit(state.copyWith(
-            response: MediaResponse(url: urlAvatar, identifier: event.identifier),
+            response:
+                MediaResponse(url: urlAvatar, identifier: event.identifier),
             status: MediaStatus.success));
       } catch (error) {
         emit(state.copyWith(
@@ -41,13 +43,15 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
         String urlAvatar = await repository.getUserAvatar(event.userID);
         print(urlAvatar);
         emit(state.copyWith(
-            response: MediaResponse(url: urlAvatar, identifier: event.identifier),
+            response:
+                MediaResponse(url: urlAvatar, identifier: event.identifier),
             status: MediaStatus.success));
-      } on StorageException catch(error) {
+      } on StorageException catch (error) {
         final urlAvatar = await repository.getDefaultAvatar();
         print(urlAvatar);
         emit(state.copyWith(
-            response: MediaResponse(url: urlAvatar, identifier: event.identifier),
+            response:
+                MediaResponse(url: urlAvatar, identifier: event.identifier),
             status: MediaStatus.success));
       } catch (error) {
         emit(state.copyWith(
@@ -122,13 +126,13 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
       } catch (error) {
         final errorMessage = error.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(status: MediaStatus.success, images: []));
-
       }
     });
 
     on<AddImageToMatchBucket>((event, emit) async {
       try {
-        final String url = await supabase.storage.from('match-resources')
+        final String url = await supabase.storage
+            .from('match-resources')
             .createSignedUrl(event.fileName, 7200); // 7200 secondes = 2 hours
         List<String> gallery = state.images ?? [];
         gallery.add(url);
@@ -158,10 +162,9 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
         await repository.updateProfilePicture(event.imageFile);
         emit(state.copyWith(status: MediaStatus.profileUpdated));
       } catch (error) {
+        final errorMessage = error.toString().replaceFirst('Exception: ', '');
         emit(state.copyWith(
-            error: error.toString(),
-            status: MediaStatus.error,
-            response: null));
+            error: errorMessage, status: MediaStatus.error, response: null));
       }
     });
 

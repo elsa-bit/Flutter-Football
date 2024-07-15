@@ -15,6 +15,7 @@ import 'package:flutter_football/presentation/dialogs/confirmation_dialog.dart';
 import 'package:flutter_football/presentation/screens/coach/settings/doc_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/settings/rule_screen.dart';
 import 'package:flutter_football/presentation/widgets/image_picker_bottom_sheet.dart';
+import 'package:flutter_football/presentation/widgets/predict_ia.dart';
 import 'package:flutter_football/utils/extensions/user_extension.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -36,6 +37,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   String? avatarUrl;
   late String identifier;
+  String _prediction = 'No prediction yet';
 
   @override
   void initState() {
@@ -60,10 +62,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             }
             break;
           case MediaStatus.error:
+            _showSnackBar(context, state.error!, Colors.red, Icons.error);
             break;
           case MediaStatus.profileUpdated:
             BlocProvider.of<MediaBloc>(context)
                 .add(GetAvatar(identifier: identifier));
+            _showSnackBar(context, "Avatar validé par l'IA", Colors.green,
+                Icons.check_circle);
             break;
           default:
             break;
@@ -119,7 +124,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return ImagePickerBottomSheet(
-                                      onImagePicked: (file) {
+                                      onImagePicked: (file) async {
                                         BlocProvider.of<MediaBloc>(context)
                                             .add(UpdateProfilePicture(file));
                                       },
@@ -263,5 +268,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _navigateToDocumentClubScreen(BuildContext context) {
     DocScreen.navigateTo(context);
+  }
+
+  void _showSnackBar(
+      BuildContext context, String text, Color background, IconData icon) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
+            SizedBox(width: 20),
+            Flexible(
+              child: Text(
+                text,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: background,
+      ),
+    );
   }
 }
