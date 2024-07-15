@@ -45,6 +45,17 @@ class _ScheduleScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text(
+          "Programme",
+          style: TextStyle(color: AppColors.white),
+        ),
+        backgroundColor: currentAppColors.secondaryColor,
+        centerTitle: true,
+      ),
       resizeToAvoidBottomInset: false,
       body: BlocBuilder<ScheduleBloc, ScheduleState>(
         builder: (context, state) {
@@ -56,7 +67,6 @@ class _ScheduleScreenState extends State<CalendarScreen> {
             case ScheduleStatus.getError:
               return Center(
                 child: Container(
-                  margin: EdgeInsets.only(top: 30.0),
                   child: TableCalendar(
                     locale: 'fr_FR',
                     firstDay: DateTime.utc(2010, 10, 16),
@@ -111,7 +121,6 @@ class _ScheduleScreenState extends State<CalendarScreen> {
                   state.meetings!.isEmpty) {
                 return Center(
                   child: Container(
-                    margin: EdgeInsets.only(top: 30.0),
                     child: TableCalendar(
                       locale: 'fr_FR',
                       firstDay: DateTime.utc(2010, 10, 16),
@@ -211,7 +220,6 @@ class _ScheduleScreenState extends State<CalendarScreen> {
               return Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 30.0),
                     child: TableCalendar(
                       locale: 'fr_FR',
                       firstDay: DateTime.utc(2010, 10, 16),
@@ -278,7 +286,6 @@ class _ScheduleScreenState extends State<CalendarScreen> {
             default:
               return Center(
                 child: Container(
-                  margin: EdgeInsets.only(top: 30.0),
                   child: TableCalendar(
                     locale: 'fr_FR',
                     firstDay: DateTime.utc(2010, 10, 16),

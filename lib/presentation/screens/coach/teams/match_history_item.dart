@@ -62,7 +62,7 @@ class MatchHistoryItem extends StatelessWidget {
                       match.opponentName.toString(),
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontWeight: FontWeight.normal,
+                        fontWeight: (match.win == "lose") ? FontWeight.bold : FontWeight.normal,
                         fontSize: 16.0,
                         color: (match.win == "lose") ? currentAppColors.primaryTextColor : currentAppColors.secondaryTextColor,
                       ),
@@ -72,7 +72,7 @@ class MatchHistoryItem extends StatelessWidget {
                       match.nameTeam.toString(),
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontWeight: FontWeight.normal,
+                        fontWeight: (match.win == "win") ? FontWeight.bold : FontWeight.normal,
                         fontSize: 16.0,
                         color: (match.win == "win") ? currentAppColors.primaryTextColor : currentAppColors.secondaryTextColor,
                       ),
@@ -88,7 +88,7 @@ class MatchHistoryItem extends StatelessWidget {
                   match.opponentGoals.toString(),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontWeight: FontWeight.normal,
+                    fontWeight: (match.win == "lose") ? FontWeight.bold : FontWeight.normal,
                     fontSize: 16.0,
                     color: (match.win == "lose") ? currentAppColors.primaryTextColor : currentAppColors.secondaryTextColor,
                   ),
@@ -98,7 +98,7 @@ class MatchHistoryItem extends StatelessWidget {
                   match.teamGoals.toString(),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontWeight: FontWeight.normal,
+                    fontWeight: (match.win == "win") ? FontWeight.bold : FontWeight.normal,
                     fontSize: 16.0,
                     color: (match.win == "win") ? currentAppColors.primaryTextColor : currentAppColors.secondaryTextColor,
                   ),

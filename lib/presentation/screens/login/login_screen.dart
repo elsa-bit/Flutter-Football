@@ -102,131 +102,133 @@ class _LoginScreen extends State<LoginScreen> {
               onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                body: Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 40.0, horizontal: 60.0),
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/CSB.png",
-                          width: 70.0,
-                          height: 70.0,
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 50.0),
-                          child: Text(
-                            "Connexion",
-                            style: AppTextStyle.title,
+                body: SafeArea(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 40.0, horizontal: 60.0),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/CSB.png",
+                            width: 70.0,
+                            height: 70.0,
                           ),
-                        ),
-                        Spacer(),
-                        Container(
-                          child: Column(
-                            children: [
-                              CustomTextField(
-                                labelText: "Email",
-                                hint: "email@gmail.com",
-                                icon: Icon(Icons.email),
-                                controller: emailController,
-                                error: emailError,
-                                onChanged: (_) {
-                                  if (emailError != null) {
-                                    setState(() {
-                                      emailError = null;
-                                      loginError = null;
-                                    });
-                                  }
-                                },
-                                onEditingComplete: () {
-                                  passwordFocusNode.requestFocus();
-                                },
-                              ),
-                              const SizedBox(height: 15),
-                              CustomTextField(
-                                labelText: "Mot de passe",
-                                hint: "*********",
-                                icon: Icon(Icons.key),
-                                focusNode: passwordFocusNode,
-                                controller: passwordController,
-                                obscureText: true,
-                                error: passwordError,
-                                onChanged: (_) {
-                                  if (passwordError != null) {
-                                    setState(() {
-                                      passwordError = null;
-                                      loginError = null;
-                                    });
-                                  }
-                                },
-                                onEditingComplete: () {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  this._login(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        if (loginError != null) ...[
                           Container(
-                            margin: const EdgeInsets.only(top: 15.0),
+                            margin: const EdgeInsets.only(top: 50.0),
                             child: Text(
-                              loginError!,
-                              style: AppTextStyle.regular.copyWith(
-                                  color: Color.fromRGBO(207, 156, 149, 1.0)),
+                              "Connexion",
+                              style: AppTextStyle.title,
                             ),
                           ),
-                        ] else
-                          ...[],
-                        Spacer(),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: currentAppColors.secondaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
+                          Spacer(),
+                          Container(
+                            child: Column(
+                              children: [
+                                CustomTextField(
+                                  labelText: "Email",
+                                  hint: "email@gmail.com",
+                                  icon: Icon(Icons.email),
+                                  controller: emailController,
+                                  error: emailError,
+                                  onChanged: (_) {
+                                    if (emailError != null) {
+                                      setState(() {
+                                        emailError = null;
+                                        loginError = null;
+                                      });
+                                    }
+                                  },
+                                  onEditingComplete: () {
+                                    passwordFocusNode.requestFocus();
+                                  },
+                                ),
+                                const SizedBox(height: 15),
+                                CustomTextField(
+                                  labelText: "Mot de passe",
+                                  hint: "*********",
+                                  icon: Icon(Icons.key),
+                                  focusNode: passwordFocusNode,
+                                  controller: passwordController,
+                                  obscureText: true,
+                                  error: passwordError,
+                                  onChanged: (_) {
+                                    if (passwordError != null) {
+                                      setState(() {
+                                        passwordError = null;
+                                        loginError = null;
+                                      });
+                                    }
+                                  },
+                                  onEditingComplete: () {
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                    this._login(context);
+                                  },
+                                ),
+                              ],
                             ),
                           ),
-                          onPressed: () {
-                            this._login(context);
-                            /*await supabase.auth.signUp(
-                              password: passwordController.text,
-                              email: emailController.text,
-                              data: {
-                                'firstname': 'firstname',
-                                'lastname': 'lastname',
-                                'avatar': '',
-                                'tokenPhone': '',
-                                'role': 'coach',
-                                'idCoach': 30
+                          if (loginError != null) ...[
+                            Container(
+                              margin: const EdgeInsets.only(top: 15.0),
+                              child: Text(
+                                loginError!,
+                                style: AppTextStyle.regular.copyWith(
+                                    color: Color.fromRGBO(207, 156, 149, 1.0)),
+                              ),
+                            ),
+                          ] else
+                            ...[],
+                          Spacer(),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: currentAppColors.secondaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                            onPressed: () {
+                              this._login(context);
+                              /*await supabase.auth.signUp(
+                                password: passwordController.text,
+                                email: emailController.text,
+                                data: {
+                                  'firstname': 'firstname',
+                                  'lastname': 'lastname',
+                                  'avatar': '',
+                                  'tokenPhone': '',
+                                  'role': 'coach',
+                                  'idCoach': 30
+                                },
+                              );*/
                               },
-                            );*/
-                            },
-                          child: Text(
-                            "Se connecter",
-                            style: AppTextStyle.subtitle1.copyWith(color: Colors.white),
-                          ),
-                        ),
-                        SizedBox(height: 10,),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(context, ResetPasswordScreen.route());
-                          },
-                          child: Container(
-                            color: Colors.transparent,
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                             child: Text(
-                              "Mot de passe oublié ?",
-                              style: TextStyle(
-                                color: currentAppColors.secondaryTextColor,
-                                fontSize: 16,
-                                decoration: TextDecoration.underline,
+                              "Se connecter",
+                              style: AppTextStyle.subtitle1.copyWith(color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, ResetPasswordScreen.route());
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                              child: Text(
+                                "Mot de passe oublié ?",
+                                style: TextStyle(
+                                  color: currentAppColors.secondaryTextColor,
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const Spacer(),
-                      ],
+                          const Spacer(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
