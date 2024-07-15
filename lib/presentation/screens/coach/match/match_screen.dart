@@ -159,8 +159,6 @@ class MatchSection extends StatelessWidget {
   void onMatchTap(BuildContext context, MatchDetails match) {
     if (match.win != null || match.date.isEqualOrBefore(DateTime.now())) {
       if (!match.FMICompleted) {
-        // Create / Edit FMI
-        //Navigator.push(context, FmiScreen.route(match));
         if (match.playerSelection == null) {
           Navigator.push(context, SelectionScreen.route(match));
         } else {

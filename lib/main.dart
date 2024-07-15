@@ -106,8 +106,6 @@ class MyApp extends StatelessWidget {
     }
   }
 
-  // TODO : implement Go_router
-  // TODO : implement theme_tailor
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([

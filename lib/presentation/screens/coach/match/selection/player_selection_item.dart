@@ -55,7 +55,6 @@ class _PlayerSelectionItemState extends State<PlayerSelectionItem> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(
-          //margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 15.0),
           alignment: Alignment.centerLeft,
           width: 120,
           height: 100,
