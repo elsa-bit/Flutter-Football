@@ -39,17 +39,6 @@ class _MatchScreenState extends State<MatchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        title: Text(
-          "Match",
-          style: TextStyle(color: AppColors.white),
-        ),
-        backgroundColor: currentAppColors.secondaryColor,
-        centerTitle: true,
-      ),
       body: Builder(builder: (context) {
         return BlocListener<MatchBloc, MatchState>(
           listener: (context, state) {
@@ -135,7 +124,7 @@ class MatchSection extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.only(top:25, bottom: 20),
           child: Text(
             title,
             style: TextStyle(

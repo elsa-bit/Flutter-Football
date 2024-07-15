@@ -68,6 +68,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text(
+          "Programme",
+          style: TextStyle(color: AppColors.white),
+        ),
+        backgroundColor: currentAppColors.secondaryColor,
+        centerTitle: true,
+      ),
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () => _displayAlertDialogToAddSchedule(context),
@@ -92,7 +103,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               case ScheduleStatus.getError:
                 return Center(
                   child: Container(
-                    margin: EdgeInsets.only(top: 30.0),
                     child: TableCalendar(
                       locale: 'fr_FR',
                       firstDay: DateTime.utc(2010, 10, 16),
@@ -148,7 +158,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     state.meetings!.isEmpty) {
                   return Center(
                     child: Container(
-                      margin: EdgeInsets.only(top: 30.0),
                       child: TableCalendar(
                         locale: 'fr_FR',
                         firstDay: DateTime.utc(2010, 10, 16),
@@ -305,7 +314,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 return Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 30.0),
                       child: TableCalendar(
                         locale: 'fr_FR',
                         firstDay: DateTime.utc(2010, 10, 16),

@@ -58,7 +58,7 @@ class LightThemeAppColors extends AppColors {
   Color primaryTextBlackColor = const Color(0xff000000);
 
   @override
-  Color sectionColor = const Color(0xffffffff);
+  Color sectionColor = const Color(0xfff8f8f8);
 
 }
 
