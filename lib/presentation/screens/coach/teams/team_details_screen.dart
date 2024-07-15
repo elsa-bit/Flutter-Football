@@ -4,6 +4,8 @@ import 'package:flutter_football/config/app_colors.dart';
 import 'package:flutter_football/domain/models/team.dart';
 import 'package:flutter_football/presentation/blocs/players/players_bloc.dart';
 import 'package:flutter_football/presentation/blocs/players/players_event.dart';
+import 'package:flutter_football/presentation/blocs/teams/teams_bloc.dart';
+import 'package:flutter_football/presentation/blocs/teams/teams_event.dart';
 import 'package:flutter_football/presentation/screens/coach/teams/team_players_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/teams/team_season_details_screen.dart';
 
@@ -36,6 +38,8 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
     _pageController = PageController(initialPage: _currentPage);
     BlocProvider.of<PlayersBloc>(context)
         .add(GetPlayersTeam(teamId: "${widget.team.id}"));
+    BlocProvider.of<TeamsBloc>(context)
+        .add(GetTeamMatchHistory(teamId: widget.team.id));
   }
 
   @override
@@ -74,7 +78,7 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
                     ),
                     child: Center(
                       child: Text(
-                        "Saison",
+                        "Infos",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: (_currentPage == 0)

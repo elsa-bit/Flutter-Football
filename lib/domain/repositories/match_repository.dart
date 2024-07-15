@@ -48,6 +48,15 @@ class MatchRepository {
     }
   }
 
+  Future<List<MatchDetails>> getTeamMatchDetails(int teamId) async {
+    try {
+      return await matchDataSource.getTeamMatchDetails(teamId);
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
   Future<Card> addCard(int idMatch, String idPlayer, String color) async {
     try {
       final response = await matchDataSource.addCard(idMatch, idPlayer, color);

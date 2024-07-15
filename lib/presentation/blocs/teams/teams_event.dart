@@ -15,6 +15,14 @@ class GetTeamDetails extends TeamsEvent {
   });
 }
 
+class GetTeamMatchHistory extends TeamsEvent {
+  final int teamId;
+
+  GetTeamMatchHistory({
+    required this.teamId
+  });
+}
+
 class GetTeamPlayers extends TeamsEvent {
   final int teamId;
 

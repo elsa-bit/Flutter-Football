@@ -11,7 +11,7 @@ import 'package:flutter_football/presentation/blocs/teams/teams_state.dart';
 import 'package:flutter_football/presentation/screens/coach/teams/team_details_screen.dart';
 import 'package:flutter_football/presentation/screens/coach/teams/team_item.dart';
 
-class TeamsScreen extends StatelessWidget {
+class TeamsScreen extends StatefulWidget {
   static const String routeName = '/teams';
 
   const TeamsScreen({super.key});
@@ -24,76 +24,77 @@ class TeamsScreen extends StatelessWidget {
   }
 
   @override
+  State<TeamsScreen> createState() => _TeamsScreenState();
+}
+
+class _TeamsScreenState extends State<TeamsScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TeamsBloc>(context).add(GetTeams());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => TeamRepository(
-        teamDataSource: TeamDataSource(),
-        preferences: SharedPreferencesDataSource(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Center(
+            child: Text("Mes équipes",
+                style: TextStyle(color: AppColors.white))),
+        backgroundColor: currentAppColors.secondaryColor,
+        centerTitle: true,
       ),
-      child: BlocProvider(
-        create: (context) => TeamsBloc(
-          repository: RepositoryProvider.of<TeamRepository>(context),
-        )..add(GetTeams()),
-        child: Scaffold(
-          appBar: AppBar(
-            title: Center(
-                child: Text("Mes équipes",
-                    style: TextStyle(color: AppColors.white))),
-            backgroundColor: currentAppColors.secondaryColor,
-            centerTitle: true,
-          ),
-          body: BlocBuilder<TeamsBloc, TeamState>(
-            builder: (context, state) {
-              switch (state.status) {
-                case TeamStatus.loading:
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                case TeamStatus.error:
-                  return Center(
-                    child: Text(
-                      state.error,
-                    ),
-                  );
-                case TeamStatus.success:
-                  if (state.teams!.isEmpty) {
-                    return const Center(
-                      child: Text("Aucune équipe ne vous a été attribuée."),
-                    );
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: ListView.builder(
-                      itemCount: state.teams!.length,
-                      itemBuilder: (context, index) {
-                        final team = state.teams![index];
-                        return TeamItem(
-                          team: team,
-                          onTap: () => _onTeamTap(context, team),
-                        );
-                      },
-                    ),
-                  );
-                default:
-                  return const Center(
-                    child: Text("Aucune équipe ne vous a été attribuée."),
-                  );
+      body: BlocBuilder<TeamsBloc, TeamState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case TeamStatus.loading:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            case TeamStatus.error:
+              return Center(
+                child: Text(
+                  state.error,
+                ),
+              );
+            case TeamStatus.success:
+              if (state.teams!.isEmpty) {
+                return const Center(
+                  child: Text("Aucune équipe ne vous a été attribuée."),
+                );
               }
-            },
-          ),
-          /*Padding(
-              padding: const EdgeInsets.fromLTRB(70.0, 40.0, 70.0, 0.0),
-              child: Column(
-                children: [
-                  TeamItem(team: Team(id: 1,
-                      name: "U13",
-                      coachIds: [],
-                      playerAccessEnabled: false)),
-                ],
-              ),
-            )*/
-        ),
+              return Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: ListView.builder(
+                  itemCount: state.teams!.length,
+                  itemBuilder: (context, index) {
+                    final team = state.teams![index];
+                    return TeamItem(
+                      team: team,
+                      onTap: () => _onTeamTap(context, team),
+                    );
+                  },
+                ),
+              );
+            default:
+              return const Center(
+                child: Text("Aucune équipe ne vous a été attribuée."),
+              );
+          }
+        },
       ),
+      /*Padding(
+          padding: const EdgeInsets.fromLTRB(70.0, 40.0, 70.0, 0.0),
+          child: Column(
+            children: [
+              TeamItem(team: Team(id: 1,
+                  name: "U13",
+                  coachIds: [],
+                  playerAccessEnabled: false)),
+            ],
+          ),
+        )*/
     );
   }
 

@@ -206,6 +206,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => TeamsBloc(
                 repository: RepositoryProvider.of<TeamRepository>(context),
+                matchRepository: RepositoryProvider.of<MatchRepository>(context),
               ),
             ),
             BlocProvider(
