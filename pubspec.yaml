@@ -56,6 +56,8 @@ dependencies:
   another_flushbar: ^1.12.30
   lottie: ^3.0.0
   image_picker: ^1.1.2
+  tflite_flutter: ^0.10.4
+  image: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +92,7 @@ flutter:
     - assets/images/
     - assets/
     - assets/json/
+    - assets/ia/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

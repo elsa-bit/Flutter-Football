@@ -14,15 +14,15 @@ class MediaRepository {
     required this.preferencesDataSource,
   });
 
-
   Future<String?> getAvatar() async {
     try {
-      final String? idUser = preferencesDataSource.getIdCoach()?.toString() ?? preferencesDataSource.getIdPlayer();
+      final String? idUser = preferencesDataSource.getIdCoach()?.toString() ??
+          preferencesDataSource.getIdPlayer();
       if (idUser != null) {
         return await mediaDataSource.getAvatar("$idUser.jpg");
       }
       return null;
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -31,7 +31,7 @@ class MediaRepository {
   Future<String> getUserAvatar(String idUser) async {
     try {
       return await mediaDataSource.getAvatar("$idUser.jpg");
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -40,7 +40,7 @@ class MediaRepository {
   Future<String> getDefaultAvatar() async {
     try {
       return await mediaDataSource.getDefaultAvatar();
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -49,7 +49,7 @@ class MediaRepository {
   Future<String> getClubRule() async {
     try {
       return await mediaDataSource.getClubRule();
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -58,7 +58,7 @@ class MediaRepository {
   Future<String> getCoachRule() async {
     try {
       return await mediaDataSource.getCoachRule();
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -67,7 +67,7 @@ class MediaRepository {
   Future<String> getDocumentClub() async {
     try {
       return await mediaDataSource.getDocumentClub();
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -76,7 +76,7 @@ class MediaRepository {
   Future<List<Video>> getVideosBucket(String bucketName) async {
     try {
       return await mediaDataSource.getVideosBucket(bucketName);
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -85,17 +85,19 @@ class MediaRepository {
   Future<List<String>> getMatchBucketImages(String matchId) async {
     try {
       return await mediaDataSource.getMatchBucketImages(matchId);
-    } catch(error) {
+    } catch (error) {
       print(error);
       rethrow;
     }
   }
 
-  Future<void> updateProfilePicture(File imageFile) async {
+  Future<String> updateProfilePicture(File imageFile) async {
     try {
-      final String? userID = preferencesDataSource.getIdCoach()?.toString() ?? preferencesDataSource.getIdPlayer();
-      return await mediaDataSource.updateProfilePicture(imageFile, "$userID.jpg");
-    } catch(error) {
+      final String? userID = preferencesDataSource.getIdCoach()?.toString() ??
+          preferencesDataSource.getIdPlayer();
+      return await mediaDataSource.updateProfilePicture(
+          imageFile, "$userID.jpg");
+    } catch (error) {
       print(error);
       rethrow;
     }
@@ -113,5 +115,4 @@ class MediaRepository {
       rethrow;
     }
   }
-
 }
