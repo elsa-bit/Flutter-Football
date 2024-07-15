@@ -15,7 +15,6 @@ Future<String> predict(String imagePath) async {
   // Resize the image to 200x200
   img.Image resizedImage = img.copyResize(image, width: 200, height: 200);
 
-  // Convert image to 3 channels (RGB)
   if (resizedImage.numChannels == 4) {
     img.Image rgbImage = img.Image(width: 200, height: 200);
     img.compositeImage(rgbImage, resizedImage);
@@ -29,7 +28,6 @@ Future<String> predict(String imagePath) async {
   // Normalize the image
   List input = imageToByteListFloat32(resizedImage, 200);
 
-  // Run inference
   var output = List.filled(6, 0.0).reshape([1, 6]);
   interpreter.run(input, output);
 

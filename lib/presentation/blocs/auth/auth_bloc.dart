@@ -11,7 +11,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<IsUserAuthenticated>((event, emit) async {
       try {
-        //emit(state.copyWith(status: AuthStatus.loading));
         final isAuthenticated = await repository.isUserAuthenticated();
         final user = repository.user;
 
@@ -35,7 +34,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<AuthenticateUser>((event, emit) async {
-      //emit(state.copyWith(status: AuthStatus.loading));
       final user = event.auth.user;
 
       if(user == null) {

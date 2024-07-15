@@ -72,7 +72,6 @@ class PlayersBloc extends Bloc<PlayersEvent, PlayersState> {
         });
       } catch (e) {
         emit(state.copyWith(playerSearch: state.players));
-        //emit(state.copyWith(error: e.toString(), status: FmiStatus.error));
       }
     });
 

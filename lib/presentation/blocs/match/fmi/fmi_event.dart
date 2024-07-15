@@ -31,7 +31,7 @@ class AddReplacement extends FmiEvent {
 
 class AddGoal extends FmiEvent {
   final int idMatch;
-  final String? idPlayer; // set idPlayer to null for opponent's goal
+  final String? idPlayer;
 
   AddGoal({
     required this.idMatch,

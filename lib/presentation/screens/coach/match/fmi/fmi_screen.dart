@@ -128,36 +128,6 @@ class _FmiScreenState extends State<FmiScreen> {
                         padding: const EdgeInsets.all(30.0),
                         child: Column(
                           children: [
-                            /*Row(
-                            children: [
-                              Text(
-                                "${state.match?.nameTeam}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 24,
-                                  color: currentAppColors.primaryTextColor,
-                                ),
-                              ),
-                              Spacer(),
-                              Text(
-                                "VS",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 30,
-                                  color: currentAppColors.primaryTextColor,
-                                ),
-                              ),
-                              Spacer(),
-                              Text(
-                                "${state.match?.opponentName}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 24,
-                                  color: currentAppColors.primaryTextColor,
-                                ),
-                              ),
-                            ],
-                          ),*/
                             Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 5),

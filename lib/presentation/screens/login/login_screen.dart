@@ -190,18 +190,6 @@ class _LoginScreen extends State<LoginScreen> {
                             ),
                             onPressed: () {
                               this._login(context);
-                              /*await supabase.auth.signUp(
-                                password: passwordController.text,
-                                email: emailController.text,
-                                data: {
-                                  'firstname': 'firstname',
-                                  'lastname': 'lastname',
-                                  'avatar': '',
-                                  'tokenPhone': '',
-                                  'role': 'coach',
-                                  'idCoach': 30
-                                },
-                              );*/
                               },
                             child: Text(
                               "Se connecter",

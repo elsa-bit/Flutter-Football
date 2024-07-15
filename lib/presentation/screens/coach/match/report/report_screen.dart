@@ -167,18 +167,6 @@ class _ReportScreenState extends State<ReportScreen> {
                             alignment: Alignment.center,
                           ),
                         ),
-                        /*Container(
-                          //padding: const EdgeInsets.symmetric(vertical: 15),
-                          height: 70,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 20,
-                            itemBuilder: (context, index) {
-                              //final match = matches[index];
-                              return Center(child: Text("Element $index"));
-                            },
-                          ),
-                        ),*/
                         // Player comment
                         if (_playerSelected.value != null)
                           ValueListenableBuilder<Player?>(

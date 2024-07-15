@@ -250,22 +250,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
                         authBloc
                           ..add(Logout(mode: 'player'))
                           ..add(AuthLogout());
-
-                        /*final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
-                          final playersBloc = BlocProvider.of<PlayersBloc>(context);
-                          final mediaBloc = BlocProvider.of<MediaBloc>(context);
-                          final fmiBloc = BlocProvider.of<FmiBloc>(context);
-                          final teamsBloc = BlocProvider.of<TeamsBloc>(context);
-                          final conversationBloc = BlocProvider.of<ConversationBloc>(context);
-                          final messageBloc = BlocProvider.of<MessageBloc>(context);
-                          authBloc.add(ClearAuthStates());
-                          scheduleBloc.add(ClearScheduleStates());
-                          playersBloc.add(ClearPlayerState());
-                          mediaBloc.add(ClearMediaState());
-                          fmiBloc.add(ClearFMIState());
-                          teamsBloc.add(ClearTeamsState());
-                          conversationBloc.add(ClearConversationState());
-                          messageBloc.add(ClearMessageState());*/
                       }, validateActionTint: Colors.red);
                     },
                     child: Text(

@@ -62,7 +62,6 @@ class Member extends User {
       final String email = json["email"] as String;
       final String firstName = json["firstname"] as String;
       final String lastName = json["lastname"] as String;
-      //final String teamsId = json["idTeams"] as List<int>;
 
       return Member(
           id: id,

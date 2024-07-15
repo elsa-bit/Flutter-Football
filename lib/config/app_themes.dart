@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_football/config/app_colors.dart';
 
-// TODO : implement theme_tailor
-
-//AppTextStyle appTextStyle = AppTextStyle();
-
 class AppTextStyle {
 
   static TextStyle title = TextStyle(
@@ -16,36 +12,27 @@ class AppTextStyle {
   static TextStyle subtitle1 = TextStyle(
     fontSize: 16.0,
     fontWeight: FontWeight.bold,
-    //color: currentAppColors.primaryTextColor,
   );
 
   static TextStyle subtitle2 = TextStyle(
     fontSize: 18.0,
     fontWeight: FontWeight.bold,
-    //color: currentAppColors.primaryTextColor,
   );
 
   static TextStyle regular = TextStyle(
     fontSize: 14.0,
     fontWeight: FontWeight.normal,
-    //color: currentAppColors.primaryTextColor,
   );
 
   static TextStyle small = TextStyle(
     fontSize: 12.0,
     fontWeight: FontWeight.normal,
-    //color: currentAppColors.primaryTextColor,
   );
 
 }
 
 final lightTheme = ThemeData(
   useMaterial3: true,
-
-  // sets the background color of the `BottomNavigationBar`
-  //canvasColor: LightThemeAppColors().primaryColor,
-  // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-  //primaryColor: LightThemeAppColors().secondaryColor,
 
   brightness: Brightness.light,
   primarySwatch: Colors.blue,
@@ -55,10 +42,6 @@ final lightTheme = ThemeData(
     seedColor: LightThemeAppColors().primaryColor,
     brightness: Brightness.light,
   ),
-
-  /*textTheme: TextTheme(
-      bodySmall: TextStyle(color: Colors.yellow)
-    ),*/
 );
 
 final darkTheme = ThemeData(
@@ -79,17 +62,4 @@ final darkTheme2 = ThemeData(
     seedColor: Colors.purple,
     brightness: Brightness.dark,
   ),
-
-  /*textTheme: TextTheme(
-      displayLarge: const TextStyle(
-        fontSize: 72,
-        fontWeight: FontWeight.bold,
-      ),
-      titleLarge: GoogleFonts.oswald(
-        fontSize: 30,
-        fontStyle: FontStyle.italic,
-      ),
-      bodyMedium: GoogleFonts.merriweather(),
-      displaySmall: GoogleFonts.pacifico(),
-    ),*/
 );
