@@ -56,7 +56,6 @@ dependencies:
   another_flushbar: ^1.12.30
   lottie: ^3.0.0
   image_picker: ^1.1.2
-  swipe_refresh: ^1.1.2
   tflite_flutter: ^0.10.4
   image: ^4.2.0
 

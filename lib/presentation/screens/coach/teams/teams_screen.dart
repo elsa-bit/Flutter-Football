@@ -35,6 +35,10 @@ class _TeamsScreenState extends State<TeamsScreen> {
     BlocProvider.of<TeamsBloc>(context).add(GetTeams());
   }
 
+  Future<void> _refresh() async {
+    BlocProvider.of<TeamsBloc>(context).add(GetTeams());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,44 +49,47 @@ class _TeamsScreenState extends State<TeamsScreen> {
         backgroundColor: currentAppColors.secondaryColor,
         centerTitle: true,
       ),
-      body: BlocBuilder<TeamsBloc, TeamState>(
-        builder: (context, state) {
-          switch (state.status) {
-            case TeamStatus.loading:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            case TeamStatus.error:
-              return Center(
-                child: Text(
-                  state.error,
-                ),
-              );
-            case TeamStatus.success:
-              if (state.teams!.isEmpty) {
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: BlocBuilder<TeamsBloc, TeamState>(
+          builder: (context, state) {
+            switch (state.status) {
+              case TeamStatus.loading:
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              case TeamStatus.error:
+                return Center(
+                  child: Text(
+                    state.error,
+                  ),
+                );
+              case TeamStatus.success:
+                if (state.teams!.isEmpty) {
+                  return const Center(
+                    child: Text("Aucune équipe ne vous a été attribuée."),
+                  );
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: ListView.builder(
+                    itemCount: state.teams!.length,
+                    itemBuilder: (context, index) {
+                      final team = state.teams![index];
+                      return TeamItem(
+                        team: team,
+                        onTap: () => _onTeamTap(context, team),
+                      );
+                    },
+                  ),
+                );
+              default:
                 return const Center(
                   child: Text("Aucune équipe ne vous a été attribuée."),
                 );
-              }
-              return Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: ListView.builder(
-                  itemCount: state.teams!.length,
-                  itemBuilder: (context, index) {
-                    final team = state.teams![index];
-                    return TeamItem(
-                      team: team,
-                      onTap: () => _onTeamTap(context, team),
-                    );
-                  },
-                ),
-              );
-            default:
-              return const Center(
-                child: Text("Aucune équipe ne vous a été attribuée."),
-              );
-          }
-        },
+            }
+          },
+        ),
       ),
       /*Padding(
           padding: const EdgeInsets.fromLTRB(70.0, 40.0, 70.0, 0.0),

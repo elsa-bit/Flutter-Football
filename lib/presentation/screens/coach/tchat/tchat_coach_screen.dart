@@ -44,6 +44,14 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
     BlocProvider.of<PlayersBloc>(context).add(GetPlayersTeams());
   }
 
+  Future<void> _refresh() async {
+    BlocProvider.of<ConversationBloc>(context)
+      ..add(GetConversationCoach())
+      ..add(SubscribeToConversation(mode: 'coach'));
+
+    BlocProvider.of<PlayersBloc>(context).add(GetPlayersTeams());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,60 +67,63 @@ class _TchatCoachScreenState extends State<TchatCoachScreen> {
         onPressed: () => _displayAlertDialogToAddConversation(context),
         child: Icon(Icons.add),
       ),
-      body: BlocListener<PlayersBloc, PlayersState>(
-        listener: (context, state) {
-          setState(() {
-            if (state.status == PlayersStatus.loading) {
-              playerListLoading = true;
-            } else {
-              playerListLoading = false;
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: BlocListener<PlayersBloc, PlayersState>(
+          listener: (context, state) {
+            setState(() {
+              if (state.status == PlayersStatus.loading) {
+                playerListLoading = true;
+              } else {
+                playerListLoading = false;
+              }
+            });
+            if (state.status == PlayersStatus.success) {
+              _updatePlayersTeam(state.playerSearch!);
+            } else if (state.status == PlayersStatus.error) {
+              _showSnackBar(context, state.error, Colors.orangeAccent, Icons.error);
             }
-          });
-          if (state.status == PlayersStatus.success) {
-            _updatePlayersTeam(state.playerSearch!);
-          } else if (state.status == PlayersStatus.error) {
-            _showSnackBar(context, state.error, Colors.orangeAccent, Icons.error);
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SafeArea(
-            child: BlocBuilder<ConversationBloc, ConversationState>(
-              builder: (context, state) {
-                switch (state.status) {
-                  case ConversationStatus.loading:
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  case ConversationStatus.error:
-                    return Center(
-                      child: Text(
-                        state.error,
-                      ),
-                    );
-                  case ConversationStatus.success:
-                  default:
-                    if (state.conversations!.isEmpty) {
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SafeArea(
+              child: BlocBuilder<ConversationBloc, ConversationState>(
+                builder: (context, state) {
+                  switch (state.status) {
+                    case ConversationStatus.loading:
                       return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    case ConversationStatus.error:
+                      return Center(
                         child: Text(
-                          "Aucune conversation, créer en une dès maintenant !",
-                          style: TextStyle(fontStyle: FontStyle.italic),
+                          state.error,
                         ),
                       );
-                    }
-                    return ListView.builder(
-                      itemCount: state.conversations!.length,
-                      itemBuilder: (context, index) {
-                        final conversation = state.conversations![index];
-                        return ConversationItem(
-                          conversation: conversation,
-                          onTap: () =>
-                              _onConversationTap(context, conversation.id),
+                    case ConversationStatus.success:
+                    default:
+                      if (state.conversations!.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            "Aucune conversation, créer en une dès maintenant !",
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
                         );
-                      },
-                    );
-                }
-              },
+                      }
+                      return ListView.builder(
+                        itemCount: state.conversations!.length,
+                        itemBuilder: (context, index) {
+                          final conversation = state.conversations![index];
+                          return ConversationItem(
+                            conversation: conversation,
+                            onTap: () =>
+                                _onConversationTap(context, conversation.id),
+                          );
+                        },
+                      );
+                  }
+                },
+              ),
             ),
           ),
         ),

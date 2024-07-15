@@ -14,7 +14,7 @@ import 'package:http_parser/http_parser.dart';
 class MediaDataSource extends BaseDataSource with MediaService {
   @override
   Future<String> getAvatar(String name) async {
-    return await supabase.storage.from('avatars').createSignedUrl(name, 300);
+    return await supabase.storage.from('avatars').createSignedUrl(name, 7200);
   }
 
   @override
@@ -27,19 +27,19 @@ class MediaDataSource extends BaseDataSource with MediaService {
   Future<String> getClubRule() async {
     return await supabase.storage
         .from('rule')
-        .createSignedUrl('club_rule.pdf', 240);
+        .createSignedUrl('club_rule.pdf', 7200);
   }
 
   Future<String> getCoachRule() async {
     return await supabase.storage
         .from('rule')
-        .createSignedUrl('coach_rule.pdf', 160);
+        .createSignedUrl('coach_rule.pdf', 7200);
   }
 
   Future<String> getDocumentClub() async {
     return await supabase.storage
         .from('rule')
-        .createSignedUrl('doc_club.pdf', 160);
+        .createSignedUrl('doc_club.pdf', 7200);
   }
 
   Future<List<Video>> getVideosBucket(String bucketName) async {

@@ -36,75 +36,82 @@ class _MatchScreenState extends State<MatchScreen> {
     BlocProvider.of<MatchBloc>(context).add(GetMatches());
   }
 
+  Future<void> _refresh() async {
+    BlocProvider.of<MatchBloc>(context).add(GetMatches());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(builder: (context) {
-        return BlocListener<MatchBloc, MatchState>(
-          listener: (context, state) {
-            switch (state.status) {
-              case MatchStatus.loading:
-                LoadingDialog.show(context);
-                break;
-              case MatchStatus.error:
-                LoadingDialog.hide(context);
-                ErrorDialog.show(context, state.error?.message ?? "Une erreur est survenue...");
-                break;
-              case MatchStatus.success:
-                LoadingDialog.hide(context);
-                break;
-              case MatchStatus.initial:
-                LoadingDialog.hide(context);
-                break;
-              case MatchStatus.refresh:
-                BlocProvider.of<MatchBloc>(context).add(GetMatches());
-                break;
-              case MatchStatus.redirect:
-                final redirection = state.redirection;
-                //LoadingDialog.show(context);
-                Future.delayed(Duration(seconds: 2), () {
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: Builder(builder: (context) {
+          return BlocListener<MatchBloc, MatchState>(
+            listener: (context, state) {
+              switch (state.status) {
+                case MatchStatus.loading:
+                  LoadingDialog.show(context);
+                  break;
+                case MatchStatus.error:
+                  LoadingDialog.hide(context);
+                  ErrorDialog.show(context, state.error?.message ?? "Une erreur est survenue...");
+                  break;
+                case MatchStatus.success:
+                  LoadingDialog.hide(context);
+                  break;
+                case MatchStatus.initial:
+                  LoadingDialog.hide(context);
+                  break;
+                case MatchStatus.refresh:
                   BlocProvider.of<MatchBloc>(context).add(GetMatches());
-                  if (redirection != null) {
-                    Navigator.push(context, FmiScreen.route(redirection));
-                  }
-                });
-                break;
-            }
-          },
-          child: Scaffold(
-            body: SafeArea(
-              child: BlocBuilder<MatchBloc, MatchState>(
-                builder: (context, state) {
-                  return Column(
-                    children: [
-                      if (state.previousMatch != null &&
-                          state.previousMatch!.isNotEmpty)
-                        Expanded(
-                            child: MatchSection(
-                                title: "Matchs passés",
-                                matches: state.previousMatch!)),
-                      if (state.nextMatch != null &&
-                          state.nextMatch!.isNotEmpty)
-                        Expanded(
-                            child: MatchSection(
-                                title: "Matchs à venir",
-                                matches: state.nextMatch!)),
-                      if ((state.nextMatch == null ||
-                          state.nextMatch!.isEmpty) && (state.previousMatch == null ||
-                          state.previousMatch!.isEmpty))
-                        Expanded(
-                          child: Center(
-                            child: Text("Aucun match pour le moment"),
+                  break;
+                case MatchStatus.redirect:
+                  final redirection = state.redirection;
+                  //LoadingDialog.show(context);
+                  Future.delayed(Duration(seconds: 2), () {
+                    BlocProvider.of<MatchBloc>(context).add(GetMatches());
+                    if (redirection != null) {
+                      Navigator.push(context, FmiScreen.route(redirection));
+                    }
+                  });
+                  break;
+              }
+            },
+            child: Scaffold(
+              body: SafeArea(
+                child: BlocBuilder<MatchBloc, MatchState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        if (state.previousMatch != null &&
+                            state.previousMatch!.isNotEmpty)
+                          Expanded(
+                              child: MatchSection(
+                                  title: "Matchs passés",
+                                  matches: state.previousMatch!)),
+                        if (state.nextMatch != null &&
+                            state.nextMatch!.isNotEmpty)
+                          Expanded(
+                              child: MatchSection(
+                                  title: "Matchs à venir",
+                                  matches: state.nextMatch!)),
+                        if ((state.nextMatch == null ||
+                            state.nextMatch!.isEmpty) && (state.previousMatch == null ||
+                            state.previousMatch!.isEmpty))
+                          Expanded(
+                            child: Center(
+                              child: Text("Aucun match pour le moment"),
+                            ),
                           ),
-                        ),
-                    ],
-                  );
-                },
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }
